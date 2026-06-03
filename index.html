@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI患者管理系统 - 量表设计</title>
+  <style>
+    :root {
+      --blue: #1d4dff;
+      --blue-2: #2447ff;
+      --bg: #f2f5ff;
+      --panel: #fff;
+      --line: #edf0f5;
+      --line-dark: #dfe5ef;
+      --text: #25324a;
+      --muted: #6c7890;
+      --soft: #98a3b6;
+      --head: #f5f7fa;
+      --chip: #f3f6fb;
+      --green: #52c41a;
+      --orange: #fa8c16;
+      --red: #ff4d4f;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { margin: 0; color: var(--text); background: var(--bg); font-size: 14px; overflow: hidden; }
+    button, input, textarea, select { font: inherit; }
+    button { border: 0; background: transparent; cursor: pointer; }
+    input, textarea, select { outline: 0; color: var(--text); }
+    .page { display: none; height: 100vh; }
+    .page.active { display: block; }
+
+    /* B端列表页 */
+    .list-app { display: grid; grid-template-columns: 200px 1fr; min-width: 1360px; height: 100vh; background: #f2f5ff; }
+    .sidebar { height: 100vh; background: #f6f8ff; border-right: 1px solid #e8edf7; display: flex; flex-direction: column; }
+    .brand { height: 62px; padding: 14px 8px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e7edf8; }
+    .seal { width: 34px; height: 34px; border-radius: 50%; background: #fff; border: 2px solid #2e65b8; display: grid; place-items: center; color: #2e65b8; box-shadow: inset 0 0 0 2px #d8e8ff; }
+    .seal::before { content: "+"; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; font-weight: 800; border: 1px solid #2e65b8; }
+    .brand span { color: #123d7d; font-size: 16px; font-weight: 800; white-space: nowrap; }
+    .menu { flex: 1; padding: 16px 8px 8px; overflow: hidden; }
+    .menu-section { margin-bottom: 10px; }
+    .menu-item, .submenu-item, .notice, .user-card { display: flex; align-items: center; height: 40px; border-radius: 6px; color: #15387e; font-weight: 700; line-height: 1; position: relative; }
+    .menu-item { padding: 0 14px; gap: 11px; margin-bottom: 4px; }
+    .menu-item svg, .notice svg { width: 16px; height: 16px; stroke-width: 2; flex: 0 0 auto; }
+    .chevron { width: 14px; height: 14px; margin-left: auto; color: #3159b8; }
+    .submenu { padding: 2px 0 0; }
+    .submenu-item { color: #667287; font-weight: 500; padding-left: 52px; margin: 2px 2px 2px 0; }
+    .submenu-item.active { color: var(--blue); background: #eaf1ff; font-weight: 700; }
+    .submenu-item.active::before { content: ""; position: absolute; left: 0; top: 9px; bottom: 9px; width: 3px; border-radius: 0 3px 3px 0; background: var(--blue); }
+    .sidebar-bottom { padding: 0 8px 12px; }
+    .bottom-line { height: 1px; background: #e1e8f5; margin-bottom: 10px; }
+    .notice { justify-content: space-between; padding: 0 14px; color: #3f5172; font-size: 13px; font-weight: 500; }
+    .notice-left { display: flex; align-items: center; gap: 10px; }
+    .badge { min-width: 34px; height: 18px; padding: 0 7px; border-radius: 999px; display: grid; place-items: center; background: #ff5c67; color: white; font-size: 11px; font-weight: 700; }
+    .user-card { height: 52px; margin-top: 8px; padding: 0 12px; gap: 10px; background: #eef4ff; color: #11388b; font-size: 13px; }
+    .avatar { width: 30px; height: 30px; border-radius: 50%; overflow: hidden; background: linear-gradient(#293b5f 0 38%, #ffd6bd 39% 100%); position: relative; box-shadow: inset 0 -7px 0 #eaf0ff; }
+    .avatar::before { content: ""; position: absolute; left: 7px; top: 14px; width: 4px; height: 4px; border-radius: 50%; background: #1c2438; box-shadow: 12px 0 0 #1c2438; }
+    .collapse { height: 28px; margin-top: 8px; color: #375cae; display: grid; place-items: center; }
+    .list-main { min-width: 0; height: 100vh; padding: 18px 14px 20px 22px; display: flex; flex-direction: column; background: #f2f5ff; }
+    .page-title { height: 30px; display: flex; align-items: flex-start; font-size: 16px; font-weight: 800; color: #263752; }
+    .list-panel { flex: 1; min-height: 0; background: white; border-radius: 8px; padding: 14px; box-shadow: 0 1px 0 rgba(31,49,85,.02); display: flex; flex-direction: column; position: relative; }
+    .toolbar { height: 48px; display: flex; align-items: flex-start; gap: 12px; }
+    .search { width: 190px; height: 36px; border: 1px solid #e6eaf1; border-radius: 3px; display: flex; align-items: center; padding: 0 11px; gap: 8px; color: #b2bbc8; background: #fff; }
+    .search svg { width: 16px; height: 16px; }
+    .search input { min-width: 0; width: 100%; border: 0; background: transparent; }
+    .search input::placeholder { color: #b7bfca; }
+    .icon-button { width: 36px; height: 36px; border: 1px solid #e6eaf1; border-radius: 4px; display: grid; place-items: center; color: #3d4658; background: #fff; }
+    .primary { margin-left: auto; height: 36px; padding: 0 13px; border-radius: 4px; background: #1d3fff; color: white; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; box-shadow: 0 2px 5px rgba(29,63,255,.18); }
+    .primary svg, .icon-button svg { width: 16px; height: 16px; }
+    .table-wrap { flex: 1; min-height: 0; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; color: #64728a; }
+    thead tr { height: 48px; background: var(--head); }
+    th { color: #2f3f58; font-size: 14px; font-weight: 500; text-align: left; padding: 0 8px; white-space: nowrap; }
+    tbody tr { height: 51px; border-bottom: 1px solid var(--line); }
+    tbody tr:hover { background: #fbfcff; }
+    td { padding: 0 8px; vertical-align: middle; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }
+    .col-name { width: 20%; }
+    .col-small { width: 8%; }
+    .col-version { width: 8%; }
+    .col-maker { width: 10%; }
+    .col-time { width: 13%; }
+    .col-status { width: 8%; }
+    .col-switch { width: 8%; }
+    .col-actions { width: 10%; }
+    .name-cell { display: flex; align-items: center; gap: 8px; min-width: 0; cursor: pointer; }
+    .triangle { width: 0; height: 0; flex: 0 0 auto; border-style: solid; opacity: .88; }
+    .triangle.right { border-width: 5px 0 5px 6px; border-color: transparent transparent transparent #8792a3; }
+    .triangle.down { border-width: 6px 5px 0 5px; border-color: #8792a3 transparent transparent transparent; }
+    .child .name-cell { padding-left: 32px; }
+    .child .triangle { visibility: hidden; }
+    .status { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+    .published { color: #52c41a; }
+    .unpublished { color: #fa8c16; }
+    .published .dot { background: #52c41a; }
+    .unpublished .dot { background: #fa8c16; }
+    .switch { width: 31px; height: 18px; border-radius: 999px; display: inline-flex; align-items: center; padding: 2px; background: #c3cad5; vertical-align: middle; transition: .16s; }
+    .switch::before { content: ""; width: 14px; height: 14px; border-radius: 50%; background: white; box-shadow: 0 1px 2px rgba(0,0,0,.22); transition: .16s; }
+    .switch.on { background: #1d3fff; }
+    .switch.on::before { transform: translateX(13px); }
+    .actions { display: inline-flex; align-items: center; gap: 9px; color: var(--blue); }
+    .link { color: var(--blue); font-size: 14px; font-weight: 500; cursor: pointer; }
+    .more { color: var(--blue); letter-spacing: 1px; }
+    .pager { height: 58px; display: flex; align-items: flex-end; justify-content: center; gap: 12px; color: #34455e; }
+    .page-btn, .page-select, .jump-input { height: 30px; border: 1px solid #e6eaf1; border-radius: 4px; min-width: 30px; display: inline-grid; place-items: center; background: white; color: #526078; font-size: 13px; }
+    .page-btn.active { background: #1d3fff; border-color: #1d3fff; color: white; font-weight: 700; }
+    .page-btn.disabled { background: #f2f4f8; color: #c2cad6; }
+    .ellipsis { color: #a0a8b5; letter-spacing: 2px; }
+    .page-select { width: 96px; grid-auto-flow: column; gap: 7px; }
+    .jump-input { width: 44px; }
+
+    /* 量表编辑器 */
+    .builder { height: 100vh; min-width: 1440px; display: grid; grid-template-rows: 58px 1fr; background: #eef2f7; }
+    .builder-top { height: 58px; background: #fff; border-bottom: 1px solid #e8ebf0; display: flex; align-items: center; padding: 0 18px; gap: 28px; }
+    .exit-btn { display: inline-flex; align-items: center; gap: 8px; color: #27364f; font-weight: 600; }
+    .exit-btn svg { width: 18px; height: 18px; }
+    .builder-title { font-size: 16px; font-weight: 800; color: #1b2a42; }
+    .top-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .top-btn { height: 36px; min-width: 74px; padding: 0 14px; border-radius: 4px; border: 1px solid #2d55ff; color: #2148ff; background: #fff; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; }
+    .top-btn.primary-action { background: #1f3fff; color: #fff; }
+    .top-btn svg { width: 15px; height: 15px; }
+    .builder-body { min-height: 0; display: grid; grid-template-columns: 54px 284px minmax(780px, 1fr) 286px; }
+    .rail { background: #fff; border-right: 1px solid #e8ebf0; padding-top: 18px; }
+    .rail-tab { height: 72px; display: grid; place-items: center; gap: 4px; color: #25314a; font-weight: 800; border-left: 3px solid transparent; }
+    .rail-tab.active { color: var(--blue); border-left-color: var(--blue); background: #f5f7ff; }
+    .rail-tab svg { width: 20px; height: 20px; }
+    .palette-wrap { padding: 16px 0 18px 14px; background: #f0f3f8; }
+    .palette { width: 254px; min-height: calc(100vh - 92px); background: #fff; border-radius: 6px; padding: 16px 14px; box-shadow: 0 10px 24px rgba(31, 45, 80, .08); }
+    .group-title { margin: 0 0 12px; font-size: 14px; font-weight: 800; color: #2d3b55; }
+    .type-group { margin-bottom: 30px; }
+    .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .type-btn { height: 32px; border-radius: 4px; background: #f5f7fb; color: #34425d; display: inline-flex; align-items: center; gap: 7px; justify-content: flex-start; padding: 0 10px; font-weight: 600; }
+    .type-btn:hover, .type-btn.active { background: #e9efff; color: var(--blue); }
+    .type-btn svg { width: 15px; height: 15px; }
+    .type-btn.wide { grid-column: span 1; }
+    .canvas-shell { min-width: 0; overflow: auto; background-color: #f8fafc; background-image: radial-gradient(#dce3ee 1px, transparent 1px); background-size: 18px 18px; padding: 20px 0 70px; }
+    .canvas { width: min(980px, calc(100% - 96px)); margin: 0 auto; background: #fff; min-height: 100%; padding: 18px 0 38px; box-shadow: 0 0 0 1px rgba(230,235,244,.35); }
+    .q-card { width: calc(100% - 88px); margin: 0 auto 28px; padding: 18px 24px 20px; background: #fff; border: 1px solid transparent; border-radius: 3px; position: relative; }
+    .q-card:hover { border-color: #ccd6ff; }
+    .q-card.selected { border-color: #3154ff; box-shadow: 0 8px 28px rgba(33,68,255,.08); }
+    .q-head { display: flex; align-items: center; min-height: 32px; gap: 12px; }
+    .q-chip { height: 28px; padding: 0 10px; border-radius: 4px; background: #f2f5f8; color: #32405a; display: inline-flex; align-items: center; font-weight: 700; white-space: nowrap; }
+    .required-inline { margin-left: auto; display: flex; align-items: center; gap: 8px; color: #33425d; }
+    .mini-switch { width: 32px; height: 18px; padding: 2px; border-radius: 999px; background: #c5cbd7; display: inline-flex; align-items: center; }
+    .mini-switch::before { content: ""; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.18); }
+    .mini-switch.on { background: #1f45ff; }
+    .mini-switch.on::before { transform: translateX(14px); }
+    .q-title-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+    .req-mark { color: #ff4d4f; font-weight: 700; }
+    .q-no { color: #526078; font-weight: 800; }
+    .q-title { flex: 1; height: 34px; border: 1px solid transparent; border-radius: 3px; color: #27364f; padding: 0 6px; }
+    .q-card.selected .q-title { border-color: #3154ff; }
+    .q-title::placeholder { color: #2e3a51; }
+    .q-desc { width: 100%; height: 28px; margin: 6px 0 12px; border: 0; color: #b2bbc8; resize: none; }
+    .q-desc::placeholder { color: #b9c1cd; }
+    .option-row { height: 36px; border: 1px solid #edf0f5; border-radius: 4px; display: flex; align-items: center; gap: 9px; padding: 0 10px; color: #69768c; margin-bottom: 10px; cursor: pointer; }
+    .option-row.selected { border-color: #3154ff; background: #f8faff; color: #233454; }
+    .fake-radio { width: 14px; height: 14px; border: 1px solid #dde3ed; border-radius: 50%; flex: 0 0 auto; }
+    .fake-check { width: 14px; height: 14px; border: 1px solid #dde3ed; border-radius: 3px; flex: 0 0 auto; }
+    .option-actions { margin-top: 12px; display: flex; gap: 14px; align-items: center; color: #40506b; }
+    .small-link { display: inline-flex; align-items: center; gap: 5px; color: #40506b; }
+    .small-link svg { width: 14px; height: 14px; }
+    .text-answer { height: 36px; border: 1px solid #edf0f5; border-radius: 4px; display: flex; align-items: center; color: #b7bfcb; padding: 0 12px; }
+    .date-answer { width: 180px; height: 36px; border: 1px solid #edf0f5; border-radius: 4px; display: flex; align-items: center; justify-content: space-between; color: #aab3c0; padding: 0 12px; }
+    .rating-note { color: #68768e; margin: 10px 0 16px; }
+    .rating-labels { display: flex; gap: 24px; margin: 0 0 12px; }
+    .rating-label { background: #f2f5f8; color: #7a879b; border-radius: 4px; height: 28px; padding: 0 10px; display: inline-flex; align-items: center; }
+    .stars { color: #e8ecf2; font-size: 26px; letter-spacing: 5px; line-height: 1; }
+    .matrix-table { width: 100%; margin-top: 18px; border-collapse: collapse; table-layout: fixed; color: #69768c; }
+    .matrix-table th, .matrix-table td { height: 42px; text-align: center; border-bottom: 1px solid #edf0f5; font-weight: 500; }
+    .matrix-table th:first-child, .matrix-table td:first-child { text-align: left; width: 34%; padding-left: 6px; }
+    .matrix-table th.matrix-option { cursor: pointer; border: 1px solid transparent; }
+    .matrix-table th.matrix-option.selected { color: #1d4dff; background: #f8faff; border-color: #3154ff; }
+    .matrix-input { height: 30px; border: 1px solid #edf0f5; border-radius: 4px; width: 88%; padding: 0 8px; color: #aab3c0; }
+    .matrix-actions { margin-top: 14px; display: flex; gap: 18px; color: #40506b; }
+    .float-tools { position: absolute; left: 50%; top: -18px; transform: translateX(-50%); height: 34px; display: none; align-items: center; background: #fff; border-radius: 3px; box-shadow: 0 12px 30px rgba(31,45,80,.16); border: 1px solid #edf0f5; }
+    .q-card.selected .float-tools { display: flex; }
+    .float-tools button { height: 34px; padding: 0 14px; color: #34425d; display: inline-flex; gap: 6px; align-items: center; border-right: 1px solid #edf0f5; }
+    .float-tools button:last-child { border-right: 0; }
+    .props-wrap { padding: 16px 12px 18px 0; background: #f0f3f8; }
+    .props { width: 260px; height: calc(100vh - 92px); background: #fff; border-radius: 6px; box-shadow: 0 10px 24px rgba(31,45,80,.08); overflow: auto; position: relative; }
+    .props-title { min-height: 50px; display: flex; align-items: stretch; padding: 0 18px; border-bottom: 1px solid #edf0f5; position: sticky; top: 0; background: #fff; z-index: 2; gap: 18px; }
+    .props-title .prop-tab { min-width: 64px; }
+    .prop-body { padding: 16px 18px 26px; }
+    .prop-tab { position: relative; color: #60708a; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; height: 50px; }
+    .prop-tab.active { color: var(--blue); }
+    .prop-tab.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; border-radius: 999px 999px 0 0; background: var(--blue); }
+    .field { margin-bottom: 18px; }
+    .field label { display: block; margin-bottom: 9px; font-weight: 800; color: #303d56; }
+    .select, .input, .textarea { width: 100%; border: 1px solid #edf0f5; border-radius: 4px; background: #fff; color: #556176; }
+    .select, .input { height: 34px; padding: 0 10px; }
+    .textarea { min-height: 128px; padding: 12px; resize: vertical; line-height: 1.6; background: #f7f8fb; }
+    .hint { margin-top: 6px; color: #a0a9b8; font-size: 12px; line-height: 1.5; }
+    .required-prop { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-weight: 800; color: #303d56; }
+    .prop-row { display: flex; gap: 8px; margin-bottom: 8px; }
+    .prop-row .mini { width: 42px; text-align: center; }
+    .prop-row .grow { flex: 1; }
+    .radio-card { height: 40px; border: 1px solid #edf0f5; border-radius: 4px; display: flex; align-items: center; padding: 0 12px; margin-bottom: 8px; gap: 8px; color: #4e5b72; }
+    .radio-card.active { color: var(--blue); background: #fbfcff; }
+    .radio-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid #c9d1df; display: grid; place-items: center; }
+    .radio-card.active .radio-dot { border-color: var(--blue); }
+    .radio-card.active .radio-dot::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--blue); }
+    .col-editor { border: 1px solid #edf0f5; border-radius: 4px; padding: 10px; margin-bottom: 10px; background: #fbfcff; }
+    .col-editor-head { display: grid; grid-template-columns: 1fr 92px 24px; gap: 8px; align-items: center; }
+    .remove-btn { height: 30px; color: #ff4d4f; display: grid; place-items: center; }
+    .add-btn { height: 32px; border: 1px dashed #c8d4ff; color: var(--blue); border-radius: 4px; width: 100%; font-weight: 700; }
+    .search-bind { position: relative; }
+    .search-bind::after { content: "⌕"; position: absolute; right: 10px; top: 8px; color: #9aa6b8; pointer-events: none; }
+    .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); background: rgba(21,31,54,.92); color: #fff; border-radius: 999px; padding: 10px 16px; z-index: 20; display: none; }
+    .toast.show { display: block; }
+    .assistant-sticker { position: fixed; right: 16px; bottom: 74px; width: 86px; height: 58px; image-rendering: pixelated; pointer-events: none; }
+    .sticker-board { position: absolute; inset: 16px 8px 0 0; border-radius: 8px; background: #79a9ff; border: 3px solid #18243a; box-shadow: inset 0 -5px 0 rgba(0,0,0,.12); }
+    .sticker-board::before { content: "+"; position: absolute; left: 7px; top: 12px; color: #ff88bd; font-weight: 900; font-size: 17px; text-shadow: 1px 0 #18243a, -1px 0 #18243a, 0 1px #18243a, 0 -1px #18243a; }
+    .cloud, .bunny, .dino { position: absolute; background: #fff; border: 3px solid #18243a; }
+    .cloud { width: 34px; height: 24px; left: 32px; bottom: 2px; border-radius: 14px; }
+    .bunny { width: 22px; height: 28px; right: 10px; bottom: 4px; border-radius: 11px 11px 8px 8px; }
+    .dino { width: 26px; height: 23px; right: 24px; top: 1px; border-radius: 11px 11px 8px 8px; background: #15b569; }
+    .muted-note { color: #a0a9b8; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <section id="listPage" class="page active">
+    <div class="list-app">
+      <aside class="sidebar">
+        <div class="brand"><div class="seal" aria-hidden="true"></div><span>AI患者管理系统</span></div>
+        <nav class="menu">
+          <div class="menu-section"><div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg><span>工作台</span></div></div>
+          <div class="menu-section"><div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 4h8l3 3v13H5V4h3Z"/><path d="M9 12h6M9 16h4"/></svg><span>任务管理</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m8 10 4 4 4-4"/></svg></div></div>
+          <div class="menu-section"><div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>患者管理</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m8 10 4 4 4-4"/></svg></div></div>
+          <div class="menu-section">
+            <div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 4h10v16H7z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><span>方案与内容</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m18 15-6-6-6 6"/></svg></div>
+            <div class="submenu"><div class="submenu-item">方案管理</div><div class="submenu-item active">量表管理</div><div class="submenu-item">评估报告</div><div class="submenu-item">文章管理</div><div class="submenu-item">知识库</div></div>
+          </div>
+          <div class="menu-section"><div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19V8a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v11"/><path d="M8 19v-5h8v5"/></svg><span>运营管理</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m18 15-6-6-6 6"/></svg></div><div class="submenu"><div class="submenu-item">统计报表</div></div></div>
+          <div class="menu-section"><div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3 7 21M12 3l5 18M5 9h14M5 15h14"/></svg><span>AI医助</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m8 10 4 4 4-4"/></svg></div></div>
+          <div class="menu-section"><div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/><path d="M4 12h2m12 0h2M12 4v2m0 12v2"/></svg><span>系统管理</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m8 10 4 4 4-4"/></svg></div></div>
+        </nav>
+        <div class="sidebar-bottom"><div class="bottom-line"></div><div class="notice"><div class="notice-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 6-3 9h18c0-3-3-2-3-9"/><path d="M10 21h4"/></svg><span>消息通知</span></div><span class="badge">99+</span></div><div class="user-card"><div class="avatar"></div><strong>平台技术人员</strong><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m9 18 6-6-6-6"/></svg></div><div class="collapse"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 7h14M4 12h10M4 17h14"/></svg></div></div>
+      </aside>
+      <main class="list-main">
+        <header class="page-title">量表管理</header>
+        <section class="list-panel">
+          <div class="toolbar">
+            <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg><input placeholder="搜索名称"></label>
+            <button class="icon-button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 5h5v14H4zM15 5h5v14h-5zM9 12h6"/><circle cx="16.5" cy="17.5" r="3.5"/></svg></button>
+            <button class="primary" data-open-editor><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 1.5 6.1L20 10l-6.5 1.9L12 18l-1.5-6.1L4 10l6.5-1.9L12 2Z"/></svg><span>新建量表</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m7 10 5 5 5-5"/></svg></button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th class="col-name">名称</th><th class="col-small">绑定方案</th><th class="col-small">任务数</th><th class="col-version">版本号</th><th class="col-small">版本数量</th><th class="col-maker">创建人员</th><th class="col-time">创建时间</th><th class="col-status">状态</th><th class="col-switch">启用版本</th><th class="col-actions">操作</th></tr></thead>
+              <tbody id="scaleRows"></tbody>
+            </table>
+          </div>
+          <div class="pager"><span>共 94 条</span><button class="page-btn disabled">‹</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">4</button><button class="page-btn">5</button><span class="ellipsis">...</span><button class="page-btn">10</button><button class="page-btn">›</button><button class="page-select">10 条/页⌄</button><span>跳至</span><span class="jump-input"></span><span>页</span></div>
+        </section>
+      </main>
+    </div>
+  </section>
+
+  <section id="builderPage" class="page">
+    <div class="builder">
+      <header class="builder-top">
+        <button class="exit-btn" id="exitBuilder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6 6 18M6 6l12 12"/></svg><span>退出</span></button>
+        <div class="builder-title" id="builderName">测试</div>
+        <div class="top-actions">
+          <button class="top-btn" data-toast="预览已打开"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>预览</button>
+          <button class="top-btn primary-action" data-toast="已保存"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 4h12l2 2v14H5z"/><path d="M8 4v6h8V4"/></svg>保存</button>
+          <button class="top-btn primary-action" data-toast="已发布"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>发布</button>
+        </div>
+      </header>
+      <main class="builder-body">
+        <aside class="rail">
+          <button class="rail-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>大纲</span></button>
+          <button class="rail-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg><span>题型</span></button>
+          <button class="rail-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 6h4v4H6zM14 14h4v4h-4zM10 8h4M12 8v8"/></svg><span>逻辑</span></button>
+        </aside>
+        <aside class="palette-wrap"><div class="palette" id="palette"></div></aside>
+        <section class="canvas-shell"><div class="canvas" id="canvas"></div></section>
+        <aside class="props-wrap"><div class="props"><div class="props-title" id="propsTabs"></div><div class="prop-body" id="props"></div></div></aside>
+      </main>
+    </div>
+  </section>
+
+  <div class="assistant-sticker" aria-hidden="true"><div class="sticker-board"></div><div class="dino"></div><div class="cloud"></div><div class="bunny"></div></div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const scaleRows = [
+      ['测试', 0, 0, '第1版', 1, '张媛丽', '2026/06/02 18:23:37', '未发布', false],
+      ['测试', '', 0, '第1版', '--', '张媛丽', '2026/06/02 18:23:37', '未发布', false, true],
+      ['12334', 0, 0, '第1版', 1, '平台技术人员', '2026/05/25 22:48:09', '未发布', false],
+      ['12334', '', 0, '第1版', '--', '平台技术人员', '2026/05/25 22:48:09', '未发布', false, true],
+      ['营养风险筛查2002（NRS-2002）', 1, 0, '第1版', 1, '--', '2026/05/21 15:45:09', '已发布', true],
+      ['胃癌慢病管理随访路径', 1, 0, '第1版', 1, '--', '2026/05/21 15:44:46', '已发布', true],
+      ['营养风险筛查2002', 1, 0, '第1版', 1, '--', '2026/05/21 15:43:20', '已发布', true],
+      ['胃癌慢病管理随访路径', 1, 0, '第1版', 1, '--', '2026/05/21 15:42:57', '已发布', true],
+      ['客户信息收集表', 0, 0, '第1版', 1, '平台技术人员', '2026/05/21 13:57:14', '未发布', false],
+      ['测试量表2', 3, 6, '第1版', 1, '--', '2026/05/15 15:57:25', '已发布', true]
+    ];
+
+    const typeMeta = {
+      single: { label: '单选', icon: radioIcon(), section: '选择' },
+      multiple: { label: '多选', icon: checkIcon(), section: '选择' },
+      text: { label: '单行文本', icon: textIcon(), section: '文本输入' },
+      rating: { label: '评分打分', icon: starIcon(), section: '高级题型' },
+      date: { label: '日期', icon: calendarIcon(), section: '高级题型' },
+      matrixSingle: { label: '矩阵单选', icon: matrixIcon(), section: '矩阵' },
+      matrixMultiple: { label: '矩阵多选', icon: matrixIcon(), section: '矩阵' },
+      matrixRating: { label: '矩阵打分', icon: starIcon(), section: '矩阵' },
+      matrixCustom: { label: '矩阵题', icon: matrixIcon(), section: '矩阵' }
+    };
+
+    const state = {
+      selectedId: 11,
+      selectedOption: null,
+      activePropTab: 'question',
+      questions: [
+        q('single', 1), q('multiple', 2), q('single', 3), q('single', 4), q('multiple', 5),
+        q('text', 6), q('rating', 7), q('date', 8), q('matrixSingle', 9), q('matrixMultiple', 10), q('matrixRating', 11)
+      ]
+    };
+
+    function q(type, index) {
+      const base = {
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
+        type, index, title: '请输入题目的标题', desc: '请输入题目描述', required: true,
+        options: ['选项', '选项'], rows: ['行标题', '行标题'], min: '', max: '', textFormat: '无限制',
+        optionSettings: [defaultOptionSetting(), defaultOptionSetting()], matrixOptionSettings: [defaultOptionSetting(), defaultOptionSetting()],
+        dateFormat: '年/月/日', ratingTemplate: '满意度', display: 'star', allowPatientAddRow: false
+      };
+      if (type === 'matrixCustom') {
+        base.matrixMode = 'fill';
+        base.columns = [
+          { title: '选项', dataType: 'fill', options: ['选项', '选项'] },
+          { title: '选项', dataType: 'fill', options: ['选项', '选项'] }
+        ];
+      } else {
+        base.columns = ['选项', '选项'];
+      }
+      return base;
+    }
+
+    function defaultOptionSetting() {
+      return {
+        fieldType: '下拉选择',
+        metric: '',
+        valueDomain: '选项1\n选项2',
+        textType: '无限制',
+        ratingTemplate: '满意度',
+        ratingDisplay: 'star',
+        dateFormat: '年/月/日'
+      };
+    }
+
+    const metricFields = [
+      'patient.name 患者姓名',
+      'patient.gender 性别',
+      'patient.age 年龄',
+      'patient.phone 手机号',
+      'assessment.score 评估总分',
+      'assessment.riskLevel 风险等级',
+      'scale.optionValue 选项值',
+      'scale.optionLabel 选项文本',
+      'nrs2002.totalScore NRS-2002总分',
+      'followup.gastricPath 胃癌随访路径'
+    ];
+
+    state.selectedId = state.questions[state.questions.length - 1].id;
+
+    function renderList() {
+      document.getElementById('scaleRows').innerHTML = scaleRows.map((r, i) => {
+        const statusClass = r[7] === '已发布' ? 'published' : 'unpublished';
+        return `<tr data-open-editor class="${r[9] ? 'child' : ''}">
+          <td><span class="name-cell"><i class="triangle ${r[9] ? 'right' : (i < 4 ? 'down' : 'right')}"></i><span>${r[0]}</span></span></td>
+          <td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td>
+          <td><span class="status ${statusClass}"><i class="dot"></i>${r[7]}</span></td><td><span class="switch ${r[8] ? 'on' : ''}"></span></td>
+          <td><span class="actions"><span class="link">编辑</span><span class="more">...</span></span></td>
+        </tr>`;
+      }).join('');
+    }
+
+    function renderPalette() {
+      const groups = ['选择', '文本输入', '高级题型', '矩阵'];
+      document.getElementById('palette').innerHTML = groups.map(group => {
+        const buttons = Object.entries(typeMeta).filter(([, m]) => m.section === group).map(([type, m]) => (
+          `<button class="type-btn ${type === selected()?.type ? 'active' : ''}" data-add-type="${type}">${m.icon}<span>${m.label}</span></button>`
+        )).join('');
+        return `<div class="type-group"><h3 class="group-title">${group}</h3><div class="type-grid">${buttons}</div></div>`;
+      }).join('');
+    }
+
+    function renderCanvas() {
+      const html = state.questions.map((item, idx) => {
+        item.index = idx + 1;
+        const active = item.id === state.selectedId;
+        return `<article class="q-card ${active ? 'selected' : ''}" data-qid="${item.id}">
+          ${active ? `<div class="float-tools"><button data-duplicate="${item.id}">${copyIcon()}复制</button><button data-delete="${item.id}">${trashIcon()}删除</button></div>` : ''}
+          <div class="q-head"><span class="q-chip">${typeMeta[item.type].label}</span><span class="required-inline"><span class="mini-switch ${item.required ? 'on' : ''}" data-toggle-required="${item.id}"></span>必填</span></div>
+          <div class="q-title-row"><span class="req-mark">*</span><span class="q-no">${String(item.index).padStart(2, '0')}</span><input class="q-title" data-title="${item.id}" value="${esc(item.title)}"></div>
+          <textarea class="q-desc" data-desc="${item.id}">${esc(item.desc)}</textarea>
+          ${renderQuestionBody(item)}
+        </article>`;
+      }).join('');
+      document.getElementById('canvas').innerHTML = html;
+    }
+
+    function renderQuestionBody(item) {
+      if (item.type === 'single' || item.type === 'multiple') {
+        const marker = item.type === 'single' ? 'fake-radio' : 'fake-check';
+        syncOptionSettings(item);
+        return `${item.options.map((o, index) => `<div class="option-row ${isSelectedOption(item, index) ? 'selected' : ''}" data-qid="${item.id}" data-option-index="${index}"><span class="${marker}"></span><span>${esc(o)}</span></div>`).join('')}
+          <div class="option-actions"><button class="small-link">${plusIcon()}添加选项</button><span>|</span><button class="small-link">${plusCircleIcon()}添加其他</button></div>`;
+      }
+      if (item.type === 'text') return `<div class="text-answer">请输入</div>`;
+      if (item.type === 'date') return `<div class="date-answer"><span>请选择年月日</span>${calendarIcon()}</div>`;
+      if (item.type === 'rating') {
+        return `<p class="rating-note">5分表示非常满意，1分表示非常不满意，分值越低表示满意度越低</p>
+          <div class="rating-labels"><span class="rating-label">非常不满意</span><span class="rating-label">非常满意</span></div><div class="stars">★★★★★</div>`;
+      }
+      return renderMatrix(item);
+    }
+
+    function renderMatrix(item) {
+      const columns = item.type === 'matrixCustom' ? item.columns : item.columns.map(c => ({ title: c, dataType: item.type === 'matrixSingle' ? 'single' : item.type === 'matrixMultiple' ? 'multiple' : 'rating' }));
+      syncMatrixOptionSettings(item);
+      const head = columns.map((c, index) => `<th class="matrix-option ${isSelectedMatrixOption(item, index) ? 'selected' : ''}" data-qid="${item.id}" data-matrix-option-index="${index}">${esc(c.title)}</th>`).join('');
+      const rows = item.rows.map(row => `<tr><td>${esc(row)}</td>${columns.map(c => `<td>${renderMatrixCell(c.dataType)}</td>`).join('')}</tr>`).join('');
+      return `<table class="matrix-table"><thead><tr><th></th>${head}</tr></thead><tbody>${rows}</tbody></table>
+        <div class="matrix-actions"><button class="small-link">${plusIcon()}添加行</button><button class="small-link">${plusCircleIcon()}添加选项</button></div>`;
+    }
+
+    function renderMatrixCell(type) {
+      if (type === 'fill') return `<input class="matrix-input" placeholder="请输入">`;
+      if (type === 'multiple') return `<span class="fake-check"></span>`;
+      if (type === 'rating') return `<span style="color:#e8ecf2;font-size:18px">★</span>`;
+      if (type === 'date') return calendarIcon();
+      return `<span class="fake-radio"></span>`;
+    }
+
+    function renderProps() {
+      const item = selected();
+      if (!item) return;
+      const option = currentOption(item);
+      const showOptionTab = !!option;
+      const activeTab = showOptionTab ? state.activePropTab : 'question';
+      document.getElementById('propsTabs').innerHTML = showOptionTab
+        ? `<button class="prop-tab ${activeTab === 'question' ? 'active' : ''}" data-prop-tab="question">题目设置</button><button class="prop-tab ${activeTab === 'option' ? 'active' : ''}" data-prop-tab="option">选项设置</button>`
+        : `<button class="prop-tab active" data-prop-tab="question">题目设置</button>`;
+      let html = '';
+      if (activeTab === 'option') {
+        html += optionProps(item, option);
+        document.getElementById('props').innerHTML = html;
+        return;
+      }
+      html += `<div class="field"><label>题目</label><select class="select" data-prop="type">${Object.entries(typeMeta).map(([k, m]) => `<option value="${k}" ${item.type === k ? 'selected' : ''}>${m.label}</option>`).join('')}</select></div>
+        <div class="required-prop"><span>是否必填:</span><span class="mini-switch ${item.required ? 'on' : ''}" data-toggle-required="${item.id}"></span></div>`;
+      if (item.type === 'single' || item.type === 'multiple') html += choiceProps(item);
+      if (item.type === 'text') html += textProps(item);
+      if (item.type === 'date') html += dateProps(item);
+      if (item.type === 'rating') html += ratingProps(item, false);
+      if (item.type === 'matrixSingle' || item.type === 'matrixMultiple') html += matrixChoiceProps(item);
+      if (item.type === 'matrixRating') html += ratingProps(item, true) + matrixChoiceProps(item, true);
+      if (item.type === 'matrixCustom') html += matrixCustomProps(item);
+      document.getElementById('props').innerHTML = html;
+    }
+
+    function optionProps(item, option) {
+      const isMatrixOption = state.selectedOption?.source === 'matrix';
+      return `<div class="field"><label>当前选项</label><input class="input" value="${esc(selectedOptionLabel(item))}" data-option-label></div>
+        <div class="field"><label>指标绑定</label><div class="search-bind"><input class="input" list="metricFieldList" data-option-metric value="${esc(option.metric)}" placeholder="搜索或选择数据库字段"></div><datalist id="metricFieldList">${metricFields.map(field => `<option value="${esc(field)}"></option>`).join('')}</datalist></div>
+        ${isMatrixOption ? `<div class="field"><label>字段类型</label><select class="select" data-option-prop="fieldType">${['下拉选择','单选','多选','填空','评分','日期'].map(type => `<option ${option.fieldType === type ? 'selected' : ''}>${type}</option>`).join('')}</select></div>${optionTypeSettings(option)}` : ''}`;
+    }
+
+    function optionTypeSettings(option) {
+      if (['下拉选择', '单选', '多选'].includes(option.fieldType)) {
+        const label = option.fieldType === '下拉选择' ? '下拉值域' : `${option.fieldType}值域`;
+        return `<div class="field"><label>${label}</label><div class="hint">每行一个可选值</div><textarea class="textarea" data-option-prop="valueDomain">${esc(option.valueDomain)}</textarea></div>`;
+      }
+      if (option.fieldType === '填空') {
+        return `<div class="field"><label>文本类型</label><select class="select" data-option-prop="textType">${['无限制','数字','手机号','邮箱','身份证','小数'].map(type => `<option ${option.textType === type ? 'selected' : ''}>${type}</option>`).join('')}</select></div>`;
+      }
+      if (option.fieldType === '评分') {
+        return `<div class="field"><label>评分模板</label><select class="select" data-option-prop="ratingTemplate">${['满意度','同意度','重要性','疼痛程度','自定义'].map(type => `<option ${option.ratingTemplate === type ? 'selected' : ''}>${type}</option>`).join('')}</select></div>
+          <div class="field"><label>评分样式</label><button class="radio-card ${option.ratingDisplay === 'data' ? 'active' : ''}" data-option-rating-display="data"><span class="radio-dot"></span>显示数据</button><button class="radio-card ${option.ratingDisplay === 'star' ? 'active' : ''}" data-option-rating-display="star"><span class="radio-dot"></span>显示星形</button><button class="radio-card ${option.ratingDisplay === 'emoji' ? 'active' : ''}" data-option-rating-display="emoji"><span class="radio-dot"></span>显示表情</button></div>`;
+      }
+      if (option.fieldType === '日期') {
+        return `<div class="field"><label>日期格式</label><select class="select" data-option-prop="dateFormat">${['年/月/日','年/月','年','年-月-日','年月日 时:分'].map(type => `<option ${option.dateFormat === type ? 'selected' : ''}>${type}</option>`).join('')}</select></div>`;
+      }
+      return '';
+    }
+
+    function choiceProps(item) {
+      return `<div class="field"><label>最多可选:</label><input class="input" data-prop="max" value="${esc(item.max)}" placeholder="请输入数字"></div>
+        <div class="field"><label>最少可选:</label><input class="input" data-prop="min" value="${esc(item.min || (item.type === 'multiple' ? '1' : ''))}" placeholder="请输入数字"></div>
+        <div class="field"><label>批量编辑</label><div class="hint">每行代表一个选项，回车键换行</div><textarea class="textarea" data-options>${esc(item.options.join('\\n'))}</textarea></div>`;
+    }
+
+    function textProps(item) {
+      return `<div class="field"><label>文本格式:</label><select class="select" data-prop="textFormat">${['无限制','数字','手机号','邮箱','身份证'].map(x => `<option ${item.textFormat === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div>
+        <div class="field"><label>最多填写:</label><input class="input" data-prop="max" value="${esc(item.max)}" placeholder="请输入数字"></div>
+        <div class="field"><label>提示文案:</label><input class="input" data-prop="desc" value="${esc(item.desc)}" placeholder="请输入提示文案"></div>`;
+    }
+
+    function dateProps(item) {
+      return `<div class="field"><label>格式</label><select class="select" data-prop="dateFormat">${['年/月/日','年/月','年','年-月-日'].map(x => `<option ${item.dateFormat === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div>`;
+    }
+
+    function ratingProps(item, compact) {
+      return `<div class="field"><label>文案模板</label><select class="select" data-prop="ratingTemplate">${['满意度','同意度','重要性','自定义'].map(x => `<option ${item.ratingTemplate === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div>
+        <div class="field"><label>显示样式</label>
+          <button class="radio-card ${item.display === 'data' ? 'active' : ''}" data-display="data"><span class="radio-dot"></span>显示数据</button>
+          <button class="radio-card ${item.display === 'star' ? 'active' : ''}" data-display="star"><span class="radio-dot"></span>显示星形</button>
+          <button class="radio-card ${item.display === 'emoji' ? 'active' : ''}" data-display="emoji"><span class="radio-dot"></span>显示表情</button>
+        </div>${compact ? '' : '<div class="muted-note">5分表示非常满意，1分表示非常不满意。</div>'}`;
+    }
+
+    function matrixChoiceProps(item) {
+      return `<div class="field"><label>每行最多可选:</label><input class="input" data-prop="max" value="${esc(item.max)}" placeholder="请输入数字"></div>
+        <div class="field"><label>每行最少可选:</label><input class="input" data-prop="min" value="${esc(item.min)}" placeholder="请输入数字"></div>
+        ${allowAddRowProp(item)}
+        <div class="field"><label>批量编辑行</label><div class="hint">每行代表一个选项，回车键换行</div><textarea class="textarea" data-rows>${esc(item.rows.join('\\n'))}</textarea></div>
+        <div class="field"><label>批量编辑列</label><div class="hint">每行代表一个选项，回车键换行</div><textarea class="textarea" data-columns>${esc(item.columns.join('\\n'))}</textarea></div>`;
+    }
+
+    function matrixCustomProps(item) {
+      return `<div class="field"><label>每行最多可选:</label><input class="input" data-prop="max" value="${esc(item.max)}" placeholder="请输入数字"></div>
+        <div class="field"><label>每行最少可选:</label><input class="input" data-prop="min" value="${esc(item.min)}" placeholder="请输入数字"></div>
+        ${allowAddRowProp(item)}
+        <div class="field"><label>批量编辑行</label><div class="hint">每行代表一个选项，回车键换行</div><textarea class="textarea" data-rows>${esc(item.rows.join('\\n'))}</textarea></div>
+        <div class="field"><label>批量编辑列</label><div class="hint">每行代表一个选项，回车键换行</div><textarea class="textarea" data-custom-columns>${esc(item.columns.map(col => col.title).join('\\n'))}</textarea></div>`;
+    }
+
+    function allowAddRowProp(item) {
+      return `<div class="required-prop"><span>允许患者新增行:</span><span class="mini-switch ${item.allowPatientAddRow ? 'on' : ''}" data-toggle-add-row="${item.id}"></span></div>`;
+    }
+
+    function selected() { return state.questions.find(q => q.id === state.selectedId); }
+    function isSelectedOption(item, index) { return state.selectedOption && state.selectedOption.source === 'choice' && state.selectedOption.questionId === item.id && state.selectedOption.index === index; }
+    function isSelectedMatrixOption(item, index) { return state.selectedOption && state.selectedOption.source === 'matrix' && state.selectedOption.questionId === item.id && state.selectedOption.index === index; }
+    function currentOption(item) {
+      if (!state.selectedOption || state.selectedOption.questionId !== item.id) return null;
+      if (state.selectedOption.source === 'matrix') {
+        syncMatrixOptionSettings(item);
+        return item.matrixOptionSettings[state.selectedOption.index] || null;
+      }
+      syncOptionSettings(item);
+      return item.optionSettings[state.selectedOption.index] || null;
+    }
+    function syncOptionSettings(item) {
+      if (!Array.isArray(item.optionSettings)) item.optionSettings = [];
+      item.optionSettings = item.options.map((_, index) => item.optionSettings[index] || defaultOptionSetting());
+    }
+    function matrixTitles(item) {
+      return item.type === 'matrixCustom' ? item.columns.map(col => col.title) : item.columns;
+    }
+    function syncMatrixOptionSettings(item) {
+      if (!Array.isArray(item.matrixOptionSettings)) item.matrixOptionSettings = [];
+      item.matrixOptionSettings = matrixTitles(item).map((_, index) => item.matrixOptionSettings[index] || defaultOptionSetting());
+    }
+    function selectedOptionLabel(item) {
+      if (!state.selectedOption) return '';
+      if (state.selectedOption.source === 'matrix') return matrixTitles(item)[state.selectedOption.index] || '';
+      return item.options[state.selectedOption.index] || '';
+    }
+    function setSelectedOptionLabel(item, value) {
+      if (!state.selectedOption) return;
+      const index = state.selectedOption.index;
+      if (state.selectedOption.source === 'matrix') {
+        if (item.type === 'matrixCustom') item.columns[index].title = value;
+        else item.columns[index] = value;
+        return;
+      }
+      item.options[index] = value;
+    }
+    function renderAll() { renderPalette(); renderCanvas(); renderProps(); }
+
+    document.addEventListener('click', e => {
+      if (e.target.closest('[data-open-editor]')) openBuilder('测试');
+      if (e.target.closest('#exitBuilder')) showList();
+      const add = e.target.closest('[data-add-type]');
+      if (add) addQuestion(add.dataset.addType);
+      const optionRow = e.target.closest('[data-option-index]');
+      if (optionRow) {
+        state.selectedId = optionRow.dataset.qid;
+        state.selectedOption = { source: 'choice', questionId: optionRow.dataset.qid, index: Number(optionRow.dataset.optionIndex) };
+        state.activePropTab = 'option';
+        renderAll();
+        return;
+      }
+      const matrixOption = e.target.closest('[data-matrix-option-index]');
+      if (matrixOption) {
+        state.selectedId = matrixOption.dataset.qid;
+        state.selectedOption = { source: 'matrix', questionId: matrixOption.dataset.qid, index: Number(matrixOption.dataset.matrixOptionIndex) };
+        state.activePropTab = 'option';
+        renderAll();
+        return;
+      }
+      const propTab = e.target.closest('[data-prop-tab]');
+      if (propTab) {
+        state.activePropTab = propTab.dataset.propTab;
+        renderProps();
+        return;
+      }
+      const card = e.target.closest('.q-card');
+      if (card && !e.target.closest('input, textarea, select, button')) { state.selectedId = card.dataset.qid; state.selectedOption = null; state.activePropTab = 'question'; renderAll(); }
+      const req = e.target.closest('[data-toggle-required]');
+      if (req) { const item = state.questions.find(q => q.id === req.dataset.toggleRequired); item.required = !item.required; renderAll(); }
+      const addRow = e.target.closest('[data-toggle-add-row]');
+      if (addRow) { const item = state.questions.find(q => q.id === addRow.dataset.toggleAddRow); item.allowPatientAddRow = !item.allowPatientAddRow; renderAll(); }
+      const dup = e.target.closest('[data-duplicate]');
+      if (dup) duplicateQuestion(dup.dataset.duplicate);
+      const del = e.target.closest('[data-delete]');
+      if (del) deleteQuestion(del.dataset.delete);
+      const display = e.target.closest('[data-display]');
+      if (display) { selected().display = display.dataset.display; renderAll(); }
+      const optionRatingDisplay = e.target.closest('[data-option-rating-display]');
+      if (optionRatingDisplay) { currentOption(selected()).ratingDisplay = optionRatingDisplay.dataset.optionRatingDisplay; renderAll(); }
+      const toastBtn = e.target.closest('[data-toast]');
+      if (toastBtn) showToast(toastBtn.dataset.toast);
+    });
+
+    document.addEventListener('input', e => {
+      const item = selected();
+      if (!item) return;
+      if (e.target.matches('[data-title]')) { const q = state.questions.find(q => q.id === e.target.dataset.title); q.title = e.target.value; }
+      if (e.target.matches('[data-desc]')) { const q = state.questions.find(q => q.id === e.target.dataset.desc); q.desc = e.target.value; }
+      if (e.target.matches('[data-prop]')) { item[e.target.dataset.prop] = e.target.value; renderAll(); }
+      if (e.target.matches('[data-options]')) { item.options = lines(e.target.value); syncOptionSettings(item); if (state.selectedOption && state.selectedOption.index >= item.options.length) state.selectedOption = null; renderAll(); }
+      if (e.target.matches('[data-option-label]')) { setSelectedOptionLabel(item, e.target.value); renderAll(); }
+      if (e.target.matches('[data-option-metric]')) { currentOption(item).metric = e.target.value; }
+      if (e.target.matches('[data-rows]')) { item.rows = lines(e.target.value); renderAll(); }
+      if (e.target.matches('[data-columns]')) { item.columns = lines(e.target.value); syncMatrixOptionSettings(item); if (state.selectedOption?.source === 'matrix' && state.selectedOption.index >= item.columns.length) state.selectedOption = null; renderAll(); }
+      if (e.target.matches('[data-custom-columns]')) {
+        const next = lines(e.target.value);
+        item.columns = next.map((title, index) => ({ title, dataType: item.columns[index]?.dataType || 'fill', options: item.columns[index]?.options || ['选项', '选项'] }));
+        syncMatrixOptionSettings(item);
+        if (state.selectedOption?.source === 'matrix' && state.selectedOption.index >= item.columns.length) state.selectedOption = null;
+        renderAll();
+      }
+    });
+
+    document.addEventListener('change', e => {
+      const item = selected();
+      if (!item) return;
+      if (e.target.matches('[data-prop="type"]')) return convertType(item, e.target.value);
+      if (e.target.matches('[data-prop]')) { item[e.target.dataset.prop] = e.target.value; renderAll(); }
+      if (e.target.matches('[data-option-prop]')) { currentOption(item)[e.target.dataset.optionProp] = e.target.value; renderAll(); }
+    });
+
+    function openBuilder(name) {
+      document.getElementById('builderName').textContent = name || '测试';
+      document.getElementById('listPage').classList.remove('active');
+      document.getElementById('builderPage').classList.add('active');
+      renderAll();
+    }
+
+    function showList() {
+      document.getElementById('builderPage').classList.remove('active');
+      document.getElementById('listPage').classList.add('active');
+    }
+
+    function addQuestion(type) {
+      const item = q(type, state.questions.length + 1);
+      state.questions.push(item);
+      state.selectedId = item.id;
+      renderAll();
+      requestAnimationFrame(() => document.querySelector(`[data-qid="${item.id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+    }
+
+    function duplicateQuestion(id) {
+      const index = state.questions.findIndex(q => q.id === id);
+      const copy = JSON.parse(JSON.stringify(state.questions[index]));
+      copy.id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random());
+      state.questions.splice(index + 1, 0, copy);
+      state.selectedId = copy.id;
+      renderAll();
+    }
+
+    function deleteQuestion(id) {
+      if (state.questions.length <= 1) return showToast('至少保留一道题');
+      const index = state.questions.findIndex(q => q.id === id);
+      state.questions.splice(index, 1);
+      state.selectedId = state.questions[Math.max(0, index - 1)].id;
+      renderAll();
+    }
+
+    function convertType(item, type) {
+      item.type = type;
+      state.selectedOption = null;
+      state.activePropTab = 'question';
+      if (type === 'single' || type === 'multiple') item.options = item.options?.length ? item.options : ['选项', '选项'];
+      if (type === 'single' || type === 'multiple') syncOptionSettings(item);
+      if (type.startsWith('matrix') && type !== 'matrixCustom') {
+        item.rows = item.rows?.length ? item.rows : ['行标题', '行标题'];
+        item.columns = Array.isArray(item.columns) && typeof item.columns[0] === 'string' ? item.columns : ['选项', '选项'];
+        syncMatrixOptionSettings(item);
+      }
+      if (type === 'matrixCustom') {
+        item.rows = item.rows?.length ? item.rows : ['行标题', '行标题'];
+        item.columns = [
+          { title: '选项', dataType: 'fill', options: ['选项', '选项'] },
+          { title: '选项', dataType: 'fill', options: ['选项', '选项'] }
+        ];
+        item.matrixMode = 'fill';
+        syncMatrixOptionSettings(item);
+      }
+      renderAll();
+    }
+
+    function lines(value) { return value.split(/\n+/).map(x => x.trim()).filter(Boolean); }
+    function esc(value) { return String(value ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;'); }
+    function showToast(text) { const el = document.getElementById('toast'); el.textContent = text; el.classList.add('show'); clearTimeout(showToast.t); showToast.t = setTimeout(() => el.classList.remove('show'), 1500); }
+
+    function radioIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>'}
+    function checkIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="m8 12 3 3 5-6"/></svg>'}
+    function textIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 12h8"/></svg>'}
+    function starIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z"/></svg>'}
+    function calendarIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>'}
+    function matrixIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M4 16h16M10 4v16M16 4v16"/></svg>'}
+    function plusIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>'}
+    function plusCircleIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-5"/></svg>'}
+    function copyIcon(){return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V6a2 2 0 0 1 2-2h10"/></svg>'}
+    function trashIcon(){return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>'}
+
+    renderList();
+  </script>
+</body>
+</html>
