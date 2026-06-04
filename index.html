@@ -174,6 +174,12 @@
     .matrix-table th.matrix-option { cursor: pointer; border: 1px solid transparent; }
     .matrix-table th.matrix-option.selected { color: #1d4dff; background: #f8faff; border-color: #3154ff; }
     .matrix-input { height: 30px; border: 1px solid #edf0f5; border-radius: 4px; width: 88%; padding: 0 8px; color: #aab3c0; }
+    .matrix-select-cell { display: inline-block; width: 88%; height: 30px; }
+    .matrix-select-cell .matrix-input { width: 100%; color: #34425d; background: #fff; appearance: auto; }
+    .matrix-date-cell { width: 88%; height: 30px; margin: 0 auto; border: 1px solid #edf0f5; border-radius: 4px; display: inline-flex; align-items: center; justify-content: space-between; padding: 0 8px; color: #8d98aa; background: #fff; }
+    .matrix-date-cell svg { width: 16px; height: 16px; flex: 0 0 auto; color: #7f8ca2; }
+    .matrix-date-input { color: #34425d; background: #fff; }
+    .matrix-date-input::-webkit-calendar-picker-indicator { cursor: pointer; opacity: .72; }
     .matrix-actions { margin-top: 14px; display: flex; gap: 18px; color: #40506b; }
     .float-tools { position: absolute; left: 50%; top: -18px; transform: translateX(-50%); height: 34px; display: none; align-items: center; background: #fff; border-radius: 3px; box-shadow: 0 12px 30px rgba(31,45,80,.16); border: 1px solid #edf0f5; }
     .q-card.selected .float-tools { display: flex; }
@@ -199,6 +205,10 @@
     .prop-row .grow { flex: 1; }
     .radio-card { height: 40px; border: 1px solid #edf0f5; border-radius: 4px; display: flex; align-items: center; padding: 0 12px; margin-bottom: 8px; gap: 8px; color: #4e5b72; }
     .radio-card.active { color: var(--blue); background: #fbfcff; }
+    .select:disabled, .input:disabled, .textarea:disabled, .radio-card:disabled { color: #aab3c0; background: #f5f7fb; border-color: #edf0f5; cursor: not-allowed; opacity: 1; }
+    .radio-card:disabled.active { color: #aab3c0; background: #f5f7fb; }
+    .radio-card:disabled .radio-dot { border-color: #d8dee8; }
+    .radio-card:disabled.active .radio-dot::after { background: #c8d0dc; }
     .radio-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid #c9d1df; display: grid; place-items: center; }
     .radio-card.active .radio-dot { border-color: var(--blue); }
     .radio-card.active .radio-dot::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--blue); }
@@ -206,6 +216,18 @@
     .col-editor-head { display: grid; grid-template-columns: 1fr 92px 24px; gap: 8px; align-items: center; }
     .remove-btn { height: 30px; color: #ff4d4f; display: grid; place-items: center; }
     .add-btn { height: 32px; border: 1px dashed #c8d4ff; color: var(--blue); border-radius: 4px; width: 100%; font-weight: 700; }
+    .value-option-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .value-option-card { min-height: 38px; border: 1px solid #edf0f5; border-radius: 4px; background: #fff; display: flex; align-items: center; gap: 8px; padding: 0 8px; }
+    .value-option-input { flex: 1; height: 32px; border: 0; background: transparent; color: #4e5b72; min-width: 0; }
+    .value-option-delete { width: 24px; height: 24px; border-radius: 4px; color: #98a3b5; font-size: 18px; line-height: 1; }
+    .value-option-delete:hover { background: #fff1f0; color: #ff4d4f; }
+    .value-option-card .fake-radio::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #3154ff; display: block; margin: 3px; }
+    .value-option-card .fake-check::after { content: ""; width: 8px; height: 5px; border-left: 2px solid #3154ff; border-bottom: 2px solid #3154ff; transform: rotate(-45deg); display: block; margin: 3px 2px; }
+    .value-option-card.disabled { background: #f5f7fb; color: #aab3c0; cursor: not-allowed; }
+    .value-option-card.disabled .value-option-input { color: #aab3c0; cursor: not-allowed; }
+    .value-option-delete:disabled, .add-btn:disabled { color: #b8c0cc; border-color: #edf0f5; background: #f5f7fb; cursor: not-allowed; }
+    .matrix-title-input { width: 92%; height: 30px; border: 1px solid transparent; border-radius: 4px; background: transparent; color: #4f5f78; text-align: inherit; padding: 0 6px; }
+    .matrix-title-input:focus { border-color: #3154ff; background: #fff; }
     .search-bind { position: relative; }
     .search-bind::after { content: "⌕"; position: absolute; right: 10px; top: 8px; color: #9aa6b8; pointer-events: none; }
     .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); background: rgba(21,31,54,.92); color: #fff; border-radius: 999px; padding: 10px 16px; z-index: 20; display: none; }
@@ -423,19 +445,35 @@
     }
 
     function renderMatrix(item) {
-      const columns = item.type === 'matrixCustom' ? item.columns : item.columns.map(c => ({ title: c, dataType: item.type === 'matrixSingle' ? 'single' : item.type === 'matrixMultiple' ? 'multiple' : 'rating' }));
       syncMatrixOptionSettings(item);
-      const head = columns.map((c, index) => `<th class="matrix-option ${isSelectedMatrixOption(item, index) ? 'selected' : ''}" data-qid="${item.id}" data-matrix-option-index="${index}">${esc(c.title)}</th>`).join('');
-      const rows = item.rows.map(row => `<tr><td>${esc(row)}</td>${columns.map(c => `<td>${renderMatrixCell(c.dataType)}</td>`).join('')}</tr>`).join('');
+      const columns = matrixColumnsForRender(item);
+      const head = columns.map((c, index) => `<th class="matrix-option ${isSelectedMatrixOption(item, index) ? 'selected' : ''}" data-qid="${item.id}" data-matrix-option-index="${index}"><input class="matrix-title-input" data-matrix-column-title="${index}" value="${esc(c.title)}"></th>`).join('');
+      const rows = item.rows.map((row, rowIndex) => `<tr><td><input class="matrix-title-input" data-matrix-row-title="${rowIndex}" value="${esc(row)}"></td>${columns.map(c => `<td>${renderMatrixCell(c)}</td>`).join('')}</tr>`).join('');
       return `<table class="matrix-table"><thead><tr><th></th>${head}</tr></thead><tbody>${rows}</tbody></table>
-        <div class="matrix-actions"><button class="small-link">${plusIcon()}添加行</button><button class="small-link">${plusCircleIcon()}添加选项</button></div>`;
+        <div class="matrix-actions"><button class="small-link" data-add-matrix-row="${item.id}">${plusIcon()}添加行</button><button class="small-link" data-add-matrix-column="${item.id}">${plusCircleIcon()}添加选项</button></div>`;
     }
 
-    function renderMatrixCell(type) {
+    function matrixColumnsForRender(item) {
+      if (item.type !== 'matrixCustom') {
+        return item.columns.map(c => ({ title: c, dataType: item.type === 'matrixSingle' ? 'single' : item.type === 'matrixMultiple' ? 'multiple' : 'rating', options: ['选项1', '选项2'] }));
+      }
+      return item.columns.map((column, index) => {
+        const setting = item.matrixOptionSettings[index] || defaultOptionSetting();
+        return {
+          title: column.title,
+          dataType: columnDataTypeFromFieldType(setting.fieldType),
+          options: optionValueItems(setting)
+        };
+      });
+    }
+
+    function renderMatrixCell(column) {
+      const type = typeof column === 'string' ? column : column.dataType;
+      const options = Array.isArray(column.options) ? column.options : ['选项1', '选项2'];
+      if (['select', 'single', 'multiple'].includes(type)) return `<span class="matrix-select-cell"><select class="matrix-input"><option>请选择</option>${options.map(option => `<option>${esc(option)}</option>`).join('')}</select></span>`;
       if (type === 'fill') return `<input class="matrix-input" placeholder="请输入">`;
-      if (type === 'multiple') return `<span class="fake-check"></span>`;
       if (type === 'rating') return `<span style="color:#e8ecf2;font-size:18px">★</span>`;
-      if (type === 'date') return calendarIcon();
+      if (type === 'date') return `<input class="matrix-input matrix-date-input" type="date">`;
       return `<span class="fake-radio"></span>`;
     }
 
@@ -461,34 +499,86 @@
       if (item.type === 'date') html += dateProps(item);
       if (item.type === 'rating') html += ratingProps(item, false);
       if (item.type === 'matrixSingle' || item.type === 'matrixMultiple') html += matrixChoiceProps(item);
-      if (item.type === 'matrixRating') html += ratingProps(item, true) + matrixChoiceProps(item, true);
+      if (item.type === 'matrixRating') html += ratingProps(item, true) + matrixChoiceProps(item, false);
       if (item.type === 'matrixCustom') html += matrixCustomProps(item);
       document.getElementById('props').innerHTML = html;
     }
 
     function optionProps(item, option) {
       const isMatrixOption = state.selectedOption?.source === 'matrix';
+      const disabled = hasMetricBinding(option) ? ' disabled' : '';
       return `<div class="field"><label>当前选项</label><input class="input" value="${esc(selectedOptionLabel(item))}" data-option-label></div>
         <div class="field"><label>指标绑定</label><div class="search-bind"><input class="input" list="metricFieldList" data-option-metric value="${esc(option.metric)}" placeholder="搜索或选择数据库字段"></div><datalist id="metricFieldList">${metricFields.map(field => `<option value="${esc(field)}"></option>`).join('')}</datalist></div>
-        ${isMatrixOption ? `<div class="field"><label>字段类型</label><select class="select" data-option-prop="fieldType">${['下拉选择','单选','多选','填空','评分','日期'].map(type => `<option ${option.fieldType === type ? 'selected' : ''}>${type}</option>`).join('')}</select></div>${optionTypeSettings(option)}` : ''}`;
+        ${isMatrixOption ? `<div class="field"><label>字段类型</label><select class="select" data-option-prop="fieldType"${disabled}>${['下拉选择','单选','多选','填空','评分','日期'].map(type => `<option ${option.fieldType === type ? 'selected' : ''}>${type}</option>`).join('')}</select></div>${optionTypeSettings(option)}` : ''}`;
+    }
+
+    function hasMetricBinding(option) {
+      return !!String(option.metric || '').trim();
     }
 
     function optionTypeSettings(option) {
-      if (['下拉选择', '单选', '多选'].includes(option.fieldType)) {
-        const label = option.fieldType === '下拉选择' ? '下拉值域' : `${option.fieldType}值域`;
-        return `<div class="field"><label>${label}</label><div class="hint">每行一个可选值</div><textarea class="textarea" data-option-prop="valueDomain">${esc(option.valueDomain)}</textarea></div>`;
+      const disabled = hasMetricBinding(option) ? ' disabled' : '';
+      if (option.fieldType === '下拉选择') {
+        const label = '下拉值域';
+        return `<div class="field"><label>${label}</label><div class="hint">每行一个可选值</div><textarea class="textarea" data-option-prop="valueDomain"${disabled}>${esc(option.valueDomain)}</textarea></div>`;
+      }
+      if (['单选', '多选'].includes(option.fieldType)) {
+        return valueOptionProps(option, disabled);
       }
       if (option.fieldType === '填空') {
-        return `<div class="field"><label>文本类型</label><select class="select" data-option-prop="textType">${['无限制','数字','手机号','邮箱','身份证','小数'].map(type => `<option ${option.textType === type ? 'selected' : ''}>${type}</option>`).join('')}</select></div>`;
+        return `<div class="field"><label>文本类型</label><select class="select" data-option-prop="textType"${disabled}>${['无限制','数字','手机号','邮箱','身份证','小数'].map(type => `<option ${option.textType === type ? 'selected' : ''}>${type}</option>`).join('')}</select></div>`;
       }
       if (option.fieldType === '评分') {
-        return `<div class="field"><label>评分模板</label><select class="select" data-option-prop="ratingTemplate">${['满意度','同意度','重要性','疼痛程度','自定义'].map(type => `<option ${option.ratingTemplate === type ? 'selected' : ''}>${type}</option>`).join('')}</select></div>
-          <div class="field"><label>评分样式</label><button class="radio-card ${option.ratingDisplay === 'data' ? 'active' : ''}" data-option-rating-display="data"><span class="radio-dot"></span>显示数据</button><button class="radio-card ${option.ratingDisplay === 'star' ? 'active' : ''}" data-option-rating-display="star"><span class="radio-dot"></span>显示星形</button><button class="radio-card ${option.ratingDisplay === 'emoji' ? 'active' : ''}" data-option-rating-display="emoji"><span class="radio-dot"></span>显示表情</button></div>`;
+        return `<div class="field"><label>评分模板</label><select class="select" data-option-prop="ratingTemplate"${disabled}>${['满意度','同意度','重要性','疼痛程度','自定义'].map(type => `<option ${option.ratingTemplate === type ? 'selected' : ''}>${type}</option>`).join('')}</select></div>
+          <div class="field"><label>评分样式</label><button class="radio-card ${option.ratingDisplay === 'data' ? 'active' : ''}" data-option-rating-display="data"${disabled}><span class="radio-dot"></span>显示数据</button><button class="radio-card ${option.ratingDisplay === 'star' ? 'active' : ''}" data-option-rating-display="star"${disabled}><span class="radio-dot"></span>显示星形</button><button class="radio-card ${option.ratingDisplay === 'emoji' ? 'active' : ''}" data-option-rating-display="emoji"${disabled}><span class="radio-dot"></span>显示表情</button></div>`;
       }
       if (option.fieldType === '日期') {
-        return `<div class="field"><label>日期格式</label><select class="select" data-option-prop="dateFormat">${['年/月/日','年/月','年','年-月-日','年月日 时:分'].map(type => `<option ${option.dateFormat === type ? 'selected' : ''}>${type}</option>`).join('')}</select></div>`;
+        return `<div class="field"><label>日期格式</label><select class="select" data-option-prop="dateFormat"${disabled}>${['年/月/日','年/月','年','年-月-日','年月日 时:分'].map(type => `<option ${option.dateFormat === type ? 'selected' : ''}>${type}</option>`).join('')}</select></div>`;
       }
       return '';
+    }
+
+    function optionValueItems(option) {
+      const values = lines(option.valueDomain || '选项1\n选项2');
+      return values.length ? values : ['选项1', '选项2'];
+    }
+
+    function setOptionValueItems(option, values) {
+      option.valueDomain = (values.length ? values : ['选项1']).join('\n');
+    }
+
+    function valueOptionProps(option, disabled) {
+      const values = optionValueItems(option);
+      const marker = option.fieldType === '单选' ? 'fake-radio' : 'fake-check';
+      const disabledClass = disabled ? ' disabled' : '';
+      const cards = values.map((value, index) => `<div class="value-option-card${disabledClass}">
+        <span class="${marker}"></span>
+        <input class="value-option-input" data-value-option-index="${index}" value="${esc(value)}"${disabled}>
+        <button class="value-option-delete" data-delete-value-option="${index}"${disabled} title="删除">×</button>
+      </div>`).join('');
+      return `<div class="field"><label>选项</label><div class="hint">每个选项单独编辑，支持添加和删除</div><div class="value-option-list">${cards}</div><button class="add-btn" data-add-value-option${disabled}>添加选项</button></div>`;
+    }
+
+    function columnDataTypeFromFieldType(fieldType) {
+      if (fieldType === '下拉选择') return 'select';
+      if (fieldType === '单选') return 'single';
+      if (fieldType === '多选') return 'multiple';
+      if (fieldType === '填空') return 'fill';
+      if (fieldType === '评分') return 'rating';
+      if (fieldType === '日期') return 'date';
+      return 'fill';
+    }
+
+    function syncSelectedMatrixColumnFromOption(item) {
+      if (!item || item.type !== 'matrixCustom' || state.selectedOption?.source !== 'matrix') return;
+      const index = state.selectedOption.index;
+      const option = currentOption(item);
+      if (!item.columns[index]) return;
+      item.columns[index] = {
+        ...item.columns[index],
+        dataType: columnDataTypeFromFieldType(option.fieldType),
+        options: optionValueItems(option)
+      };
     }
 
     function choiceProps(item) {
@@ -516,18 +606,17 @@
         </div>${compact ? '' : '<div class="muted-note">5分表示非常满意，1分表示非常不满意。</div>'}`;
     }
 
-    function matrixChoiceProps(item) {
-      return `<div class="field"><label>每行最多可选:</label><input class="input" data-prop="max" value="${esc(item.max)}" placeholder="请输入数字"></div>
-        <div class="field"><label>每行最少可选:</label><input class="input" data-prop="min" value="${esc(item.min)}" placeholder="请输入数字"></div>
+    function matrixChoiceProps(item, showSelectionLimits = true) {
+      const selectionLimits = showSelectionLimits ? `<div class="field"><label>每行最多可选:</label><input class="input" data-prop="max" value="${esc(item.max)}" placeholder="请输入数字"></div>
+        <div class="field"><label>每行最少可选:</label><input class="input" data-prop="min" value="${esc(item.min)}" placeholder="请输入数字"></div>` : '';
+      return `${selectionLimits}
         ${allowAddRowProp(item)}
         <div class="field"><label>批量编辑行</label><div class="hint">每行代表一个选项，回车键换行</div><textarea class="textarea" data-rows>${esc(item.rows.join('\\n'))}</textarea></div>
         <div class="field"><label>批量编辑列</label><div class="hint">每行代表一个选项，回车键换行</div><textarea class="textarea" data-columns>${esc(item.columns.join('\\n'))}</textarea></div>`;
     }
 
     function matrixCustomProps(item) {
-      return `<div class="field"><label>每行最多可选:</label><input class="input" data-prop="max" value="${esc(item.max)}" placeholder="请输入数字"></div>
-        <div class="field"><label>每行最少可选:</label><input class="input" data-prop="min" value="${esc(item.min)}" placeholder="请输入数字"></div>
-        ${allowAddRowProp(item)}
+      return `${allowAddRowProp(item)}
         <div class="field"><label>批量编辑行</label><div class="hint">每行代表一个选项，回车键换行</div><textarea class="textarea" data-rows>${esc(item.rows.join('\\n'))}</textarea></div>
         <div class="field"><label>批量编辑列</label><div class="hint">每行代表一个选项，回车键换行</div><textarea class="textarea" data-custom-columns>${esc(item.columns.map(col => col.title).join('\\n'))}</textarea></div>`;
     }
@@ -558,6 +647,16 @@
     function syncMatrixOptionSettings(item) {
       if (!Array.isArray(item.matrixOptionSettings)) item.matrixOptionSettings = [];
       item.matrixOptionSettings = matrixTitles(item).map((_, index) => item.matrixOptionSettings[index] || defaultOptionSetting());
+      if (item.type === 'matrixCustom') {
+        item.columns = item.columns.map((column, index) => {
+          const setting = item.matrixOptionSettings[index] || defaultOptionSetting();
+          return {
+            ...column,
+            dataType: columnDataTypeFromFieldType(setting.fieldType),
+            options: optionValueItems(setting)
+          };
+        });
+      }
     }
     function selectedOptionLabel(item) {
       if (!state.selectedOption) return '';
@@ -589,6 +688,7 @@
         renderAll();
         return;
       }
+      if (e.target.closest('[data-matrix-row-title], [data-matrix-column-title]')) return;
       const matrixOption = e.target.closest('[data-matrix-option-index]');
       if (matrixOption) {
         state.selectedId = matrixOption.dataset.qid;
@@ -617,6 +717,44 @@
       if (display) { selected().display = display.dataset.display; renderAll(); }
       const optionRatingDisplay = e.target.closest('[data-option-rating-display]');
       if (optionRatingDisplay) { currentOption(selected()).ratingDisplay = optionRatingDisplay.dataset.optionRatingDisplay; renderAll(); }
+      const addMatrixRow = e.target.closest('[data-add-matrix-row]');
+      if (addMatrixRow) {
+        const item = state.questions.find(q => q.id === addMatrixRow.dataset.addMatrixRow);
+        item.rows.push(`行标题${item.rows.length + 1}`);
+        renderAll();
+        return;
+      }
+      const addMatrixColumn = e.target.closest('[data-add-matrix-column]');
+      if (addMatrixColumn) {
+        const item = state.questions.find(q => q.id === addMatrixColumn.dataset.addMatrixColumn);
+        if (item.type === 'matrixCustom') item.columns.push({ title: `选项${item.columns.length + 1}`, dataType: 'fill', options: ['选项1', '选项2'] });
+        else item.columns.push(`选项${item.columns.length + 1}`);
+        syncMatrixOptionSettings(item);
+        renderAll();
+        return;
+      }
+      const addValueOption = e.target.closest('[data-add-value-option]');
+      if (addValueOption && !addValueOption.disabled) {
+        const item = selected();
+        const option = currentOption(selected());
+        const values = optionValueItems(option);
+        values.push(`选项${values.length + 1}`);
+        setOptionValueItems(option, values);
+        syncSelectedMatrixColumnFromOption(item);
+        renderAll();
+        return;
+      }
+      const deleteValueOption = e.target.closest('[data-delete-value-option]');
+      if (deleteValueOption && !deleteValueOption.disabled) {
+        const item = selected();
+        const option = currentOption(selected());
+        const values = optionValueItems(option);
+        values.splice(Number(deleteValueOption.dataset.deleteValueOption), 1);
+        setOptionValueItems(option, values);
+        syncSelectedMatrixColumnFromOption(item);
+        renderAll();
+        return;
+      }
       const toastBtn = e.target.closest('[data-toast]');
       if (toastBtn) showToast(toastBtn.dataset.toast);
     });
@@ -630,6 +768,26 @@
       if (e.target.matches('[data-options]')) { item.options = lines(e.target.value); syncOptionSettings(item); if (state.selectedOption && state.selectedOption.index >= item.options.length) state.selectedOption = null; renderAll(); }
       if (e.target.matches('[data-option-label]')) { setSelectedOptionLabel(item, e.target.value); renderAll(); }
       if (e.target.matches('[data-option-metric]')) { currentOption(item).metric = e.target.value; }
+      if (e.target.matches('[data-option-prop]')) {
+        currentOption(item)[e.target.dataset.optionProp] = e.target.value;
+        syncSelectedMatrixColumnFromOption(item);
+      }
+      if (e.target.matches('[data-value-option-index]')) {
+        const option = currentOption(item);
+        const values = optionValueItems(option);
+        values[Number(e.target.dataset.valueOptionIndex)] = e.target.value;
+        setOptionValueItems(option, values);
+        syncSelectedMatrixColumnFromOption(item);
+      }
+      if (e.target.matches('[data-matrix-row-title]')) {
+        item.rows[Number(e.target.dataset.matrixRowTitle)] = e.target.value;
+      }
+      if (e.target.matches('[data-matrix-column-title]')) {
+        const index = Number(e.target.dataset.matrixColumnTitle);
+        if (item.type === 'matrixCustom') item.columns[index].title = e.target.value;
+        else item.columns[index] = e.target.value;
+        syncMatrixOptionSettings(item);
+      }
       if (e.target.matches('[data-rows]')) { item.rows = lines(e.target.value); renderAll(); }
       if (e.target.matches('[data-columns]')) { item.columns = lines(e.target.value); syncMatrixOptionSettings(item); if (state.selectedOption?.source === 'matrix' && state.selectedOption.index >= item.columns.length) state.selectedOption = null; renderAll(); }
       if (e.target.matches('[data-custom-columns]')) {
@@ -646,7 +804,12 @@
       if (!item) return;
       if (e.target.matches('[data-prop="type"]')) return convertType(item, e.target.value);
       if (e.target.matches('[data-prop]')) { item[e.target.dataset.prop] = e.target.value; renderAll(); }
-      if (e.target.matches('[data-option-prop]')) { currentOption(item)[e.target.dataset.optionProp] = e.target.value; renderAll(); }
+      if (e.target.matches('[data-option-metric]')) { currentOption(item).metric = e.target.value; renderAll(); }
+      if (e.target.matches('[data-option-prop]')) {
+        currentOption(item)[e.target.dataset.optionProp] = e.target.value;
+        syncSelectedMatrixColumnFromOption(item);
+        renderAll();
+      }
     });
 
     function openBuilder(name) {
