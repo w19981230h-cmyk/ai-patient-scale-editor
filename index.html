@@ -39,7 +39,8 @@
     .seal { width: 34px; height: 34px; border-radius: 50%; background: #fff; border: 2px solid #2e65b8; display: grid; place-items: center; color: #2e65b8; box-shadow: inset 0 0 0 2px #d8e8ff; }
     .seal::before { content: "+"; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; font-weight: 800; border: 1px solid #2e65b8; }
     .brand span { color: #123d7d; font-size: 16px; font-weight: 800; white-space: nowrap; }
-    .menu { flex: 1; padding: 16px 8px 8px; overflow: hidden; }
+    .menu { flex: 1; padding: 16px 8px 8px; overflow-y: auto; scrollbar-width: none; }
+    .menu::-webkit-scrollbar { display: none; }
     .menu-section { margin-bottom: 10px; }
     .menu-item, .submenu-item, .notice, .user-card { display: flex; align-items: center; height: 40px; border-radius: 6px; color: #15387e; font-weight: 700; line-height: 1; position: relative; }
     .menu-item { padding: 0 14px; gap: 11px; margin-bottom: 4px; }
@@ -110,6 +111,49 @@
     .ellipsis { color: #a0a8b5; letter-spacing: 2px; }
     .page-select { width: 96px; grid-auto-flow: column; gap: 7px; }
     .jump-input { width: 44px; }
+    .list-view { display: none; }
+    .list-view.active { display: flex; }
+    .submenu-item[data-list-view] { cursor: pointer; }
+    .filter-select { width: 132px; height: 36px; border: 1px solid #e6eaf1; border-radius: 4px; padding: 0 10px; background: #fff; color: #5a6880; }
+    .indicator-table .col-indicator-name { width: 14%; }
+    .indicator-table .col-code { width: 12%; }
+    .indicator-table .col-data-type { width: 8%; }
+    .indicator-table .col-category { width: 10%; }
+    .indicator-table .col-domain { width: 12%; }
+    .indicator-table .col-reference { width: 7%; }
+    .indicator-table .col-indicator-maker { width: 9%; }
+    .indicator-table .col-updated { width: 11%; }
+    .indicator-table .col-indicator-status { width: 7%; }
+    .indicator-table .col-indicator-actions { width: 10%; }
+    .indicator-name { color: #30405c; font-weight: 600; }
+    .indicator-code { color: #7a879b; font-family: Consolas, "SFMono-Regular", monospace; font-size: 13px; }
+    .type-tag { display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 4px; background: #eef3ff; color: #3154d9; font-size: 12px; }
+    .type-tag.number { background: #edf9f2; color: #26975a; }
+    .type-tag.choice { background: #fff5e8; color: #c97816; }
+    .type-tag.date { background: #f5efff; color: #8054c7; }
+    .table-empty { height: 220px; text-align: center; color: #9ba6b7; }
+    .action-divider { color: #d6dce6; }
+    .danger-link { color: #ff4d4f; }
+    .modal-mask { position: fixed; inset: 0; z-index: 40; background: rgba(17, 28, 51, .28); display: none; align-items: center; justify-content: center; }
+    .modal-mask.open { display: flex; }
+    .indicator-modal { width: 560px; background: #fff; border-radius: 8px; box-shadow: 0 18px 55px rgba(26, 41, 73, .22); overflow: hidden; }
+    .modal-head { height: 56px; border-bottom: 1px solid #edf0f5; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; }
+    .modal-head h2 { margin: 0; font-size: 16px; color: #263752; }
+    .modal-close { width: 30px; height: 30px; display: grid; place-items: center; color: #7c8798; font-size: 22px; border-radius: 4px; }
+    .modal-close:hover { background: #f4f6fa; }
+    .modal-body { padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .modal-field { min-width: 0; }
+    .modal-field.full { grid-column: 1 / -1; }
+    .modal-field label { display: block; margin-bottom: 8px; color: #34425a; font-weight: 700; }
+    .modal-field label.required::before { content: "*"; color: #ff4d4f; margin-right: 4px; }
+    .modal-input, .modal-select, .modal-textarea { width: 100%; border: 1px solid #dfe5ef; border-radius: 4px; color: #34425a; background: #fff; }
+    .modal-input, .modal-select { height: 38px; padding: 0 11px; }
+    .modal-textarea { min-height: 84px; padding: 10px 11px; resize: vertical; }
+    .modal-input:focus, .modal-select:focus, .modal-textarea:focus { border-color: #3154ff; box-shadow: 0 0 0 2px rgba(49, 84, 255, .08); }
+    .modal-foot { height: 64px; border-top: 1px solid #edf0f5; padding: 0 20px; display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+    .secondary-btn, .confirm-btn { height: 36px; min-width: 72px; border-radius: 4px; padding: 0 16px; font-weight: 600; }
+    .secondary-btn { border: 1px solid #dfe5ef; color: #536079; background: #fff; }
+    .confirm-btn { color: #fff; background: #1d3fff; }
 
     /* 量表编辑器 */
     .builder { height: 100vh; min-width: 1440px; display: grid; grid-template-rows: 58px 1fr; background: #eef2f7; }
@@ -253,17 +297,17 @@
           <div class="menu-section"><div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>患者管理</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m8 10 4 4 4-4"/></svg></div></div>
           <div class="menu-section">
             <div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 4h10v16H7z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><span>方案与内容</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m18 15-6-6-6 6"/></svg></div>
-            <div class="submenu"><div class="submenu-item">方案管理</div><div class="submenu-item active">量表管理</div><div class="submenu-item">评估报告</div><div class="submenu-item">文章管理</div><div class="submenu-item">知识库</div></div>
+            <div class="submenu"><div class="submenu-item">方案管理</div><div class="submenu-item active" data-list-view="scale">量表管理</div><div class="submenu-item">评估报告</div><div class="submenu-item">文章管理</div><div class="submenu-item">知识库</div></div>
           </div>
           <div class="menu-section"><div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19V8a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v11"/><path d="M8 19v-5h8v5"/></svg><span>运营管理</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m18 15-6-6-6 6"/></svg></div><div class="submenu"><div class="submenu-item">统计报表</div></div></div>
           <div class="menu-section"><div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3 7 21M12 3l5 18M5 9h14M5 15h14"/></svg><span>AI医助</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m8 10 4 4 4-4"/></svg></div></div>
-          <div class="menu-section"><div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/><path d="M4 12h2m12 0h2M12 4v2m0 12v2"/></svg><span>系统管理</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m8 10 4 4 4-4"/></svg></div></div>
+          <div class="menu-section"><div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/><path d="M4 12h2m12 0h2M12 4v2m0 12v2"/></svg><span>系统管理</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m18 15-6-6-6 6"/></svg></div><div class="submenu"><div class="submenu-item" data-list-view="indicator">指标模板</div></div></div>
         </nav>
         <div class="sidebar-bottom"><div class="bottom-line"></div><div class="notice"><div class="notice-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 6-3 9h18c0-3-3-2-3-9"/><path d="M10 21h4"/></svg><span>消息通知</span></div><span class="badge">99+</span></div><div class="user-card"><div class="avatar"></div><strong>平台技术人员</strong><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m9 18 6-6-6-6"/></svg></div><div class="collapse"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 7h14M4 12h10M4 17h14"/></svg></div></div>
       </aside>
       <main class="list-main">
-        <header class="page-title">量表管理</header>
-        <section class="list-panel">
+        <header class="page-title" id="listPageTitle">量表管理</header>
+        <section class="list-panel list-view active" id="scaleManagementView">
           <div class="toolbar">
             <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg><input placeholder="搜索名称"></label>
             <button class="icon-button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 5h5v14H4zM15 5h5v14h-5zM9 12h6"/><circle cx="16.5" cy="17.5" r="3.5"/></svg></button>
@@ -276,6 +320,21 @@
             </table>
           </div>
           <div class="pager"><span>共 94 条</span><button class="page-btn disabled">‹</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">4</button><button class="page-btn">5</button><span class="ellipsis">...</span><button class="page-btn">10</button><button class="page-btn">›</button><button class="page-select">10 条/页⌄</button><span>跳至</span><span class="jump-input"></span><span>页</span></div>
+        </section>
+        <section class="list-panel list-view" id="indicatorTemplateView">
+          <div class="toolbar">
+            <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg><input id="indicatorSearch" placeholder="搜索指标名称/编码"></label>
+            <select class="filter-select" id="indicatorCategoryFilter"><option value="">全部分类</option><option>患者基础信息</option><option>生命体征</option><option>检验指标</option><option>评估结果</option><option>随访指标</option></select>
+            <select class="filter-select" id="indicatorStatusFilter"><option value="">全部状态</option><option>启用</option><option>停用</option></select>
+            <button class="primary" data-new-indicator><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg><span>新建指标模板</span></button>
+          </div>
+          <div class="table-wrap">
+            <table class="indicator-table">
+              <thead><tr><th class="col-indicator-name">指标名称</th><th class="col-code">指标编码</th><th class="col-data-type">数据类型</th><th class="col-category">所属分类</th><th class="col-domain">单位/值域</th><th class="col-reference">引用量表</th><th class="col-indicator-maker">创建人员</th><th class="col-updated">更新时间</th><th class="col-indicator-status">状态</th><th class="col-indicator-actions">操作</th></tr></thead>
+              <tbody id="indicatorRows"></tbody>
+            </table>
+          </div>
+          <div class="pager"><span id="indicatorTotal">共 0 条</span><button class="page-btn disabled">‹</button><button class="page-btn active">1</button><button class="page-btn">›</button><button class="page-select">10 条/页⌄</button></div>
         </section>
       </main>
     </div>
@@ -307,6 +366,20 @@
 
   <div class="assistant-sticker" aria-hidden="true"><div class="sticker-board"></div><div class="dino"></div><div class="cloud"></div><div class="bunny"></div></div>
   <div class="toast" id="toast"></div>
+  <div class="modal-mask" id="indicatorModal" aria-hidden="true">
+    <div class="indicator-modal" role="dialog" aria-modal="true" aria-labelledby="indicatorModalTitle">
+      <div class="modal-head"><h2 id="indicatorModalTitle">新建指标模板</h2><button class="modal-close" data-close-indicator-modal aria-label="关闭">×</button></div>
+      <div class="modal-body">
+        <div class="modal-field"><label class="required" for="indicatorName">指标名称</label><input class="modal-input" id="indicatorName" placeholder="请输入指标名称"></div>
+        <div class="modal-field"><label class="required" for="indicatorCode">指标编码</label><input class="modal-input" id="indicatorCode" placeholder="例如 patient.height"></div>
+        <div class="modal-field"><label class="required" for="indicatorCategory">所属分类</label><select class="modal-select" id="indicatorCategory"><option>患者基础信息</option><option>生命体征</option><option>检验指标</option><option>评估结果</option><option>随访指标</option></select></div>
+        <div class="modal-field"><label class="required" for="indicatorDataType">数据类型</label><select class="modal-select" id="indicatorDataType"><option>文本</option><option>数值</option><option>单选</option><option>多选</option><option>日期</option><option>布尔</option></select></div>
+        <div class="modal-field full"><label for="indicatorDomain">单位/值域</label><input class="modal-input" id="indicatorDomain" placeholder="例如 cm，或 男/女/未知"></div>
+        <div class="modal-field full"><label for="indicatorDescription">指标说明</label><textarea class="modal-textarea" id="indicatorDescription" placeholder="请输入指标用途、采集说明或口径"></textarea></div>
+      </div>
+      <div class="modal-foot"><button class="secondary-btn" data-close-indicator-modal>取消</button><button class="confirm-btn" data-save-indicator>保存</button></div>
+    </div>
+  </div>
 
   <script>
     const scaleRows = [
@@ -321,6 +394,19 @@
       ['客户信息收集表', 0, 0, '第1版', 1, '平台技术人员', '2026/05/21 13:57:14', '未发布', false],
       ['测试量表2', 3, 6, '第1版', 1, '--', '2026/05/15 15:57:25', '已发布', true]
     ];
+
+    let indicatorTemplates = [
+      { id: 'metric-1', name: '患者姓名', code: 'patient.name', dataType: '文本', category: '患者基础信息', domain: '--', references: 12, maker: '平台技术人员', updatedAt: '2026/06/10 16:24:18', enabled: true, description: '患者基础身份信息' },
+      { id: 'metric-2', name: '性别', code: 'patient.gender', dataType: '单选', category: '患者基础信息', domain: '男 / 女 / 未知', references: 9, maker: '平台技术人员', updatedAt: '2026/06/10 15:58:42', enabled: true, description: '患者生理性别' },
+      { id: 'metric-3', name: '身高', code: 'vital.height', dataType: '数值', category: '生命体征', domain: 'cm', references: 6, maker: '张媛丽', updatedAt: '2026/06/09 11:20:05', enabled: true, description: '患者身高，单位厘米' },
+      { id: 'metric-4', name: '体重', code: 'vital.weight', dataType: '数值', category: '生命体征', domain: 'kg', references: 8, maker: '张媛丽', updatedAt: '2026/06/09 11:18:33', enabled: true, description: '患者体重，单位千克' },
+      { id: 'metric-5', name: '空腹血糖', code: 'lab.fbg', dataType: '数值', category: '检验指标', domain: 'mmol/L', references: 4, maker: '平台技术人员', updatedAt: '2026/06/08 09:42:17', enabled: true, description: '空腹血浆葡萄糖' },
+      { id: 'metric-6', name: '营养风险等级', code: 'assessment.nutritionRisk', dataType: '单选', category: '评估结果', domain: '低风险 / 中风险 / 高风险', references: 3, maker: '平台技术人员', updatedAt: '2026/06/07 18:06:29', enabled: true, description: '营养风险筛查结果' },
+      { id: 'metric-7', name: '随访日期', code: 'followup.date', dataType: '日期', category: '随访指标', domain: '年/月/日', references: 5, maker: '张媛丽', updatedAt: '2026/06/06 14:31:50', enabled: true, description: '患者实际随访日期' },
+      { id: 'metric-8', name: '症状标签', code: 'followup.symptoms', dataType: '多选', category: '随访指标', domain: '恶心 / 呕吐 / 疼痛 / 乏力', references: 0, maker: '平台技术人员', updatedAt: '2026/06/05 10:12:26', enabled: false, description: '随访过程中记录的症状' }
+    ];
+
+    const indicatorState = { keyword: '', category: '', status: '', editingId: null };
 
     const typeMeta = {
       single: { label: '单选', icon: radioIcon(), section: '选择' },
@@ -401,6 +487,95 @@
           <td><span class="actions"><span class="link">编辑</span><span class="more">...</span></span></td>
         </tr>`;
       }).join('');
+    }
+
+    function indicatorTypeClass(type) {
+      if (type === '数值') return 'number';
+      if (type === '单选' || type === '多选' || type === '布尔') return 'choice';
+      if (type === '日期') return 'date';
+      return '';
+    }
+
+    function renderIndicatorList() {
+      const keyword = indicatorState.keyword.trim().toLowerCase();
+      const rows = indicatorTemplates.filter(item => {
+        const matchesKeyword = !keyword || `${item.name} ${item.code}`.toLowerCase().includes(keyword);
+        const matchesCategory = !indicatorState.category || item.category === indicatorState.category;
+        const matchesStatus = !indicatorState.status || (indicatorState.status === '启用' ? item.enabled : !item.enabled);
+        return matchesKeyword && matchesCategory && matchesStatus;
+      });
+      document.getElementById('indicatorTotal').textContent = `共 ${rows.length} 条`;
+      document.getElementById('indicatorRows').innerHTML = rows.length ? rows.map(item => `<tr>
+        <td><span class="indicator-name">${esc(item.name)}</span></td>
+        <td><span class="indicator-code">${esc(item.code)}</span></td>
+        <td><span class="type-tag ${indicatorTypeClass(item.dataType)}">${esc(item.dataType)}</span></td>
+        <td>${esc(item.category)}</td>
+        <td title="${esc(item.domain)}">${esc(item.domain || '--')}</td>
+        <td>${item.references}</td>
+        <td>${esc(item.maker)}</td>
+        <td>${esc(item.updatedAt)}</td>
+        <td><button class="switch ${item.enabled ? 'on' : ''}" data-toggle-indicator-status="${item.id}" aria-label="${item.enabled ? '停用' : '启用'}指标"></button></td>
+        <td><span class="actions"><button class="link" data-edit-indicator="${item.id}">编辑</button><span class="action-divider">|</span><button class="link danger-link" data-delete-indicator="${item.id}">删除</button></span></td>
+      </tr>`).join('') : '<tr><td class="table-empty" colspan="10">暂无符合条件的指标模板</td></tr>';
+    }
+
+    function showListView(view) {
+      const isIndicator = view === 'indicator';
+      document.getElementById('scaleManagementView').classList.toggle('active', !isIndicator);
+      document.getElementById('indicatorTemplateView').classList.toggle('active', isIndicator);
+      document.getElementById('listPageTitle').textContent = isIndicator ? '指标模板' : '量表管理';
+      document.querySelectorAll('[data-list-view]').forEach(item => item.classList.toggle('active', item.dataset.listView === view));
+      if (isIndicator) renderIndicatorList();
+    }
+
+    function openIndicatorModal(id = null) {
+      const item = id ? indicatorTemplates.find(row => row.id === id) : null;
+      indicatorState.editingId = item?.id || null;
+      document.getElementById('indicatorModalTitle').textContent = item ? '编辑指标模板' : '新建指标模板';
+      document.getElementById('indicatorName').value = item?.name || '';
+      document.getElementById('indicatorCode').value = item?.code || '';
+      document.getElementById('indicatorCategory').value = item?.category || '患者基础信息';
+      document.getElementById('indicatorDataType').value = item?.dataType || '文本';
+      document.getElementById('indicatorDomain').value = item?.domain === '--' ? '' : (item?.domain || '');
+      document.getElementById('indicatorDescription').value = item?.description || '';
+      const modal = document.getElementById('indicatorModal');
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      requestAnimationFrame(() => document.getElementById('indicatorName').focus());
+    }
+
+    function closeIndicatorModal() {
+      const modal = document.getElementById('indicatorModal');
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      indicatorState.editingId = null;
+    }
+
+    function saveIndicatorTemplate() {
+      const name = document.getElementById('indicatorName').value.trim();
+      const code = document.getElementById('indicatorCode').value.trim();
+      if (!name || !code) return showToast('请填写指标名称和指标编码');
+      const duplicate = indicatorTemplates.find(item => item.code.toLowerCase() === code.toLowerCase() && item.id !== indicatorState.editingId);
+      if (duplicate) return showToast('指标编码已存在');
+      const values = {
+        name,
+        code,
+        category: document.getElementById('indicatorCategory').value,
+        dataType: document.getElementById('indicatorDataType').value,
+        domain: document.getElementById('indicatorDomain').value.trim() || '--',
+        description: document.getElementById('indicatorDescription').value.trim(),
+        updatedAt: '2026/06/11 10:30:00'
+      };
+      const wasEditing = !!indicatorState.editingId;
+      if (wasEditing) {
+        const item = indicatorTemplates.find(row => row.id === indicatorState.editingId);
+        Object.assign(item, values);
+      } else {
+        indicatorTemplates.unshift({ id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), ...values, references: 0, maker: '平台技术人员', enabled: true });
+      }
+      closeIndicatorModal();
+      renderIndicatorList();
+      showToast(wasEditing ? '指标模板已更新' : '指标模板已创建');
     }
 
     function renderPalette() {
@@ -676,6 +851,47 @@
     function renderAll() { renderPalette(); renderCanvas(); renderProps(); }
 
     document.addEventListener('click', e => {
+      const listView = e.target.closest('[data-list-view]');
+      if (listView) {
+        showListView(listView.dataset.listView);
+        return;
+      }
+      if (e.target.closest('[data-new-indicator]')) {
+        openIndicatorModal();
+        return;
+      }
+      const editIndicator = e.target.closest('[data-edit-indicator]');
+      if (editIndicator) {
+        openIndicatorModal(editIndicator.dataset.editIndicator);
+        return;
+      }
+      const toggleIndicator = e.target.closest('[data-toggle-indicator-status]');
+      if (toggleIndicator) {
+        const item = indicatorTemplates.find(row => row.id === toggleIndicator.dataset.toggleIndicatorStatus);
+        item.enabled = !item.enabled;
+        renderIndicatorList();
+        showToast(item.enabled ? '指标模板已启用' : '指标模板已停用');
+        return;
+      }
+      const deleteIndicator = e.target.closest('[data-delete-indicator]');
+      if (deleteIndicator) {
+        const item = indicatorTemplates.find(row => row.id === deleteIndicator.dataset.deleteIndicator);
+        if (item.references > 0) return showToast('该指标已被量表引用，无法删除');
+        if (window.confirm(`确认删除指标模板“${item.name}”吗？`)) {
+          indicatorTemplates = indicatorTemplates.filter(row => row.id !== item.id);
+          renderIndicatorList();
+          showToast('指标模板已删除');
+        }
+        return;
+      }
+      if (e.target.closest('[data-save-indicator]')) {
+        saveIndicatorTemplate();
+        return;
+      }
+      if (e.target.closest('[data-close-indicator-modal]') || e.target.id === 'indicatorModal') {
+        closeIndicatorModal();
+        return;
+      }
       if (e.target.closest('[data-open-editor]')) openBuilder('测试');
       if (e.target.closest('#exitBuilder')) showList();
       const add = e.target.closest('[data-add-type]');
@@ -760,6 +976,11 @@
     });
 
     document.addEventListener('input', e => {
+      if (e.target.id === 'indicatorSearch') {
+        indicatorState.keyword = e.target.value;
+        renderIndicatorList();
+        return;
+      }
       const item = selected();
       if (!item) return;
       if (e.target.matches('[data-title]')) { const q = state.questions.find(q => q.id === e.target.dataset.title); q.title = e.target.value; }
@@ -800,6 +1021,16 @@
     });
 
     document.addEventListener('change', e => {
+      if (e.target.id === 'indicatorCategoryFilter') {
+        indicatorState.category = e.target.value;
+        renderIndicatorList();
+        return;
+      }
+      if (e.target.id === 'indicatorStatusFilter') {
+        indicatorState.status = e.target.value;
+        renderIndicatorList();
+        return;
+      }
       const item = selected();
       if (!item) return;
       if (e.target.matches('[data-prop="type"]')) return convertType(item, e.target.value);
@@ -822,6 +1053,7 @@
     function showList() {
       document.getElementById('builderPage').classList.remove('active');
       document.getElementById('listPage').classList.add('active');
+      showListView('scale');
     }
 
     function addQuestion(type) {
@@ -888,6 +1120,7 @@
     function trashIcon(){return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>'}
 
     renderList();
+    renderIndicatorList();
   </script>
 </body>
 </html>
