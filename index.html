@@ -116,7 +116,7 @@
     .submenu-item[data-list-view] { cursor: pointer; }
     .indicator-toolbar .search { width: 280px; }
     .dashboard-grid { flex: 1; min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(4, minmax(220px, 1fr)); align-content: start; gap: 16px; padding: 4px 2px 18px; }
-    .dashboard-card { min-height: 190px; border: 1px solid #e8ecf3; border-radius: 6px; background: #fff; padding: 18px; display: flex; flex-direction: column; transition: border-color .16s, box-shadow .16s; }
+    .dashboard-card { min-height: 168px; border: 1px solid #e8ecf3; border-radius: 6px; background: #fff; padding: 18px; display: flex; flex-direction: column; transition: border-color .16s, box-shadow .16s; }
     .dashboard-card:hover { border-color: #b9c8ff; box-shadow: 0 6px 20px rgba(35, 61, 128, .08); }
     .dashboard-card-head { min-width: 0; display: flex; align-items: flex-start; gap: 10px; margin-bottom: 18px; }
     .dashboard-icon { width: 36px; height: 36px; border-radius: 6px; background: #edf2ff; color: #3154ff; display: grid; place-items: center; flex: 0 0 auto; }
@@ -356,9 +356,8 @@
       <div class="modal-head"><h2 id="indicatorModalTitle">新建指标看板</h2><button class="modal-close" data-close-indicator-modal aria-label="关闭">×</button></div>
       <div class="modal-body">
         <div class="modal-field full"><label class="required" for="indicatorName">指标看板名称</label><input class="modal-input" id="indicatorName" placeholder="请输入指标看板名称"></div>
-        <div class="modal-field"><label class="required" for="indicatorApplicableType">适用类型</label><select class="modal-select" id="indicatorApplicableType"><option>健康评估</option><option>慢病管理</option><option>患者随访</option><option>风险筛查</option><option>运营统计</option></select></div>
+        <div class="modal-field full"><label class="required" for="indicatorApplicableProfile">适用画像</label><input class="modal-input" id="indicatorApplicableProfile" placeholder="例如：全部患者、糖尿病患者、高血压患者"></div>
         <div class="modal-field"><label class="required" for="indicatorStatus">状态</label><select class="modal-select" id="indicatorStatus"><option>未发布</option><option>发布</option></select></div>
-        <div class="modal-field full"><label class="required" for="indicatorApplicableObject">适用对象</label><input class="modal-input" id="indicatorApplicableObject" placeholder="例如：全部患者、糖尿病患者"></div>
       </div>
       <div class="modal-foot"><button class="secondary-btn" data-close-indicator-modal>取消</button><button class="confirm-btn" data-save-indicator>保存</button></div>
     </div>
@@ -379,12 +378,12 @@
     ];
 
     let indicatorTemplates = [
-      { id: 'board-1', name: '患者基础信息看板', applicableType: '健康评估', applicableObject: '全部患者', published: true },
-      { id: 'board-2', name: '糖尿病健康指标看板', applicableType: '慢病管理', applicableObject: '糖尿病患者', published: true },
-      { id: 'board-3', name: '肿瘤患者随访看板', applicableType: '患者随访', applicableObject: '肿瘤患者', published: false },
-      { id: 'board-4', name: '营养风险指标看板', applicableType: '风险筛查', applicableObject: '住院患者', published: true },
-      { id: 'board-5', name: '心血管风险看板', applicableType: '健康评估', applicableObject: '高血压患者', published: false },
-      { id: 'board-6', name: '患者运营数据看板', applicableType: '运营统计', applicableObject: '全部患者', published: true }
+      { id: 'board-1', name: '患者基础信息看板', applicableProfile: '全部患者', published: true },
+      { id: 'board-2', name: '糖尿病健康指标看板', applicableProfile: '糖尿病患者', published: true },
+      { id: 'board-3', name: '肿瘤患者随访看板', applicableProfile: '肿瘤患者', published: false },
+      { id: 'board-4', name: '营养风险指标看板', applicableProfile: '住院患者', published: true },
+      { id: 'board-5', name: '心血管风险看板', applicableProfile: '高血压患者', published: false },
+      { id: 'board-6', name: '患者运营数据看板', applicableProfile: '全部患者', published: true }
     ];
 
     const indicatorState = { keyword: '', editingId: null };
@@ -479,7 +478,7 @@
           <h3 class="dashboard-name" title="${esc(item.name)}">${esc(item.name)}</h3>
           <span class="dashboard-status ${item.published ? 'published' : 'draft'}">${item.published ? '发布' : '未发布'}</span>
         </div>
-        <dl class="dashboard-info"><dt>适用类型</dt><dd>${esc(item.applicableType)}</dd><dt>适用对象</dt><dd>${esc(item.applicableObject)}</dd></dl>
+        <dl class="dashboard-info"><dt>适用画像</dt><dd>${esc(item.applicableProfile)}</dd></dl>
         <div class="dashboard-card-foot">
           <button class="dashboard-action" data-toggle-indicator-status="${item.id}">${item.published ? '撤回' : '发布'}</button>
           <button class="dashboard-action" data-edit-indicator="${item.id}">编辑</button>
@@ -502,8 +501,7 @@
       indicatorState.editingId = item?.id || null;
       document.getElementById('indicatorModalTitle').textContent = item ? '编辑指标看板' : '新建指标看板';
       document.getElementById('indicatorName').value = item?.name || '';
-      document.getElementById('indicatorApplicableType').value = item?.applicableType || '健康评估';
-      document.getElementById('indicatorApplicableObject').value = item?.applicableObject || '';
+      document.getElementById('indicatorApplicableProfile').value = item?.applicableProfile || '';
       document.getElementById('indicatorStatus').value = item?.published ? '发布' : '未发布';
       const modal = document.getElementById('indicatorModal');
       modal.classList.add('open');
@@ -520,14 +518,13 @@
 
     function saveIndicatorTemplate() {
       const name = document.getElementById('indicatorName').value.trim();
-      const applicableObject = document.getElementById('indicatorApplicableObject').value.trim();
-      if (!name || !applicableObject) return showToast('请填写看板名称和适用对象');
+      const applicableProfile = document.getElementById('indicatorApplicableProfile').value.trim();
+      if (!name || !applicableProfile) return showToast('请填写看板名称和适用画像');
       const duplicate = indicatorTemplates.find(item => item.name.toLowerCase() === name.toLowerCase() && item.id !== indicatorState.editingId);
       if (duplicate) return showToast('指标看板名称已存在');
       const values = {
         name,
-        applicableType: document.getElementById('indicatorApplicableType').value,
-        applicableObject,
+        applicableProfile,
         published: document.getElementById('indicatorStatus').value === '发布'
       };
       const wasEditing = !!indicatorState.editingId;
