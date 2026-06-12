@@ -480,7 +480,7 @@
         </div>
         <dl class="dashboard-info"><dt>适用画像</dt><dd>${esc(item.applicableProfile)}</dd></dl>
         <div class="dashboard-card-foot">
-          <button class="dashboard-action" data-toggle-indicator-status="${item.id}">${item.published ? '撤回' : '发布'}</button>
+          ${item.published ? '' : `<button class="dashboard-action" data-toggle-indicator-status="${item.id}">发布</button>`}
           <button class="dashboard-action" data-edit-indicator="${item.id}">编辑</button>
           <button class="dashboard-action danger" data-delete-indicator="${item.id}">删除</button>
         </div>
@@ -829,9 +829,9 @@
       const toggleIndicator = e.target.closest('[data-toggle-indicator-status]');
       if (toggleIndicator) {
         const item = indicatorTemplates.find(row => row.id === toggleIndicator.dataset.toggleIndicatorStatus);
-        item.published = !item.published;
+        item.published = true;
         renderIndicatorList();
-        showToast(item.published ? '指标看板已发布' : '指标看板已撤回');
+        showToast('指标看板已发布');
         return;
       }
       const deleteIndicator = e.target.closest('[data-delete-indicator]');
