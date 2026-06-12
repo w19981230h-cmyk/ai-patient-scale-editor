@@ -276,13 +276,6 @@
     .search-bind::after { content: "⌕"; position: absolute; right: 10px; top: 8px; color: #9aa6b8; pointer-events: none; }
     .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); background: rgba(21,31,54,.92); color: #fff; border-radius: 999px; padding: 10px 16px; z-index: 20; display: none; }
     .toast.show { display: block; }
-    .assistant-sticker { position: fixed; right: 16px; bottom: 74px; width: 86px; height: 58px; image-rendering: pixelated; pointer-events: none; }
-    .sticker-board { position: absolute; inset: 16px 8px 0 0; border-radius: 8px; background: #79a9ff; border: 3px solid #18243a; box-shadow: inset 0 -5px 0 rgba(0,0,0,.12); }
-    .sticker-board::before { content: "+"; position: absolute; left: 7px; top: 12px; color: #ff88bd; font-weight: 900; font-size: 17px; text-shadow: 1px 0 #18243a, -1px 0 #18243a, 0 1px #18243a, 0 -1px #18243a; }
-    .cloud, .bunny, .dino { position: absolute; background: #fff; border: 3px solid #18243a; }
-    .cloud { width: 34px; height: 24px; left: 32px; bottom: 2px; border-radius: 14px; }
-    .bunny { width: 22px; height: 28px; right: 10px; bottom: 4px; border-radius: 11px 11px 8px 8px; }
-    .dino { width: 26px; height: 23px; right: 24px; top: 1px; border-radius: 11px 11px 8px 8px; background: #15b569; }
     .muted-note { color: #a0a9b8; font-size: 12px; }
   </style>
 </head>
@@ -364,7 +357,6 @@
     </div>
   </section>
 
-  <div class="assistant-sticker" aria-hidden="true"><div class="sticker-board"></div><div class="dino"></div><div class="cloud"></div><div class="bunny"></div></div>
   <div class="toast" id="toast"></div>
   <div class="modal-mask" id="indicatorModal" aria-hidden="true">
     <div class="indicator-modal" role="dialog" aria-modal="true" aria-labelledby="indicatorModalTitle">
