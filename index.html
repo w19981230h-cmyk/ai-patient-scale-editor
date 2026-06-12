@@ -1286,7 +1286,7 @@
       }
       const editIndicator = e.target.closest('[data-edit-indicator]');
       if (editIndicator) {
-        openIndicatorEditor(editIndicator.dataset.editIndicator);
+        showPatientPage();
         return;
       }
       const toggleIndicator = e.target.closest('[data-toggle-indicator-status]');
