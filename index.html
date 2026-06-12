@@ -260,6 +260,34 @@
     .portrait-remove:hover { background: #fff2f0; }
     .portrait-add { margin-top: 12px; height: 36px; padding: 0 14px; border: 1px dashed #9cb0ff; border-radius: 4px; color: #3154ff; font-weight: 700; }
 
+    /* 指标看板独立编辑页 */
+    .indicator-editor-page { height: 100vh; background: #eef3fa; display: grid; grid-template-rows: 64px minmax(0, 1fr); }
+    .indicator-editor-header { background: #fff; border-bottom: 1px solid #e2e7ef; padding: 0 24px; display: flex; align-items: center; gap: 14px; }
+    .indicator-editor-back { width: 34px; height: 34px; border-radius: 4px; display: grid; place-items: center; color: #53627a; }
+    .indicator-editor-back:hover { background: #f3f6fa; }
+    .indicator-editor-back svg { width: 19px; height: 19px; }
+    .indicator-editor-title { min-width: 0; }
+    .indicator-editor-title h1 { margin: 0 0 4px; font-size: 17px; color: #283952; }
+    .indicator-editor-title p { margin: 0; color: #8b96a7; font-size: 12px; }
+    .indicator-editor-actions { margin-left: auto; display: flex; gap: 10px; }
+    .indicator-editor-body { overflow: auto; padding: 22px max(28px, calc((100vw - 1240px) / 2)) 60px; }
+    .indicator-edit-card { background: #fff; border: 1px solid #e1e7f0; border-radius: 7px; margin-bottom: 16px; }
+    .indicator-edit-card-head { height: 52px; padding: 0 20px; border-bottom: 1px solid #edf0f5; display: flex; align-items: center; }
+    .indicator-edit-card-head h2 { margin: 0; color: #2f3f57; font-size: 15px; }
+    .indicator-edit-card-body { padding: 20px; }
+    .indicator-edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 20px; }
+    .indicator-edit-field.full { grid-column: 1 / -1; }
+    .indicator-edit-field label { display: block; margin-bottom: 8px; color: #405069; font-weight: 700; }
+    .indicator-edit-field.required label::before { content: "*"; color: #ff4d4f; margin-right: 4px; }
+    .indicator-edit-input, .indicator-edit-select { width: 100%; height: 38px; padding: 0 11px; border: 1px solid #dfe5ee; border-radius: 4px; background: #fff; color: #35445b; }
+    .indicator-edit-input:focus, .indicator-edit-select:focus { border-color: #3154ff; box-shadow: 0 0 0 2px rgba(49,84,255,.08); }
+    .indicator-metric-list { display: flex; flex-direction: column; gap: 10px; }
+    .indicator-metric-row { min-height: 54px; padding: 8px 10px; border: 1px solid #e7ebf2; border-radius: 5px; display: grid; grid-template-columns: minmax(180px, 1fr) 180px minmax(240px, 1.5fr) 34px; gap: 10px; align-items: center; }
+    .indicator-metric-row .indicator-edit-input, .indicator-metric-row .indicator-edit-select { height: 36px; }
+    .indicator-metric-remove { width: 34px; height: 34px; color: #ff4d4f; border-radius: 4px; display: grid; place-items: center; font-size: 18px; }
+    .indicator-metric-remove:hover { background: #fff2f0; }
+    .indicator-metric-add { margin-top: 12px; height: 36px; padding: 0 14px; border: 1px dashed #9db1ff; border-radius: 4px; color: #3154ff; font-weight: 700; }
+
     /* 量表编辑器 */
     .builder { height: 100vh; min-width: 1440px; display: grid; grid-template-rows: 58px 1fr; background: #eef2f7; }
     .builder-top { height: 58px; background: #fff; border-bottom: 1px solid #e8ebf0; display: flex; align-items: center; padding: 0 18px; gap: 28px; }
@@ -454,6 +482,24 @@
     </div>
   </section>
 
+  <section id="indicatorEditorPage" class="page">
+    <div class="indicator-editor-page">
+      <header class="indicator-editor-header">
+        <button class="indicator-editor-back" data-close-indicator-editor aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="indicator-editor-title"><h1>编辑指标看板</h1><p id="indicatorEditorSubtitle">配置看板基本信息和展示指标</p></div>
+        <div class="indicator-editor-actions"><button class="secondary-btn" data-close-indicator-editor>取消</button><button class="confirm-btn" data-save-indicator-editor>保存</button></div>
+      </header>
+      <main class="indicator-editor-body">
+        <section class="indicator-edit-card"><div class="indicator-edit-card-head"><h2>基本配置</h2></div><div class="indicator-edit-card-body"><div class="indicator-edit-grid">
+          <div class="indicator-edit-field required full"><label>指标看板名称</label><input class="indicator-edit-input" id="indicatorEditorName" placeholder="请输入指标看板名称"></div>
+          <div class="indicator-edit-field required"><label>适用画像</label><input class="indicator-edit-input" id="indicatorEditorProfile" placeholder="请输入适用画像"></div>
+          <div class="indicator-edit-field required"><label>状态</label><select class="indicator-edit-select" id="indicatorEditorStatus"><option value="false">未发布</option><option value="true">发布</option></select></div>
+        </div></div></section>
+        <section class="indicator-edit-card"><div class="indicator-edit-card-head"><h2>看板指标配置</h2></div><div class="indicator-edit-card-body"><div class="indicator-metric-list" id="indicatorMetricRows"></div><button class="indicator-metric-add" data-add-indicator-metric>+ 添加指标</button></div></section>
+      </main>
+    </div>
+  </section>
+
   <section id="builderPage" class="page">
     <div class="builder">
       <header class="builder-top">
@@ -531,15 +577,16 @@
     ];
 
     let indicatorTemplates = [
-      { id: 'board-1', name: '患者基础信息看板', applicableProfile: '全部患者', published: true },
-      { id: 'board-2', name: '糖尿病健康指标看板', applicableProfile: '糖尿病患者', published: true },
-      { id: 'board-3', name: '肿瘤患者随访看板', applicableProfile: '肿瘤患者', published: false },
-      { id: 'board-4', name: '营养风险指标看板', applicableProfile: '住院患者', published: true },
-      { id: 'board-5', name: '心血管风险看板', applicableProfile: '高血压患者', published: false },
-      { id: 'board-6', name: '患者运营数据看板', applicableProfile: '全部患者', published: true }
+      { id: 'board-1', name: '患者基础信息看板', applicableProfile: '全部患者', published: true, metrics: [{ name: '年龄', type: '数值', source: 'patient.age' }, { name: '性别', type: '分类', source: 'patient.gender' }] },
+      { id: 'board-2', name: '糖尿病健康指标看板', applicableProfile: '糖尿病患者', published: true, metrics: [{ name: '空腹血糖', type: '数值', source: 'lab.fbg' }, { name: '糖化血红蛋白', type: '数值', source: 'lab.hba1c' }] },
+      { id: 'board-3', name: '肿瘤患者随访看板', applicableProfile: '肿瘤患者', published: false, metrics: [{ name: '随访日期', type: '日期', source: 'followup.date' }] },
+      { id: 'board-4', name: '营养风险指标看板', applicableProfile: '住院患者', published: true, metrics: [{ name: 'NRS-2002总分', type: '数值', source: 'nrs2002.totalScore' }] },
+      { id: 'board-5', name: '心血管风险看板', applicableProfile: '高血压患者', published: false, metrics: [{ name: '收缩压', type: '数值', source: 'vital.sbp' }, { name: '舒张压', type: '数值', source: 'vital.dbp' }] },
+      { id: 'board-6', name: '患者运营数据看板', applicableProfile: '全部患者', published: true, metrics: [{ name: '患者总数', type: '数值', source: 'operation.patientCount' }] }
     ];
 
     const indicatorState = { keyword: '', editingId: null };
+    const indicatorEditorState = { editingId: null, dirty: false, draft: null };
 
     const patientRecord = {
       name: '林嘉慧', gender: '女', birthDate: '2007-06', age: '19', ethnicity: '汉族', occupation: '学生',
@@ -703,6 +750,56 @@
       closeIndicatorModal();
       renderIndicatorList();
       showToast(wasEditing ? '指标看板已更新' : '指标看板已创建');
+    }
+
+    function renderIndicatorMetricEditor() {
+      const metrics = indicatorEditorState.draft?.metrics || [];
+      document.getElementById('indicatorMetricRows').innerHTML = metrics.length ? metrics.map((metric, index) => `<div class="indicator-metric-row">
+        <input class="indicator-edit-input" data-indicator-metric-field="name" data-indicator-metric-index="${index}" value="${esc(metric.name)}" placeholder="指标名称">
+        <select class="indicator-edit-select" data-indicator-metric-field="type" data-indicator-metric-index="${index}">${['数值','分类','文本','日期','评分'].map(type => `<option ${metric.type === type ? 'selected' : ''}>${type}</option>`).join('')}</select>
+        <input class="indicator-edit-input" data-indicator-metric-field="source" data-indicator-metric-index="${index}" value="${esc(metric.source)}" placeholder="数据来源字段，例如 vital.sbp">
+        <button class="indicator-metric-remove" data-remove-indicator-metric="${index}" title="删除">×</button>
+      </div>`).join('') : '<div class="muted-note">暂未配置指标，可点击下方按钮添加。</div>';
+    }
+
+    function openIndicatorEditor(id) {
+      const item = indicatorTemplates.find(row => row.id === id);
+      if (!item) return;
+      indicatorEditorState.editingId = id;
+      indicatorEditorState.dirty = false;
+      indicatorEditorState.draft = JSON.parse(JSON.stringify({ ...item, metrics: item.metrics || [] }));
+      document.getElementById('indicatorEditorName').value = item.name;
+      document.getElementById('indicatorEditorProfile').value = item.applicableProfile;
+      document.getElementById('indicatorEditorStatus').value = String(item.published);
+      document.getElementById('indicatorEditorSubtitle').textContent = `正在编辑：${item.name}`;
+      renderIndicatorMetricEditor();
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      document.getElementById('indicatorEditorPage').classList.add('active');
+    }
+
+    function closeIndicatorEditor(force = false) {
+      if (!force && indicatorEditorState.dirty && !window.confirm('当前内容尚未保存，确定退出吗？')) return;
+      indicatorEditorState.editingId = null;
+      indicatorEditorState.dirty = false;
+      indicatorEditorState.draft = null;
+      document.getElementById('indicatorEditorPage').classList.remove('active');
+      document.getElementById('listPage').classList.add('active');
+      showListView('indicator');
+    }
+
+    function saveIndicatorEditor() {
+      const draft = indicatorEditorState.draft;
+      draft.name = document.getElementById('indicatorEditorName').value.trim();
+      draft.applicableProfile = document.getElementById('indicatorEditorProfile').value.trim();
+      draft.published = document.getElementById('indicatorEditorStatus').value === 'true';
+      if (!draft.name || !draft.applicableProfile) return showToast('请填写看板名称和适用画像');
+      if (draft.metrics.some(metric => !metric.name.trim() || !metric.source.trim())) return showToast('请完善指标名称和数据来源字段');
+      const item = indicatorTemplates.find(row => row.id === indicatorEditorState.editingId);
+      Object.assign(item, JSON.parse(JSON.stringify(draft)));
+      indicatorEditorState.dirty = false;
+      closeIndicatorEditor(true);
+      renderIndicatorList();
+      showToast('指标看板已保存');
     }
 
     function formatBirthDate(value) {
@@ -1090,6 +1187,27 @@
     function renderAll() { renderPalette(); renderCanvas(); renderProps(); }
 
     document.addEventListener('click', e => {
+      if (e.target.closest('[data-close-indicator-editor]')) {
+        closeIndicatorEditor();
+        return;
+      }
+      if (e.target.closest('[data-save-indicator-editor]')) {
+        saveIndicatorEditor();
+        return;
+      }
+      if (e.target.closest('[data-add-indicator-metric]')) {
+        indicatorEditorState.draft.metrics.push({ name: '', type: '数值', source: '' });
+        indicatorEditorState.dirty = true;
+        renderIndicatorMetricEditor();
+        return;
+      }
+      const removeIndicatorMetric = e.target.closest('[data-remove-indicator-metric]');
+      if (removeIndicatorMetric) {
+        indicatorEditorState.draft.metrics.splice(Number(removeIndicatorMetric.dataset.removeIndicatorMetric), 1);
+        indicatorEditorState.dirty = true;
+        renderIndicatorMetricEditor();
+        return;
+      }
       if (e.target.closest('[data-open-patient]')) {
         showPatientPage();
         return;
@@ -1165,7 +1283,7 @@
       }
       const editIndicator = e.target.closest('[data-edit-indicator]');
       if (editIndicator) {
-        openIndicatorModal(editIndicator.dataset.editIndicator);
+        openIndicatorEditor(editIndicator.dataset.editIndicator);
         return;
       }
       const toggleIndicator = e.target.closest('[data-toggle-indicator-status]');
@@ -1278,6 +1396,16 @@
     });
 
     document.addEventListener('input', e => {
+      if (e.target.matches('#indicatorEditorName, #indicatorEditorProfile') && indicatorEditorState.draft) {
+        indicatorEditorState.dirty = true;
+        return;
+      }
+      if (e.target.matches('[data-indicator-metric-field]') && indicatorEditorState.draft) {
+        const metric = indicatorEditorState.draft.metrics[Number(e.target.dataset.indicatorMetricIndex)];
+        metric[e.target.dataset.indicatorMetricField] = e.target.value;
+        indicatorEditorState.dirty = true;
+        return;
+      }
       if (e.target.matches('[data-patient-field]') && patientEditState.draft) {
         const field = e.target.dataset.patientField;
         patientEditState.draft[field] = e.target.value;
@@ -1338,6 +1466,16 @@
     });
 
     document.addEventListener('change', e => {
+      if (e.target.id === 'indicatorEditorStatus' && indicatorEditorState.draft) {
+        indicatorEditorState.dirty = true;
+        return;
+      }
+      if (e.target.matches('[data-indicator-metric-field]') && indicatorEditorState.draft) {
+        const metric = indicatorEditorState.draft.metrics[Number(e.target.dataset.indicatorMetricIndex)];
+        metric[e.target.dataset.indicatorMetricField] = e.target.value;
+        indicatorEditorState.dirty = true;
+        return;
+      }
       if (e.target.matches('[data-patient-field]') && patientEditState.draft) {
         const field = e.target.dataset.patientField;
         patientEditState.draft[field] = e.target.value;
