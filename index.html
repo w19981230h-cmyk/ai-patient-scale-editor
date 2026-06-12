@@ -194,6 +194,15 @@
     .patient-nav-item { height: 48px; padding: 0 14px; border-radius: 5px; display: flex; align-items: center; gap: 9px; color: #7b8799; font-weight: 700; margin-bottom: 8px; }
     .patient-nav-item.active { color: #214cff; background: #fff; box-shadow: 0 3px 12px rgba(43,68,119,.06); border-left: 3px solid #3154ff; }
     .patient-nav-item svg { width: 18px; height: 18px; }
+    .patient-template-config { align-self: start; padding: 20px 18px 22px; background: rgba(255,255,255,.96); border: 1px solid #dfe8f5; border-radius: 8px; }
+    .patient-template-config h2 { margin: 0 0 20px; padding-bottom: 14px; border-bottom: 1px solid #edf1f6; color: #253751; font-size: 16px; }
+    .patient-template-field { margin-bottom: 18px; }
+    .patient-template-field:last-child { margin-bottom: 0; }
+    .patient-template-field label { display: block; margin-bottom: 8px; color: #405069; font-weight: 700; }
+    .patient-template-field label::before { content: '*'; margin-right: 4px; color: #ff4d4f; }
+    .patient-template-input, .patient-template-select { width: 100%; height: 38px; padding: 0 11px; border: 1px solid #dfe5ee; border-radius: 4px; color: #35445b; background: #fff; }
+    .patient-template-input:focus, .patient-template-select:focus { border-color: #3154ff; box-shadow: 0 0 0 2px rgba(49,84,255,.08); }
+    .patient-template-help { margin-top: 7px; color: #929dad; font-size: 12px; line-height: 1.5; }
     .patient-content { min-width: 0; display: flex; flex-direction: column; gap: 16px; }
     .patient-summary, .patient-portrait, .patient-metrics, .patient-monitor { background: rgba(255,255,255,.95); border: 1px solid #dfe8f5; border-radius: 8px; }
     .patient-summary { padding: 20px 26px 24px; }
@@ -478,9 +487,11 @@
         <div class="patient-top-actions"><button class="patient-top-save" data-save-patient-detail>保存</button><button class="patient-top-publish" data-publish-patient>发布</button></div>
       </header>
       <div class="patient-layout">
-        <aside class="patient-nav">
-          <div class="patient-profile"><div class="patient-profile-row"><div class="patient-avatar"></div><div><div class="patient-profile-name" data-patient-text="name">林嘉慧</div><div class="patient-profile-meta"><span data-patient-text="gender">女</span><span data-patient-text="age">19岁</span></div></div></div><div class="patient-phone" data-patient-text="phone">联系电话：138****5628</div></div>
-          <nav class="patient-nav-list"><div class="patient-nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M13 10h4M13 14h4M7 16h4"/></svg>基本信息</div><div class="patient-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10Z"/></svg>健康管理</div><div class="patient-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 4h10v3h3v13H4V7h3z"/><path d="M9 4h6v4H9zM8 13h8M8 17h5"/></svg>病历档案</div></nav>
+        <aside class="patient-template-config">
+          <h2>模板配置</h2>
+          <div class="patient-template-field"><label for="patientTemplateName">模板名称</label><input class="patient-template-input" id="patientTemplateName" placeholder="请输入模板名称"></div>
+          <div class="patient-template-field"><label for="patientTemplateType">适用对象</label><select class="patient-template-select" id="patientTemplateType"><option value="方案">方案</option><option value="科室">科室</option><option value="主诊断">主诊断</option><option value="团队">团队</option></select><div class="patient-template-help">先选择适用对象类型。</div></div>
+          <div class="patient-template-field"><label for="patientTemplateValue">对象值域</label><select class="patient-template-select" id="patientTemplateValue"></select><div class="patient-template-help" id="patientTemplateValueHelp">请选择具体方案</div></div>
         </aside>
         <main class="patient-content">
           <section class="patient-summary">
@@ -620,7 +631,7 @@
       portraits: []
     };
     const patientEditState = { dirty: false, draft: null };
-    const patientPageState = { dirty: false, saving: false, publishing: false };
+    const patientPageState = { dirty: false, saving: false, publishing: false, editingId: null };
 
     const typeMeta = {
       single: { label: '单选', icon: radioIcon(), section: '选择' },
@@ -871,10 +882,30 @@
       });
     }
 
-    function showPatientPage() {
+    function updatePatientTemplateOptions(type, selectedValue = '') {
+      const select = document.getElementById('patientTemplateValue');
+      const options = [...(indicatorApplicableOptions[type] || [])];
+      if (selectedValue && !options.includes(selectedValue)) options.unshift(selectedValue);
+      select.innerHTML = options.map(value => `<option value="${esc(value)}" ${value === selectedValue ? 'selected' : ''}>${esc(value)}</option>`).join('');
+      document.getElementById('patientTemplateValueHelp').textContent = `请选择具体${type}`;
+    }
+
+    function renderPatientTemplateConfig() {
+      const item = indicatorTemplates.find(row => row.id === patientPageState.editingId) || indicatorTemplates[0];
+      if (!item) return;
+      patientPageState.editingId = item.id;
+      const applicableType = item.applicableType || inferApplicableType(item.applicableProfile);
+      document.getElementById('patientTemplateName').value = item.name;
+      document.getElementById('patientTemplateType').value = applicableType;
+      updatePatientTemplateOptions(applicableType, item.applicableProfile);
+    }
+
+    function showPatientPage(id = null) {
       document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
       document.getElementById('patientPage').classList.add('active');
+      patientPageState.editingId = id || patientPageState.editingId || indicatorTemplates[0]?.id || null;
       patientPageState.dirty = false;
+      renderPatientTemplateConfig();
       renderPatientDetail();
     }
 
@@ -887,15 +918,22 @@
 
     function savePatientDetail() {
       if (patientPageState.saving) return;
+      const item = indicatorTemplates.find(row => row.id === patientPageState.editingId);
+      const name = document.getElementById('patientTemplateName').value.trim();
+      const applicableType = document.getElementById('patientTemplateType').value;
+      const applicableProfile = document.getElementById('patientTemplateValue').value;
+      if (!name || !applicableType || !applicableProfile) return showToast('请填写模板名称和适用对象');
       patientPageState.saving = true;
       const button = document.querySelector('[data-save-patient-detail]');
       button.classList.add('loading');
       button.textContent = '保存中...';
       setTimeout(() => {
+        if (item) Object.assign(item, { name, applicableType, applicableProfile });
         patientPageState.saving = false;
         patientPageState.dirty = false;
         button.classList.remove('loading');
         button.textContent = '保存';
+        renderIndicatorList();
         showToast('保存成功');
       }, 500);
     }
@@ -1401,7 +1439,7 @@
       }
       const editIndicator = e.target.closest('[data-edit-indicator]');
       if (editIndicator) {
-        openIndicatorEditor(editIndicator.dataset.editIndicator);
+        showPatientPage(editIndicator.dataset.editIndicator);
         return;
       }
       const toggleIndicator = e.target.closest('[data-toggle-indicator-status]');
@@ -1514,6 +1552,10 @@
     });
 
     document.addEventListener('input', e => {
+      if (e.target.id === 'patientTemplateName') {
+        patientPageState.dirty = true;
+        return;
+      }
       if (e.target.matches('#indicatorEditorName') && indicatorEditorState.draft) {
         indicatorEditorState.dirty = true;
         return;
@@ -1584,6 +1626,15 @@
     });
 
     document.addEventListener('change', e => {
+      if (e.target.id === 'patientTemplateType') {
+        updatePatientTemplateOptions(e.target.value);
+        patientPageState.dirty = true;
+        return;
+      }
+      if (e.target.id === 'patientTemplateValue') {
+        patientPageState.dirty = true;
+        return;
+      }
       if (e.target.id === 'indicatorEditorApplicableType' && indicatorEditorState.draft) {
         updateIndicatorApplicableOptions(e.target.value);
         indicatorEditorState.dirty = true;
