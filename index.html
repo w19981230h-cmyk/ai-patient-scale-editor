@@ -490,8 +490,8 @@
         <aside class="patient-template-config">
           <h2>模板配置</h2>
           <div class="patient-template-field"><label for="patientTemplateName">模板名称</label><input class="patient-template-input" id="patientTemplateName" placeholder="请输入模板名称"></div>
-          <div class="patient-template-field"><label for="patientTemplateType">适用对象</label><select class="patient-template-select" id="patientTemplateType"><option value="方案">方案</option><option value="科室">科室</option><option value="主诊断">主诊断</option><option value="团队">团队</option></select><div class="patient-template-help">先选择适用对象类型。</div></div>
-          <div class="patient-template-field"><label for="patientTemplateValue">对象值域</label><select class="patient-template-select" id="patientTemplateValue"></select><div class="patient-template-help" id="patientTemplateValueHelp">请选择具体方案</div></div>
+          <div class="patient-template-field"><label for="patientTemplateType">匹配维度</label><select class="patient-template-select" id="patientTemplateType"><option value="方案">方案</option><option value="科室">科室</option><option value="主诊断">主诊断</option><option value="团队">团队</option></select><div class="patient-template-help">先选择匹配维度。</div></div>
+          <div class="patient-template-field"><label for="patientTemplateValue">匹配值</label><select class="patient-template-select" id="patientTemplateValue"></select><div class="patient-template-help" id="patientTemplateValueHelp">请选择具体方案</div></div>
         </aside>
         <main class="patient-content">
           <section class="patient-summary">
@@ -922,7 +922,7 @@
       const name = document.getElementById('patientTemplateName').value.trim();
       const applicableType = document.getElementById('patientTemplateType').value;
       const applicableProfile = document.getElementById('patientTemplateValue').value;
-      if (!name || !applicableType || !applicableProfile) return showToast('请填写模板名称和适用对象');
+      if (!name || !applicableType || !applicableProfile) return showToast('请填写模板名称、匹配维度和匹配值');
       patientPageState.saving = true;
       const button = document.querySelector('[data-save-patient-detail]');
       button.classList.add('loading');
