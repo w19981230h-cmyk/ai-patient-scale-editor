@@ -130,9 +130,19 @@
     .dashboard-info dt, .dashboard-info dd { margin: 0; }
     .dashboard-info dt { color: #98a3b5; }
     .dashboard-info dd { color: #4d5c74; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .dashboard-card-foot { margin-top: auto; padding-top: 16px; border-top: 1px solid #f0f2f6; display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
+    .dashboard-card-foot { margin-top: auto; padding-top: 16px; border-top: 1px solid #f0f2f6; display: flex; align-items: center; justify-content: flex-end; gap: 14px; position: relative; }
     .dashboard-action { color: #3154ff; font-size: 13px; font-weight: 600; }
     .dashboard-action.danger { color: #ff4d4f; }
+    .dashboard-more { position: relative; }
+    .dashboard-more-trigger { color: #3154ff; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
+    .dashboard-more-trigger svg { width: 13px; height: 13px; transition: transform .16s; }
+    .dashboard-more.open .dashboard-more-trigger svg { transform: rotate(180deg); }
+    .dashboard-menu { position: absolute; right: 0; bottom: 28px; z-index: 6; min-width: 96px; padding: 5px; background: #fff; border: 1px solid #e5eaf2; border-radius: 5px; box-shadow: 0 8px 24px rgba(32, 48, 78, .15); display: none; }
+    .dashboard-more.open .dashboard-menu { display: block; }
+    .dashboard-menu button { width: 100%; height: 32px; padding: 0 10px; border-radius: 3px; display: flex; align-items: center; color: #40506b; font-size: 13px; white-space: nowrap; }
+    .dashboard-menu button:hover { background: #f4f7ff; color: #3154ff; }
+    .dashboard-menu button.danger { color: #ff4d4f; }
+    .dashboard-menu button.danger:hover { background: #fff2f0; color: #ff4d4f; }
     .dashboard-empty { grid-column: 1 / -1; height: 260px; display: grid; place-items: center; color: #9ba6b7; }
     @media (max-width: 1650px) { .dashboard-grid { grid-template-columns: repeat(3, minmax(220px, 1fr)); } }
     .modal-mask { position: fixed; inset: 0; z-index: 40; background: rgba(17, 28, 51, .28); display: none; align-items: center; justify-content: center; }
@@ -480,9 +490,14 @@
         </div>
         <dl class="dashboard-info"><dt>适用画像</dt><dd>${esc(item.applicableProfile)}</dd></dl>
         <div class="dashboard-card-foot">
-          ${item.published ? '' : `<button class="dashboard-action" data-toggle-indicator-status="${item.id}">发布</button>`}
           <button class="dashboard-action" data-edit-indicator="${item.id}">编辑</button>
-          <button class="dashboard-action danger" data-delete-indicator="${item.id}">删除</button>
+          <div class="dashboard-more">
+            <button class="dashboard-more-trigger" data-dashboard-more aria-expanded="false">更多<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m7 10 5 5 5-5"/></svg></button>
+            <div class="dashboard-menu">
+              ${item.published ? '' : `<button data-toggle-indicator-status="${item.id}">发布</button>`}
+              <button class="danger" data-delete-indicator="${item.id}">删除</button>
+            </div>
+          </div>
         </div>
       </article>`).join('') : '<div class="dashboard-empty">暂无符合条件的指标看板</div>';
     }
@@ -812,6 +827,24 @@
     function renderAll() { renderPalette(); renderCanvas(); renderProps(); }
 
     document.addEventListener('click', e => {
+      const dashboardMore = e.target.closest('[data-dashboard-more]');
+      if (dashboardMore) {
+        const container = dashboardMore.closest('.dashboard-more');
+        const willOpen = !container.classList.contains('open');
+        document.querySelectorAll('.dashboard-more.open').forEach(menu => {
+          menu.classList.remove('open');
+          menu.querySelector('[data-dashboard-more]')?.setAttribute('aria-expanded', 'false');
+        });
+        container.classList.toggle('open', willOpen);
+        dashboardMore.setAttribute('aria-expanded', String(willOpen));
+        return;
+      }
+      if (!e.target.closest('.dashboard-more')) {
+        document.querySelectorAll('.dashboard-more.open').forEach(menu => {
+          menu.classList.remove('open');
+          menu.querySelector('[data-dashboard-more]')?.setAttribute('aria-expanded', 'false');
+        });
+      }
       const listView = e.target.closest('[data-list-view]');
       if (listView) {
         showListView(listView.dataset.listView);
