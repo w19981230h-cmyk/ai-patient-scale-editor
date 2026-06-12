@@ -166,6 +166,100 @@
     .secondary-btn { border: 1px solid #dfe5ef; color: #536079; background: #fff; }
     .confirm-btn { color: #fff; background: #1d3fff; }
 
+    /* 患者档案详情与全屏编辑 */
+    .patient-page { height: 100vh; background: #edf3fb; overflow: auto; padding: 20px; }
+    .patient-page-head { height: 42px; display: flex; align-items: center; gap: 10px; color: #243751; font-size: 18px; font-weight: 800; }
+    .patient-back { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: #54647d; background: rgba(255,255,255,.7); }
+    .patient-layout { min-height: calc(100vh - 82px); display: grid; grid-template-columns: 270px minmax(900px, 1fr); gap: 16px; }
+    .patient-nav { background: rgba(248,250,255,.94); border: 1px solid #dfe8f5; border-radius: 8px; overflow: hidden; }
+    .patient-profile { min-height: 174px; padding: 34px 18px 18px; background: linear-gradient(145deg, #dfeaff, #f8fbff); border-bottom: 1px dashed #d9e2f0; }
+    .patient-profile-row { display: flex; align-items: center; gap: 12px; }
+    .patient-avatar { width: 58px; height: 58px; border-radius: 50%; border: 3px solid #fff; background: linear-gradient(150deg, #283b62 0 34%, #ffd7c7 35% 70%, #dbe5ff 71%); box-shadow: 0 5px 14px rgba(35,57,104,.15); flex: 0 0 auto; }
+    .patient-profile-name { color: #2d3d57; font-weight: 800; margin-bottom: 8px; }
+    .patient-profile-meta { color: #59677e; display: flex; gap: 12px; font-size: 13px; }
+    .patient-phone { margin: 10px 0 0 70px; color: #8b96a8; font-size: 12px; }
+    .patient-nav-list { padding: 16px; }
+    .patient-nav-item { height: 48px; padding: 0 14px; border-radius: 5px; display: flex; align-items: center; gap: 9px; color: #7b8799; font-weight: 700; margin-bottom: 8px; }
+    .patient-nav-item.active { color: #214cff; background: #fff; box-shadow: 0 3px 12px rgba(43,68,119,.06); border-left: 3px solid #3154ff; }
+    .patient-nav-item svg { width: 18px; height: 18px; }
+    .patient-content { min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+    .patient-summary, .patient-portrait, .patient-metrics, .patient-monitor { background: rgba(255,255,255,.95); border: 1px solid #dfe8f5; border-radius: 8px; }
+    .patient-summary { padding: 20px 26px 24px; }
+    .patient-summary-head { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+    .patient-summary-name { margin: 0; color: #253751; font-size: 20px; }
+    .patient-summary-meta { color: #40506a; }
+    .patient-edit-btn { margin-left: auto; height: 34px; padding: 0 14px; border: 1px solid #3154ff; border-radius: 4px; color: #3154ff; background: #fff; display: inline-flex; align-items: center; gap: 6px; font-weight: 700; }
+    .patient-edit-btn svg { width: 15px; height: 15px; }
+    .patient-info-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; }
+    .patient-info-title { margin: 0 0 14px; padding-left: 10px; border-left: 3px solid #3154ff; color: #2e3d56; font-size: 15px; }
+    .patient-info-grid { display: grid; grid-template-columns: 84px 1fr; row-gap: 12px; color: #55647a; }
+    .patient-info-grid dt, .patient-info-grid dd { margin: 0; }
+    .patient-info-grid dt { color: #8994a5; }
+    .patient-portrait { padding: 18px 24px; }
+    .patient-band-title { margin: 0 0 16px; color: #3154ff; font-size: 15px; }
+    .portrait-columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; padding: 16px 22px; background: #f5f7ff; border-radius: 6px; }
+    .portrait-item { color: #4c5a71; border-left: 2px solid #3154ff; padding-left: 10px; }
+    .portrait-count { margin-top: 12px; color: #6d8cff; font-size: 12px; }
+    .patient-metrics { padding: 16px; display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)); gap: 14px; }
+    .patient-metric { min-height: 130px; padding: 16px; border: 1px solid #e8edf5; border-radius: 6px; }
+    .patient-metric h4 { margin: 0 0 18px; font-size: 14px; color: #34425a; }
+    .patient-metric strong { display: block; margin-bottom: 10px; font-size: 18px; color: #263650; }
+    .patient-metric small { color: #9aa4b3; }
+    .patient-spark { height: 30px; margin-top: 12px; background: linear-gradient(135deg, transparent 0 18%, #84a4ff 19% 23%, transparent 24% 35%, #3154ff 36% 40%, transparent 41% 53%, #9db4ff 54% 58%, transparent 59%); opacity: .7; }
+    .patient-monitor { min-height: 230px; padding: 20px; }
+    .patient-monitor h3 { margin: 0 0 22px; padding-left: 10px; border-left: 3px solid #3154ff; font-size: 15px; }
+    .monitor-grid { height: 130px; background-image: repeating-linear-gradient(to bottom, transparent 0 42px, #e9edf4 43px 44px); position: relative; }
+    .monitor-grid::after { content: "暂无监测数据"; position: absolute; inset: 0; display: grid; place-items: center; color: #a3acba; }
+
+    .patient-editor { position: fixed; inset: 0; z-index: 60; background: #eef3fa; display: none; grid-template-rows: 76px minmax(0, 1fr); }
+    .patient-editor.open { display: grid; }
+    .editor-header { background: #fff; border-bottom: 1px solid #dfe5ef; padding: 0 28px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 3; }
+    .editor-back { width: 34px; height: 34px; border-radius: 4px; display: grid; place-items: center; color: #50617a; }
+    .editor-back:hover { background: #f2f5fa; }
+    .editor-back svg { width: 20px; height: 20px; }
+    .editor-heading { min-width: 0; }
+    .editor-heading h1 { margin: 0 0 5px; font-size: 18px; color: #263751; }
+    .editor-patient-meta { color: #7b8798; font-size: 12px; }
+    .editor-actions { margin-left: auto; display: flex; gap: 10px; }
+    .editor-cancel, .editor-save { height: 36px; min-width: 76px; padding: 0 16px; border-radius: 4px; font-weight: 700; }
+    .editor-cancel { border: 1px solid #dbe1eb; color: #55647c; background: #fff; }
+    .editor-save { background: #1d43ff; color: #fff; }
+    .editor-save.loading { opacity: .68; pointer-events: none; }
+    .editor-body { overflow: auto; padding: 24px max(28px, calc((100vw - 1320px) / 2)) 60px; }
+    .editor-error-banner { display: none; margin-bottom: 14px; padding: 11px 14px; border: 1px solid #ffccc7; border-radius: 5px; background: #fff2f0; color: #cf1322; }
+    .editor-error-banner.show { display: block; }
+    .editor-section { background: #fff; border: 1px solid #e1e7f0; border-radius: 7px; margin-bottom: 16px; overflow: hidden; }
+    .editor-section-head { height: 52px; padding: 0 20px; display: flex; align-items: center; border-bottom: 1px solid #edf0f5; }
+    .editor-section-head h2 { margin: 0; font-size: 15px; color: #2d3d55; }
+    .section-toggle { margin-left: auto; width: 30px; height: 30px; color: #718096; display: grid; place-items: center; }
+    .section-toggle svg { width: 16px; height: 16px; transition: transform .16s; }
+    .editor-section.collapsed .section-toggle svg { transform: rotate(-90deg); }
+    .editor-section.collapsed .editor-section-body { display: none; }
+    .editor-section-body { padding: 20px; }
+    .form-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 20px; }
+    .archive-field { min-width: 0; }
+    .archive-field.span-2 { grid-column: span 2; }
+    .archive-field.span-3 { grid-column: 1 / -1; }
+    .archive-field label { display: block; margin-bottom: 8px; color: #405069; font-weight: 700; }
+    .archive-field.required label::before { content: "*"; margin-right: 4px; color: #ff4d4f; }
+    .archive-input, .archive-select, .archive-textarea { width: 100%; border: 1px solid #dfe5ee; border-radius: 4px; background: #fff; color: #35445b; }
+    .archive-input, .archive-select { height: 38px; padding: 0 11px; }
+    .archive-textarea { min-height: 92px; padding: 10px 11px; resize: vertical; line-height: 1.55; }
+    .archive-input:focus, .archive-select:focus, .archive-textarea:focus { border-color: #3154ff; box-shadow: 0 0 0 2px rgba(49,84,255,.08); }
+    .archive-input[readonly] { background: #f4f6f9; color: #929cab; cursor: not-allowed; }
+    .archive-field.changed .archive-input, .archive-field.changed .archive-select, .archive-field.changed .archive-textarea { background: #f8faff; border-color: #9bb0ff; }
+    .field-error { min-height: 16px; margin-top: 5px; color: #ff4d4f; font-size: 12px; }
+    .habit-options { height: 38px; display: inline-flex; border: 1px solid #dfe5ee; border-radius: 4px; overflow: hidden; }
+    .habit-option { min-width: 62px; padding: 0 14px; color: #657289; border-right: 1px solid #e5e9f0; }
+    .habit-option:last-child { border-right: 0; }
+    .habit-option.active { color: #3154ff; background: #eef3ff; }
+    .portrait-editor-list { display: flex; flex-direction: column; gap: 10px; }
+    .portrait-editor-row { display: grid; grid-template-columns: 150px 180px minmax(220px, 1fr) 34px; gap: 10px; align-items: center; }
+    .portrait-editor-row .archive-input, .portrait-editor-row .archive-select { height: 36px; }
+    .portrait-remove { width: 34px; height: 34px; border-radius: 4px; color: #ff4d4f; display: grid; place-items: center; }
+    .portrait-remove:hover { background: #fff2f0; }
+    .portrait-add { margin-top: 12px; height: 36px; padding: 0 14px; border: 1px dashed #9cb0ff; border-radius: 4px; color: #3154ff; font-weight: 700; }
+
     /* 量表编辑器 */
     .builder { height: 100vh; min-width: 1440px; display: grid; grid-template-rows: 58px 1fr; background: #eef2f7; }
     .builder-top { height: 58px; background: #fff; border-bottom: 1px solid #e8ebf0; display: flex; align-items: center; padding: 0 18px; gap: 28px; }
@@ -298,7 +392,7 @@
         <nav class="menu">
           <div class="menu-section"><div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg><span>工作台</span></div></div>
           <div class="menu-section"><div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 4h8l3 3v13H5V4h3Z"/><path d="M9 12h6M9 16h4"/></svg><span>任务管理</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m8 10 4 4 4-4"/></svg></div></div>
-          <div class="menu-section"><div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>患者管理</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m8 10 4 4 4-4"/></svg></div></div>
+          <div class="menu-section"><div class="menu-item" data-open-patient><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>患者管理</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m8 10 4 4 4-4"/></svg></div></div>
           <div class="menu-section">
             <div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 4h10v16H7z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><span>方案与内容</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m18 15-6-6-6 6"/></svg></div>
             <div class="submenu"><div class="submenu-item">方案管理</div><div class="submenu-item active" data-list-view="scale">量表管理</div><div class="submenu-item">评估报告</div><div class="submenu-item">文章管理</div><div class="submenu-item">知识库</div></div>
@@ -333,6 +427,30 @@
           <div class="dashboard-grid" id="indicatorCards"></div>
         </section>
       </main>
+    </div>
+  </section>
+
+  <section id="patientPage" class="page">
+    <div class="patient-page">
+      <header class="patient-page-head"><button class="patient-back" data-patient-back aria-label="返回">‹</button><span>患者档案</span></header>
+      <div class="patient-layout">
+        <aside class="patient-nav">
+          <div class="patient-profile"><div class="patient-profile-row"><div class="patient-avatar"></div><div><div class="patient-profile-name" data-patient-text="name">林嘉慧</div><div class="patient-profile-meta"><span data-patient-text="gender">女</span><span data-patient-text="age">19岁</span></div></div></div><div class="patient-phone" data-patient-text="phone">联系电话：138****5628</div></div>
+          <nav class="patient-nav-list"><div class="patient-nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M13 10h4M13 14h4M7 16h4"/></svg>基本信息</div><div class="patient-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10Z"/></svg>健康管理</div><div class="patient-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 4h10v3h3v13H4V7h3z"/><path d="M9 4h6v4H9zM8 13h8M8 17h5"/></svg>病历档案</div></nav>
+        </aside>
+        <main class="patient-content">
+          <section class="patient-summary">
+            <div class="patient-summary-head"><h1 class="patient-summary-name" data-patient-text="name">林嘉慧</h1><span data-patient-text="gender">女</span><span data-patient-text="age">19岁</span><span class="patient-summary-meta">就诊号：<span data-patient-text="visitNo">22071523287</span></span><button class="patient-edit-btn" data-edit-patient><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m4 20 4.5-1 10-10-3.5-3.5-10 10L4 20Z"/><path d="m13.5 6.5 3.5 3.5"/></svg>编辑档案</button></div>
+            <div class="patient-info-columns">
+              <div><h2 class="patient-info-title">基本信息</h2><dl class="patient-info-grid"><dt>出生年月</dt><dd data-patient-text="birthDate">2007年06月</dd><dt>民族</dt><dd data-patient-text="ethnicity">汉族</dd><dt>职业</dt><dd data-patient-text="occupation">学生</dd><dt>地区</dt><dd data-patient-text="region">浙江省杭州市</dd><dt>手机号码</dt><dd data-patient-text="phone">138****5628</dd></dl></div>
+              <div><h2 class="patient-info-title">健康史/生活习惯</h2><dl class="patient-info-grid"><dt>既往史</dt><dd data-patient-text="pastHistory">--</dd><dt>个人史</dt><dd data-patient-text="personalHistory">--</dd><dt>过敏史</dt><dd data-patient-text="allergyHistory">--</dd><dt>家族史</dt><dd data-patient-text="familyHistory">--</dd><dt>饮酒</dt><dd data-patient-text="drinking">否</dd><dt>吸烟</dt><dd data-patient-text="smoking">否</dd></dl></div>
+            </div>
+          </section>
+          <section class="patient-portrait"><h3 class="patient-band-title">健康画像</h3><div class="portrait-columns"><div class="portrait-item">疾病诊断：<span id="diagnosisSummary">--</span><div class="portrait-count" id="diagnosisCount">共 0 条</div></div><div class="portrait-item">异常指标：<span id="abnormalSummary">--</span><div class="portrait-count" id="abnormalCount">共 0 条</div></div><div class="portrait-item">风险提示：<span id="riskSummary">--</span><div class="portrait-count" id="riskCount">共 0 条</div></div></div></section>
+          <section class="patient-metrics"><article class="patient-metric"><h4>血压</h4><strong>--</strong><small>未更新</small><div class="patient-spark"></div></article><article class="patient-metric"><h4>血糖</h4><strong>--</strong><small>未更新</small><div class="patient-spark"></div></article><article class="patient-metric"><h4>BMI</h4><strong>--</strong><small>未更新</small><div class="patient-spark"></div></article><article class="patient-metric"><h4>心率</h4><strong>--</strong><small>未更新</small><div class="patient-spark"></div></article></section>
+          <section class="patient-monitor"><h3>血压监测数据</h3><div class="monitor-grid"></div></section>
+        </main>
+      </div>
     </div>
   </section>
 
@@ -372,6 +490,31 @@
       <div class="modal-foot"><button class="secondary-btn" data-close-indicator-modal>取消</button><button class="confirm-btn" data-save-indicator>保存</button></div>
     </div>
   </div>
+  <section class="patient-editor" id="patientEditor" aria-hidden="true">
+    <header class="editor-header"><button class="editor-back" data-cancel-patient-edit aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m15 18-6-6 6-6"/></svg></button><div class="editor-heading"><h1>编辑患者档案</h1><div class="editor-patient-meta"><span id="editorPatientMeta">林嘉慧 · 女 · 19岁 · 就诊号 22071523287</span></div></div><div class="editor-actions"><button class="editor-cancel" data-cancel-patient-edit>取消</button><button class="editor-save" data-save-patient>保存</button></div></header>
+    <main class="editor-body"><div class="editor-error-banner" id="patientEditorError">保存失败，请检查必填字段后重试。</div>
+      <section class="editor-section"><div class="editor-section-head"><h2>基本信息</h2><button class="section-toggle" data-section-toggle aria-label="折叠"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></button></div><div class="editor-section-body"><div class="form-grid">
+        <div class="archive-field required"><label>姓名</label><input class="archive-input" data-patient-field="name" placeholder="请输入姓名"><div class="field-error" data-error-for="name"></div></div>
+        <div class="archive-field required"><label>性别</label><select class="archive-select" data-patient-field="gender"><option value="">请选择</option><option>女</option><option>男</option><option>未知</option></select><div class="field-error" data-error-for="gender"></div></div>
+        <div class="archive-field required"><label>出生年月</label><input class="archive-input" type="month" data-patient-field="birthDate"><div class="field-error" data-error-for="birthDate"></div></div>
+        <div class="archive-field"><label>年龄</label><input class="archive-input" data-patient-field="age" placeholder="请输入年龄"></div>
+        <div class="archive-field"><label>民族</label><select class="archive-select" data-patient-field="ethnicity"><option>汉族</option><option>壮族</option><option>回族</option><option>满族</option><option>其他</option></select></div>
+        <div class="archive-field"><label>职业</label><input class="archive-input" data-patient-field="occupation" placeholder="请输入职业"></div>
+        <div class="archive-field"><label>地区</label><input class="archive-input" data-patient-field="region" placeholder="请输入省市区"></div>
+        <div class="archive-field required"><label>手机号码</label><input class="archive-input" data-patient-field="phone" placeholder="请输入手机号码"><div class="field-error" data-error-for="phone"></div></div>
+        <div class="archive-field"><label>就诊号</label><input class="archive-input" data-patient-field="visitNo" readonly></div>
+      </div></div></section>
+      <section class="editor-section"><div class="editor-section-head"><h2>健康史 / 生活习惯</h2><button class="section-toggle" data-section-toggle aria-label="折叠"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></button></div><div class="editor-section-body"><div class="form-grid">
+        <div class="archive-field span-2"><label>既往史</label><textarea class="archive-textarea" data-patient-field="pastHistory" placeholder="请输入既往疾病、手术或住院史"></textarea></div>
+        <div class="archive-field"><label>个人史</label><textarea class="archive-textarea" data-patient-field="personalHistory" placeholder="请输入个人史"></textarea></div>
+        <div class="archive-field"><label>过敏史</label><textarea class="archive-textarea" data-patient-field="allergyHistory" placeholder="请输入药物或食物过敏史"></textarea></div>
+        <div class="archive-field span-2"><label>家族史</label><textarea class="archive-textarea" data-patient-field="familyHistory" placeholder="请输入家族疾病史"></textarea></div>
+        <div class="archive-field"><label>饮酒</label><div class="habit-options" data-habit="drinking"><button class="habit-option" data-habit-value="否">否</button><button class="habit-option" data-habit-value="是">是</button><button class="habit-option" data-habit-value="已戒">已戒</button></div></div>
+        <div class="archive-field"><label>吸烟</label><div class="habit-options" data-habit="smoking"><button class="habit-option" data-habit-value="否">否</button><button class="habit-option" data-habit-value="是">是</button><button class="habit-option" data-habit-value="已戒">已戒</button></div></div>
+      </div></div></section>
+      <section class="editor-section"><div class="editor-section-head"><h2>健康画像</h2><button class="section-toggle" data-section-toggle aria-label="折叠"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 9 6 6 6-6"/></svg></button></div><div class="editor-section-body"><div class="portrait-editor-list" id="portraitEditorRows"></div><button class="portrait-add" data-add-portrait>+ 新增画像条目</button></div></section>
+    </main>
+  </section>
 
   <script>
     const scaleRows = [
@@ -397,6 +540,14 @@
     ];
 
     const indicatorState = { keyword: '', editingId: null };
+
+    const patientRecord = {
+      name: '林嘉慧', gender: '女', birthDate: '2007-06', age: '19', ethnicity: '汉族', occupation: '学生',
+      region: '浙江省杭州市', phone: '13812345628', visitNo: '22071523287', pastHistory: '', personalHistory: '',
+      allergyHistory: '', familyHistory: '', drinking: '否', smoking: '否',
+      portraits: []
+    };
+    const patientEditState = { dirty: false, draft: null };
 
     const typeMeta = {
       single: { label: '单选', icon: radioIcon(), section: '选择' },
@@ -552,6 +703,118 @@
       closeIndicatorModal();
       renderIndicatorList();
       showToast(wasEditing ? '指标看板已更新' : '指标看板已创建');
+    }
+
+    function formatBirthDate(value) {
+      if (!value) return '--';
+      const [year, month] = value.split('-');
+      return `${year}年${month}月`;
+    }
+
+    function patientDisplayValue(key, value) {
+      if (key === 'birthDate') return formatBirthDate(value);
+      if (key === 'age') return value ? `${value}岁` : '--';
+      if (key === 'phone') return value || '--';
+      return value || '--';
+    }
+
+    function renderPatientDetail() {
+      document.querySelectorAll('[data-patient-text]').forEach(node => {
+        const key = node.dataset.patientText;
+        node.textContent = patientDisplayValue(key, patientRecord[key]);
+      });
+      const groups = { diagnosis: [], abnormal: [], risk: [] };
+      patientRecord.portraits.forEach(item => groups[item.type]?.push(item));
+      [['diagnosis','diagnosisSummary','diagnosisCount'],['abnormal','abnormalSummary','abnormalCount'],['risk','riskSummary','riskCount']].forEach(([type, summaryId, countId]) => {
+        const items = groups[type];
+        document.getElementById(summaryId).textContent = items.length ? items.map(item => item.name).join('、') : '--';
+        document.getElementById(countId).textContent = `共 ${items.length} 条`;
+      });
+    }
+
+    function showPatientPage() {
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      document.getElementById('patientPage').classList.add('active');
+      renderPatientDetail();
+    }
+
+    function portraitTypeLabel(type) {
+      return { diagnosis: '疾病诊断', abnormal: '异常指标', risk: '风险提示' }[type] || '疾病诊断';
+    }
+
+    function renderPortraitEditor() {
+      const rows = patientEditState.draft?.portraits || [];
+      document.getElementById('portraitEditorRows').innerHTML = rows.length ? rows.map((item, index) => `<div class="portrait-editor-row">
+        <select class="archive-select" data-portrait-field="type" data-portrait-index="${index}"><option value="diagnosis" ${item.type === 'diagnosis' ? 'selected' : ''}>疾病诊断</option><option value="abnormal" ${item.type === 'abnormal' ? 'selected' : ''}>异常指标</option><option value="risk" ${item.type === 'risk' ? 'selected' : ''}>风险提示</option></select>
+        <input class="archive-input" data-portrait-field="name" data-portrait-index="${index}" value="${esc(item.name)}" placeholder="请输入名称">
+        <input class="archive-input" data-portrait-field="note" data-portrait-index="${index}" value="${esc(item.note)}" placeholder="请输入来源、备注或说明">
+        <button class="portrait-remove" data-remove-portrait="${index}" title="删除">×</button>
+      </div>`).join('') : '<div class="muted-note">暂无健康画像条目，可点击下方按钮新增。</div>';
+    }
+
+    function updateEditorMeta() {
+      const draft = patientEditState.draft;
+      document.getElementById('editorPatientMeta').textContent = `${draft.name || '未填写姓名'} · ${draft.gender || '未选择性别'} · ${draft.age ? `${draft.age}岁` : '年龄未知'} · 就诊号 ${draft.visitNo}`;
+    }
+
+    function openPatientEditor() {
+      patientEditState.draft = JSON.parse(JSON.stringify(patientRecord));
+      patientEditState.dirty = false;
+      document.querySelectorAll('[data-patient-field]').forEach(input => {
+        input.value = patientEditState.draft[input.dataset.patientField] || '';
+        input.closest('.archive-field')?.classList.remove('changed');
+      });
+      document.querySelectorAll('[data-error-for]').forEach(node => node.textContent = '');
+      document.getElementById('patientEditorError').classList.remove('show');
+      document.querySelectorAll('[data-habit]').forEach(group => {
+        group.querySelectorAll('[data-habit-value]').forEach(button => button.classList.toggle('active', button.dataset.habitValue === patientEditState.draft[group.dataset.habit]));
+      });
+      document.querySelectorAll('.editor-section').forEach(section => section.classList.remove('collapsed'));
+      renderPortraitEditor();
+      updateEditorMeta();
+      const editor = document.getElementById('patientEditor');
+      editor.classList.add('open');
+      editor.setAttribute('aria-hidden', 'false');
+    }
+
+    function closePatientEditor(force = false) {
+      if (!force && patientEditState.dirty && !window.confirm('当前内容尚未保存，确定退出吗？')) return;
+      const editor = document.getElementById('patientEditor');
+      editor.classList.remove('open');
+      editor.setAttribute('aria-hidden', 'true');
+      patientEditState.dirty = false;
+      patientEditState.draft = null;
+    }
+
+    function validatePatientDraft() {
+      const draft = patientEditState.draft;
+      const errors = {};
+      if (!draft.name.trim()) errors.name = '请输入姓名';
+      if (!draft.gender) errors.gender = '请选择性别';
+      if (!draft.birthDate) errors.birthDate = '请选择出生年月';
+      if (!/^1\d{10}$/.test(draft.phone)) errors.phone = '请输入正确的 11 位手机号码';
+      document.querySelectorAll('[data-error-for]').forEach(node => node.textContent = errors[node.dataset.errorFor] || '');
+      return Object.keys(errors).length === 0;
+    }
+
+    function savePatientRecord() {
+      if (!validatePatientDraft()) {
+        document.getElementById('patientEditorError').classList.add('show');
+        document.querySelector('[data-error-for]:not(:empty)')?.closest('.archive-field')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      document.getElementById('patientEditorError').classList.remove('show');
+      const button = document.querySelector('[data-save-patient]');
+      button.classList.add('loading');
+      button.textContent = '保存中...';
+      setTimeout(() => {
+        Object.assign(patientRecord, JSON.parse(JSON.stringify(patientEditState.draft)));
+        renderPatientDetail();
+        button.classList.remove('loading');
+        button.textContent = '保存';
+        closePatientEditor(true);
+        showToast('保存成功');
+      }, 450);
     }
 
     function renderPalette() {
@@ -827,6 +1090,52 @@
     function renderAll() { renderPalette(); renderCanvas(); renderProps(); }
 
     document.addEventListener('click', e => {
+      if (e.target.closest('[data-open-patient]')) {
+        showPatientPage();
+        return;
+      }
+      if (e.target.closest('[data-patient-back]')) {
+        showList();
+        return;
+      }
+      if (e.target.closest('[data-edit-patient]')) {
+        openPatientEditor();
+        return;
+      }
+      if (e.target.closest('[data-cancel-patient-edit]')) {
+        closePatientEditor();
+        return;
+      }
+      if (e.target.closest('[data-save-patient]')) {
+        savePatientRecord();
+        return;
+      }
+      const sectionToggle = e.target.closest('[data-section-toggle]');
+      if (sectionToggle) {
+        sectionToggle.closest('.editor-section').classList.toggle('collapsed');
+        return;
+      }
+      const habitValue = e.target.closest('[data-habit-value]');
+      if (habitValue) {
+        const group = habitValue.closest('[data-habit]');
+        patientEditState.draft[group.dataset.habit] = habitValue.dataset.habitValue;
+        group.querySelectorAll('[data-habit-value]').forEach(button => button.classList.toggle('active', button === habitValue));
+        patientEditState.dirty = true;
+        return;
+      }
+      if (e.target.closest('[data-add-portrait]')) {
+        patientEditState.draft.portraits.push({ type: 'diagnosis', name: '', note: '' });
+        patientEditState.dirty = true;
+        renderPortraitEditor();
+        return;
+      }
+      const removePortrait = e.target.closest('[data-remove-portrait]');
+      if (removePortrait) {
+        patientEditState.draft.portraits.splice(Number(removePortrait.dataset.removePortrait), 1);
+        patientEditState.dirty = true;
+        renderPortraitEditor();
+        return;
+      }
       const dashboardMore = e.target.closest('[data-dashboard-more]');
       if (dashboardMore) {
         const container = dashboardMore.closest('.dashboard-more');
@@ -969,6 +1278,21 @@
     });
 
     document.addEventListener('input', e => {
+      if (e.target.matches('[data-patient-field]') && patientEditState.draft) {
+        const field = e.target.dataset.patientField;
+        patientEditState.draft[field] = e.target.value;
+        patientEditState.dirty = true;
+        e.target.closest('.archive-field')?.classList.add('changed');
+        document.querySelector(`[data-error-for="${field}"]`)?.replaceChildren();
+        updateEditorMeta();
+        return;
+      }
+      if (e.target.matches('[data-portrait-field]') && patientEditState.draft) {
+        const item = patientEditState.draft.portraits[Number(e.target.dataset.portraitIndex)];
+        item[e.target.dataset.portraitField] = e.target.value;
+        patientEditState.dirty = true;
+        return;
+      }
       if (e.target.id === 'indicatorSearch') {
         indicatorState.keyword = e.target.value;
         renderIndicatorList();
@@ -1014,6 +1338,19 @@
     });
 
     document.addEventListener('change', e => {
+      if (e.target.matches('[data-patient-field]') && patientEditState.draft) {
+        const field = e.target.dataset.patientField;
+        patientEditState.draft[field] = e.target.value;
+        patientEditState.dirty = true;
+        e.target.closest('.archive-field')?.classList.add('changed');
+        updateEditorMeta();
+        return;
+      }
+      if (e.target.matches('[data-portrait-field]') && patientEditState.draft) {
+        patientEditState.draft.portraits[Number(e.target.dataset.portraitIndex)][e.target.dataset.portraitField] = e.target.value;
+        patientEditState.dirty = true;
+        return;
+      }
       const item = selected();
       if (!item) return;
       if (e.target.matches('[data-prop="type"]')) return convertType(item, e.target.value);
@@ -1035,6 +1372,7 @@
 
     function showList() {
       document.getElementById('builderPage').classList.remove('active');
+      document.getElementById('patientPage').classList.remove('active');
       document.getElementById('listPage').classList.add('active');
       showListView('scale');
     }
@@ -1104,6 +1442,7 @@
 
     renderList();
     renderIndicatorList();
+    renderPatientDetail();
   </script>
 </body>
 </html>
