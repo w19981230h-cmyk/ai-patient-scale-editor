@@ -114,26 +114,27 @@
     .list-view { display: none; }
     .list-view.active { display: flex; }
     .submenu-item[data-list-view] { cursor: pointer; }
-    .filter-select { width: 132px; height: 36px; border: 1px solid #e6eaf1; border-radius: 4px; padding: 0 10px; background: #fff; color: #5a6880; }
-    .indicator-table .col-indicator-name { width: 14%; }
-    .indicator-table .col-code { width: 12%; }
-    .indicator-table .col-data-type { width: 8%; }
-    .indicator-table .col-category { width: 10%; }
-    .indicator-table .col-domain { width: 12%; }
-    .indicator-table .col-reference { width: 7%; }
-    .indicator-table .col-indicator-maker { width: 9%; }
-    .indicator-table .col-updated { width: 11%; }
-    .indicator-table .col-indicator-status { width: 7%; }
-    .indicator-table .col-indicator-actions { width: 10%; }
-    .indicator-name { color: #30405c; font-weight: 600; }
-    .indicator-code { color: #7a879b; font-family: Consolas, "SFMono-Regular", monospace; font-size: 13px; }
-    .type-tag { display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 4px; background: #eef3ff; color: #3154d9; font-size: 12px; }
-    .type-tag.number { background: #edf9f2; color: #26975a; }
-    .type-tag.choice { background: #fff5e8; color: #c97816; }
-    .type-tag.date { background: #f5efff; color: #8054c7; }
-    .table-empty { height: 220px; text-align: center; color: #9ba6b7; }
-    .action-divider { color: #d6dce6; }
-    .danger-link { color: #ff4d4f; }
+    .indicator-toolbar .search { width: 280px; }
+    .dashboard-grid { flex: 1; min-height: 0; overflow: auto; display: grid; grid-template-columns: repeat(4, minmax(220px, 1fr)); align-content: start; gap: 16px; padding: 4px 2px 18px; }
+    .dashboard-card { min-height: 190px; border: 1px solid #e8ecf3; border-radius: 6px; background: #fff; padding: 18px; display: flex; flex-direction: column; transition: border-color .16s, box-shadow .16s; }
+    .dashboard-card:hover { border-color: #b9c8ff; box-shadow: 0 6px 20px rgba(35, 61, 128, .08); }
+    .dashboard-card-head { min-width: 0; display: flex; align-items: flex-start; gap: 10px; margin-bottom: 18px; }
+    .dashboard-icon { width: 36px; height: 36px; border-radius: 6px; background: #edf2ff; color: #3154ff; display: grid; place-items: center; flex: 0 0 auto; }
+    .dashboard-icon svg { width: 19px; height: 19px; }
+    .dashboard-name { min-width: 0; flex: 1; margin: 7px 0 0; color: #253653; font-size: 15px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dashboard-status { height: 24px; padding: 0 8px; border-radius: 4px; display: inline-flex; align-items: center; gap: 5px; font-size: 12px; flex: 0 0 auto; }
+    .dashboard-status.published { color: #389e0d; background: #f0f9eb; }
+    .dashboard-status.draft { color: #d46b08; background: #fff7e6; }
+    .dashboard-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .dashboard-info { display: grid; grid-template-columns: 76px minmax(0, 1fr); row-gap: 12px; color: #66748a; }
+    .dashboard-info dt, .dashboard-info dd { margin: 0; }
+    .dashboard-info dt { color: #98a3b5; }
+    .dashboard-info dd { color: #4d5c74; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dashboard-card-foot { margin-top: auto; padding-top: 16px; border-top: 1px solid #f0f2f6; display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
+    .dashboard-action { color: #3154ff; font-size: 13px; font-weight: 600; }
+    .dashboard-action.danger { color: #ff4d4f; }
+    .dashboard-empty { grid-column: 1 / -1; height: 260px; display: grid; place-items: center; color: #9ba6b7; }
+    @media (max-width: 1650px) { .dashboard-grid { grid-template-columns: repeat(3, minmax(220px, 1fr)); } }
     .modal-mask { position: fixed; inset: 0; z-index: 40; background: rgba(17, 28, 51, .28); display: none; align-items: center; justify-content: center; }
     .modal-mask.open { display: flex; }
     .indicator-modal { width: 560px; background: #fff; border-radius: 8px; box-shadow: 0 18px 55px rgba(26, 41, 73, .22); overflow: hidden; }
@@ -315,19 +316,11 @@
           <div class="pager"><span>共 94 条</span><button class="page-btn disabled">‹</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">4</button><button class="page-btn">5</button><span class="ellipsis">...</span><button class="page-btn">10</button><button class="page-btn">›</button><button class="page-select">10 条/页⌄</button><span>跳至</span><span class="jump-input"></span><span>页</span></div>
         </section>
         <section class="list-panel list-view" id="indicatorTemplateView">
-          <div class="toolbar">
-            <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg><input id="indicatorSearch" placeholder="搜索指标名称/编码"></label>
-            <select class="filter-select" id="indicatorCategoryFilter"><option value="">全部分类</option><option>患者基础信息</option><option>生命体征</option><option>检验指标</option><option>评估结果</option><option>随访指标</option></select>
-            <select class="filter-select" id="indicatorStatusFilter"><option value="">全部状态</option><option>启用</option><option>停用</option></select>
-            <button class="primary" data-new-indicator><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg><span>新建指标模板</span></button>
+          <div class="toolbar indicator-toolbar">
+            <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg><input id="indicatorSearch" placeholder="搜索指标看板名称"></label>
+            <button class="primary" data-new-indicator><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg><span>新建指标看板</span></button>
           </div>
-          <div class="table-wrap">
-            <table class="indicator-table">
-              <thead><tr><th class="col-indicator-name">指标名称</th><th class="col-code">指标编码</th><th class="col-data-type">数据类型</th><th class="col-category">所属分类</th><th class="col-domain">单位/值域</th><th class="col-reference">引用量表</th><th class="col-indicator-maker">创建人员</th><th class="col-updated">更新时间</th><th class="col-indicator-status">状态</th><th class="col-indicator-actions">操作</th></tr></thead>
-              <tbody id="indicatorRows"></tbody>
-            </table>
-          </div>
-          <div class="pager"><span id="indicatorTotal">共 0 条</span><button class="page-btn disabled">‹</button><button class="page-btn active">1</button><button class="page-btn">›</button><button class="page-select">10 条/页⌄</button></div>
+          <div class="dashboard-grid" id="indicatorCards"></div>
         </section>
       </main>
     </div>
@@ -360,14 +353,12 @@
   <div class="toast" id="toast"></div>
   <div class="modal-mask" id="indicatorModal" aria-hidden="true">
     <div class="indicator-modal" role="dialog" aria-modal="true" aria-labelledby="indicatorModalTitle">
-      <div class="modal-head"><h2 id="indicatorModalTitle">新建指标模板</h2><button class="modal-close" data-close-indicator-modal aria-label="关闭">×</button></div>
+      <div class="modal-head"><h2 id="indicatorModalTitle">新建指标看板</h2><button class="modal-close" data-close-indicator-modal aria-label="关闭">×</button></div>
       <div class="modal-body">
-        <div class="modal-field"><label class="required" for="indicatorName">指标名称</label><input class="modal-input" id="indicatorName" placeholder="请输入指标名称"></div>
-        <div class="modal-field"><label class="required" for="indicatorCode">指标编码</label><input class="modal-input" id="indicatorCode" placeholder="例如 patient.height"></div>
-        <div class="modal-field"><label class="required" for="indicatorCategory">所属分类</label><select class="modal-select" id="indicatorCategory"><option>患者基础信息</option><option>生命体征</option><option>检验指标</option><option>评估结果</option><option>随访指标</option></select></div>
-        <div class="modal-field"><label class="required" for="indicatorDataType">数据类型</label><select class="modal-select" id="indicatorDataType"><option>文本</option><option>数值</option><option>单选</option><option>多选</option><option>日期</option><option>布尔</option></select></div>
-        <div class="modal-field full"><label for="indicatorDomain">单位/值域</label><input class="modal-input" id="indicatorDomain" placeholder="例如 cm，或 男/女/未知"></div>
-        <div class="modal-field full"><label for="indicatorDescription">指标说明</label><textarea class="modal-textarea" id="indicatorDescription" placeholder="请输入指标用途、采集说明或口径"></textarea></div>
+        <div class="modal-field full"><label class="required" for="indicatorName">指标看板名称</label><input class="modal-input" id="indicatorName" placeholder="请输入指标看板名称"></div>
+        <div class="modal-field"><label class="required" for="indicatorApplicableType">适用类型</label><select class="modal-select" id="indicatorApplicableType"><option>健康评估</option><option>慢病管理</option><option>患者随访</option><option>风险筛查</option><option>运营统计</option></select></div>
+        <div class="modal-field"><label class="required" for="indicatorStatus">状态</label><select class="modal-select" id="indicatorStatus"><option>未发布</option><option>发布</option></select></div>
+        <div class="modal-field full"><label class="required" for="indicatorApplicableObject">适用对象</label><input class="modal-input" id="indicatorApplicableObject" placeholder="例如：全部患者、糖尿病患者"></div>
       </div>
       <div class="modal-foot"><button class="secondary-btn" data-close-indicator-modal>取消</button><button class="confirm-btn" data-save-indicator>保存</button></div>
     </div>
@@ -388,17 +379,15 @@
     ];
 
     let indicatorTemplates = [
-      { id: 'metric-1', name: '患者姓名', code: 'patient.name', dataType: '文本', category: '患者基础信息', domain: '--', references: 12, maker: '平台技术人员', updatedAt: '2026/06/10 16:24:18', enabled: true, description: '患者基础身份信息' },
-      { id: 'metric-2', name: '性别', code: 'patient.gender', dataType: '单选', category: '患者基础信息', domain: '男 / 女 / 未知', references: 9, maker: '平台技术人员', updatedAt: '2026/06/10 15:58:42', enabled: true, description: '患者生理性别' },
-      { id: 'metric-3', name: '身高', code: 'vital.height', dataType: '数值', category: '生命体征', domain: 'cm', references: 6, maker: '张媛丽', updatedAt: '2026/06/09 11:20:05', enabled: true, description: '患者身高，单位厘米' },
-      { id: 'metric-4', name: '体重', code: 'vital.weight', dataType: '数值', category: '生命体征', domain: 'kg', references: 8, maker: '张媛丽', updatedAt: '2026/06/09 11:18:33', enabled: true, description: '患者体重，单位千克' },
-      { id: 'metric-5', name: '空腹血糖', code: 'lab.fbg', dataType: '数值', category: '检验指标', domain: 'mmol/L', references: 4, maker: '平台技术人员', updatedAt: '2026/06/08 09:42:17', enabled: true, description: '空腹血浆葡萄糖' },
-      { id: 'metric-6', name: '营养风险等级', code: 'assessment.nutritionRisk', dataType: '单选', category: '评估结果', domain: '低风险 / 中风险 / 高风险', references: 3, maker: '平台技术人员', updatedAt: '2026/06/07 18:06:29', enabled: true, description: '营养风险筛查结果' },
-      { id: 'metric-7', name: '随访日期', code: 'followup.date', dataType: '日期', category: '随访指标', domain: '年/月/日', references: 5, maker: '张媛丽', updatedAt: '2026/06/06 14:31:50', enabled: true, description: '患者实际随访日期' },
-      { id: 'metric-8', name: '症状标签', code: 'followup.symptoms', dataType: '多选', category: '随访指标', domain: '恶心 / 呕吐 / 疼痛 / 乏力', references: 0, maker: '平台技术人员', updatedAt: '2026/06/05 10:12:26', enabled: false, description: '随访过程中记录的症状' }
+      { id: 'board-1', name: '患者基础信息看板', applicableType: '健康评估', applicableObject: '全部患者', published: true },
+      { id: 'board-2', name: '糖尿病健康指标看板', applicableType: '慢病管理', applicableObject: '糖尿病患者', published: true },
+      { id: 'board-3', name: '肿瘤患者随访看板', applicableType: '患者随访', applicableObject: '肿瘤患者', published: false },
+      { id: 'board-4', name: '营养风险指标看板', applicableType: '风险筛查', applicableObject: '住院患者', published: true },
+      { id: 'board-5', name: '心血管风险看板', applicableType: '健康评估', applicableObject: '高血压患者', published: false },
+      { id: 'board-6', name: '患者运营数据看板', applicableType: '运营统计', applicableObject: '全部患者', published: true }
     ];
 
-    const indicatorState = { keyword: '', category: '', status: '', editingId: null };
+    const indicatorState = { keyword: '', editingId: null };
 
     const typeMeta = {
       single: { label: '单选', icon: radioIcon(), section: '选择' },
@@ -481,34 +470,22 @@
       }).join('');
     }
 
-    function indicatorTypeClass(type) {
-      if (type === '数值') return 'number';
-      if (type === '单选' || type === '多选' || type === '布尔') return 'choice';
-      if (type === '日期') return 'date';
-      return '';
-    }
-
     function renderIndicatorList() {
       const keyword = indicatorState.keyword.trim().toLowerCase();
-      const rows = indicatorTemplates.filter(item => {
-        const matchesKeyword = !keyword || `${item.name} ${item.code}`.toLowerCase().includes(keyword);
-        const matchesCategory = !indicatorState.category || item.category === indicatorState.category;
-        const matchesStatus = !indicatorState.status || (indicatorState.status === '启用' ? item.enabled : !item.enabled);
-        return matchesKeyword && matchesCategory && matchesStatus;
-      });
-      document.getElementById('indicatorTotal').textContent = `共 ${rows.length} 条`;
-      document.getElementById('indicatorRows').innerHTML = rows.length ? rows.map(item => `<tr>
-        <td><span class="indicator-name">${esc(item.name)}</span></td>
-        <td><span class="indicator-code">${esc(item.code)}</span></td>
-        <td><span class="type-tag ${indicatorTypeClass(item.dataType)}">${esc(item.dataType)}</span></td>
-        <td>${esc(item.category)}</td>
-        <td title="${esc(item.domain)}">${esc(item.domain || '--')}</td>
-        <td>${item.references}</td>
-        <td>${esc(item.maker)}</td>
-        <td>${esc(item.updatedAt)}</td>
-        <td><button class="switch ${item.enabled ? 'on' : ''}" data-toggle-indicator-status="${item.id}" aria-label="${item.enabled ? '停用' : '启用'}指标"></button></td>
-        <td><span class="actions"><button class="link" data-edit-indicator="${item.id}">编辑</button><span class="action-divider">|</span><button class="link danger-link" data-delete-indicator="${item.id}">删除</button></span></td>
-      </tr>`).join('') : '<tr><td class="table-empty" colspan="10">暂无符合条件的指标模板</td></tr>';
+      const rows = indicatorTemplates.filter(item => !keyword || item.name.toLowerCase().includes(keyword));
+      document.getElementById('indicatorCards').innerHTML = rows.length ? rows.map(item => `<article class="dashboard-card">
+        <div class="dashboard-card-head">
+          <span class="dashboard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 19V9M12 19V5M19 19v-7"/><path d="M3 19h18"/></svg></span>
+          <h3 class="dashboard-name" title="${esc(item.name)}">${esc(item.name)}</h3>
+          <span class="dashboard-status ${item.published ? 'published' : 'draft'}">${item.published ? '发布' : '未发布'}</span>
+        </div>
+        <dl class="dashboard-info"><dt>适用类型</dt><dd>${esc(item.applicableType)}</dd><dt>适用对象</dt><dd>${esc(item.applicableObject)}</dd></dl>
+        <div class="dashboard-card-foot">
+          <button class="dashboard-action" data-toggle-indicator-status="${item.id}">${item.published ? '撤回' : '发布'}</button>
+          <button class="dashboard-action" data-edit-indicator="${item.id}">编辑</button>
+          <button class="dashboard-action danger" data-delete-indicator="${item.id}">删除</button>
+        </div>
+      </article>`).join('') : '<div class="dashboard-empty">暂无符合条件的指标看板</div>';
     }
 
     function showListView(view) {
@@ -523,13 +500,11 @@
     function openIndicatorModal(id = null) {
       const item = id ? indicatorTemplates.find(row => row.id === id) : null;
       indicatorState.editingId = item?.id || null;
-      document.getElementById('indicatorModalTitle').textContent = item ? '编辑指标模板' : '新建指标模板';
+      document.getElementById('indicatorModalTitle').textContent = item ? '编辑指标看板' : '新建指标看板';
       document.getElementById('indicatorName').value = item?.name || '';
-      document.getElementById('indicatorCode').value = item?.code || '';
-      document.getElementById('indicatorCategory').value = item?.category || '患者基础信息';
-      document.getElementById('indicatorDataType').value = item?.dataType || '文本';
-      document.getElementById('indicatorDomain').value = item?.domain === '--' ? '' : (item?.domain || '');
-      document.getElementById('indicatorDescription').value = item?.description || '';
+      document.getElementById('indicatorApplicableType').value = item?.applicableType || '健康评估';
+      document.getElementById('indicatorApplicableObject').value = item?.applicableObject || '';
+      document.getElementById('indicatorStatus').value = item?.published ? '发布' : '未发布';
       const modal = document.getElementById('indicatorModal');
       modal.classList.add('open');
       modal.setAttribute('aria-hidden', 'false');
@@ -545,29 +520,26 @@
 
     function saveIndicatorTemplate() {
       const name = document.getElementById('indicatorName').value.trim();
-      const code = document.getElementById('indicatorCode').value.trim();
-      if (!name || !code) return showToast('请填写指标名称和指标编码');
-      const duplicate = indicatorTemplates.find(item => item.code.toLowerCase() === code.toLowerCase() && item.id !== indicatorState.editingId);
-      if (duplicate) return showToast('指标编码已存在');
+      const applicableObject = document.getElementById('indicatorApplicableObject').value.trim();
+      if (!name || !applicableObject) return showToast('请填写看板名称和适用对象');
+      const duplicate = indicatorTemplates.find(item => item.name.toLowerCase() === name.toLowerCase() && item.id !== indicatorState.editingId);
+      if (duplicate) return showToast('指标看板名称已存在');
       const values = {
         name,
-        code,
-        category: document.getElementById('indicatorCategory').value,
-        dataType: document.getElementById('indicatorDataType').value,
-        domain: document.getElementById('indicatorDomain').value.trim() || '--',
-        description: document.getElementById('indicatorDescription').value.trim(),
-        updatedAt: '2026/06/11 10:30:00'
+        applicableType: document.getElementById('indicatorApplicableType').value,
+        applicableObject,
+        published: document.getElementById('indicatorStatus').value === '发布'
       };
       const wasEditing = !!indicatorState.editingId;
       if (wasEditing) {
         const item = indicatorTemplates.find(row => row.id === indicatorState.editingId);
         Object.assign(item, values);
       } else {
-        indicatorTemplates.unshift({ id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), ...values, references: 0, maker: '平台技术人员', enabled: true });
+        indicatorTemplates.unshift({ id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), ...values });
       }
       closeIndicatorModal();
       renderIndicatorList();
-      showToast(wasEditing ? '指标模板已更新' : '指标模板已创建');
+      showToast(wasEditing ? '指标看板已更新' : '指标看板已创建');
     }
 
     function renderPalette() {
@@ -860,19 +832,18 @@
       const toggleIndicator = e.target.closest('[data-toggle-indicator-status]');
       if (toggleIndicator) {
         const item = indicatorTemplates.find(row => row.id === toggleIndicator.dataset.toggleIndicatorStatus);
-        item.enabled = !item.enabled;
+        item.published = !item.published;
         renderIndicatorList();
-        showToast(item.enabled ? '指标模板已启用' : '指标模板已停用');
+        showToast(item.published ? '指标看板已发布' : '指标看板已撤回');
         return;
       }
       const deleteIndicator = e.target.closest('[data-delete-indicator]');
       if (deleteIndicator) {
         const item = indicatorTemplates.find(row => row.id === deleteIndicator.dataset.deleteIndicator);
-        if (item.references > 0) return showToast('该指标已被量表引用，无法删除');
-        if (window.confirm(`确认删除指标模板“${item.name}”吗？`)) {
+        if (window.confirm(`确认删除指标看板“${item.name}”吗？`)) {
           indicatorTemplates = indicatorTemplates.filter(row => row.id !== item.id);
           renderIndicatorList();
-          showToast('指标模板已删除');
+          showToast('指标看板已删除');
         }
         return;
       }
@@ -1013,16 +984,6 @@
     });
 
     document.addEventListener('change', e => {
-      if (e.target.id === 'indicatorCategoryFilter') {
-        indicatorState.category = e.target.value;
-        renderIndicatorList();
-        return;
-      }
-      if (e.target.id === 'indicatorStatusFilter') {
-        indicatorState.status = e.target.value;
-        renderIndicatorList();
-        return;
-      }
       const item = selected();
       if (!item) return;
       if (e.target.matches('[data-prop="type"]')) return convertType(item, e.target.value);
