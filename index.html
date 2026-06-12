@@ -293,6 +293,7 @@
     .indicator-edit-field.required label::before { content: "*"; color: #ff4d4f; margin-right: 4px; }
     .indicator-edit-input, .indicator-edit-select { width: 100%; height: 38px; padding: 0 11px; border: 1px solid #dfe5ee; border-radius: 4px; background: #fff; color: #35445b; }
     .indicator-edit-input:focus, .indicator-edit-select:focus { border-color: #3154ff; box-shadow: 0 0 0 2px rgba(49,84,255,.08); }
+    .indicator-edit-help { margin-top: 7px; color: #929dad; font-size: 12px; line-height: 1.5; }
     .indicator-metric-list { display: flex; flex-direction: column; gap: 10px; }
     .indicator-metric-row { min-height: 54px; padding: 8px 10px; border: 1px solid #e7ebf2; border-radius: 5px; display: grid; grid-template-columns: minmax(180px, 1fr) 180px minmax(240px, 1.5fr) 34px; gap: 10px; align-items: center; }
     .indicator-metric-row .indicator-edit-input, .indicator-metric-row .indicator-edit-select { height: 36px; }
@@ -501,14 +502,14 @@
     <div class="indicator-editor-page">
       <header class="indicator-editor-header">
         <button class="indicator-editor-back" data-close-indicator-editor aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m15 18-6-6 6-6"/></svg></button>
-        <div class="indicator-editor-title"><h1>编辑指标看板</h1><p id="indicatorEditorSubtitle">配置看板基本信息和展示指标</p></div>
+        <div class="indicator-editor-title"><h1>编辑指标模板</h1><p id="indicatorEditorSubtitle">配置模板适用范围和展示指标</p></div>
         <div class="indicator-editor-actions"><button class="secondary-btn" data-close-indicator-editor>取消</button><button class="confirm-btn" data-save-indicator-editor>保存</button></div>
       </header>
       <main class="indicator-editor-body">
         <section class="indicator-edit-card"><div class="indicator-edit-card-head"><h2>基本配置</h2></div><div class="indicator-edit-card-body"><div class="indicator-edit-grid">
-          <div class="indicator-edit-field required full"><label>指标看板名称</label><input class="indicator-edit-input" id="indicatorEditorName" placeholder="请输入指标看板名称"></div>
-          <div class="indicator-edit-field required"><label>适用画像</label><input class="indicator-edit-input" id="indicatorEditorProfile" placeholder="请输入适用画像"></div>
-          <div class="indicator-edit-field required"><label>状态</label><select class="indicator-edit-select" id="indicatorEditorStatus"><option value="false">未发布</option><option value="true">发布</option></select></div>
+          <div class="indicator-edit-field required full"><label>模板名称</label><input class="indicator-edit-input" id="indicatorEditorName" placeholder="请输入模板名称"></div>
+          <div class="indicator-edit-field required"><label>适用对象</label><select class="indicator-edit-select" id="indicatorEditorApplicableType"><option value="方案">方案</option><option value="科室">科室</option><option value="主诊断">主诊断</option><option value="团队">团队</option></select><div class="indicator-edit-help">先选择适用对象类型，再选择该类型下的具体值域。</div></div>
+          <div class="indicator-edit-field required"><label>对象值域</label><select class="indicator-edit-select" id="indicatorEditorApplicableValue"></select><div class="indicator-edit-help" id="indicatorApplicableHelp">请选择具体方案</div></div>
         </div></div></section>
         <section class="indicator-edit-card"><div class="indicator-edit-card-head"><h2>看板指标配置</h2></div><div class="indicator-edit-card-body"><div class="indicator-metric-list" id="indicatorMetricRows"></div><button class="indicator-metric-add" data-add-indicator-metric>+ 添加指标</button></div></section>
       </main>
@@ -605,6 +606,12 @@
 
     const indicatorState = { keyword: '', editingId: null };
     const indicatorEditorState = { editingId: null, dirty: false, draft: null };
+    const indicatorApplicableOptions = {
+      '方案': ['全部患者管理方案', '糖尿病管理方案', '高血压管理方案', '肿瘤患者随访方案', '营养风险管理方案'],
+      '科室': ['消化内科', '呼吸内科', '心血管内科', '内分泌科', '肿瘤科', '营养科'],
+      '主诊断': ['2型糖尿病', '原发性高血压', '慢性阻塞性肺疾病', '肺癌', '营养不良'],
+      '团队': ['全院患者管理团队', '糖尿病管理团队', '心血管管理团队', '肿瘤随访团队', '营养管理团队', '患者运营团队']
+    };
 
     const patientRecord = {
       name: '林嘉慧', gender: '女', birthDate: '2007-06', age: '19', ethnicity: '汉族', occupation: '学生',
@@ -781,6 +788,21 @@
       </div>`).join('') : '<div class="muted-note">暂未配置指标，可点击下方按钮添加。</div>';
     }
 
+    function inferApplicableType(value) {
+      if (/科|内科/.test(value)) return '科室';
+      if (/团队/.test(value)) return '团队';
+      if (/糖尿病|高血压|肿瘤|肺癌|诊断/.test(value)) return '主诊断';
+      return '方案';
+    }
+
+    function updateIndicatorApplicableOptions(type, selectedValue = '') {
+      const select = document.getElementById('indicatorEditorApplicableValue');
+      const options = [...(indicatorApplicableOptions[type] || [])];
+      if (selectedValue && !options.includes(selectedValue)) options.unshift(selectedValue);
+      select.innerHTML = options.map(value => `<option value="${esc(value)}" ${value === selectedValue ? 'selected' : ''}>${esc(value)}</option>`).join('');
+      document.getElementById('indicatorApplicableHelp').textContent = `请选择具体${type}`;
+    }
+
     function openIndicatorEditor(id) {
       const item = indicatorTemplates.find(row => row.id === id);
       if (!item) return;
@@ -788,8 +810,9 @@
       indicatorEditorState.dirty = false;
       indicatorEditorState.draft = JSON.parse(JSON.stringify({ ...item, metrics: item.metrics || [] }));
       document.getElementById('indicatorEditorName').value = item.name;
-      document.getElementById('indicatorEditorProfile').value = item.applicableProfile;
-      document.getElementById('indicatorEditorStatus').value = String(item.published);
+      const applicableType = item.applicableType || inferApplicableType(item.applicableProfile);
+      document.getElementById('indicatorEditorApplicableType').value = applicableType;
+      updateIndicatorApplicableOptions(applicableType, item.applicableProfile);
       document.getElementById('indicatorEditorSubtitle').textContent = `正在编辑：${item.name}`;
       renderIndicatorMetricEditor();
       document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
@@ -809,9 +832,9 @@
     function saveIndicatorEditor() {
       const draft = indicatorEditorState.draft;
       draft.name = document.getElementById('indicatorEditorName').value.trim();
-      draft.applicableProfile = document.getElementById('indicatorEditorProfile').value.trim();
-      draft.published = document.getElementById('indicatorEditorStatus').value === 'true';
-      if (!draft.name || !draft.applicableProfile) return showToast('请填写看板名称和适用画像');
+      draft.applicableType = document.getElementById('indicatorEditorApplicableType').value;
+      draft.applicableProfile = document.getElementById('indicatorEditorApplicableValue').value;
+      if (!draft.name || !draft.applicableType || !draft.applicableProfile) return showToast('请填写模板名称和适用对象');
       if (draft.metrics.some(metric => !metric.name.trim() || !metric.source.trim())) return showToast('请完善指标名称和数据来源字段');
       const item = indicatorTemplates.find(row => row.id === indicatorEditorState.editingId);
       Object.assign(item, JSON.parse(JSON.stringify(draft)));
@@ -1378,7 +1401,7 @@
       }
       const editIndicator = e.target.closest('[data-edit-indicator]');
       if (editIndicator) {
-        showPatientPage();
+        openIndicatorEditor(editIndicator.dataset.editIndicator);
         return;
       }
       const toggleIndicator = e.target.closest('[data-toggle-indicator-status]');
@@ -1491,7 +1514,7 @@
     });
 
     document.addEventListener('input', e => {
-      if (e.target.matches('#indicatorEditorName, #indicatorEditorProfile') && indicatorEditorState.draft) {
+      if (e.target.matches('#indicatorEditorName') && indicatorEditorState.draft) {
         indicatorEditorState.dirty = true;
         return;
       }
@@ -1561,7 +1584,12 @@
     });
 
     document.addEventListener('change', e => {
-      if (e.target.id === 'indicatorEditorStatus' && indicatorEditorState.draft) {
+      if (e.target.id === 'indicatorEditorApplicableType' && indicatorEditorState.draft) {
+        updateIndicatorApplicableOptions(e.target.value);
+        indicatorEditorState.dirty = true;
+        return;
+      }
+      if (e.target.id === 'indicatorEditorApplicableValue' && indicatorEditorState.draft) {
         indicatorEditorState.dirty = true;
         return;
       }
