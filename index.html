@@ -167,10 +167,25 @@
     .confirm-btn { color: #fff; background: #1d3fff; }
 
     /* 患者档案详情与全屏编辑 */
-    .patient-page { height: 100vh; background: #edf3fb; overflow: auto; padding: 20px; }
-    .patient-page-head { height: 42px; display: flex; align-items: center; gap: 10px; color: #243751; font-size: 18px; font-weight: 800; }
-    .patient-back { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: #54647d; background: rgba(255,255,255,.7); }
-    .patient-layout { min-height: calc(100vh - 82px); display: grid; grid-template-columns: 270px minmax(900px, 1fr); gap: 16px; }
+    .patient-page { height: 100vh; background: #edf3fb; overflow: auto; padding: 0; }
+    .patient-page-head { position: sticky; top: 0; z-index: 12; height: 62px; padding: 0 22px; display: flex; align-items: center; gap: 14px; color: #243751; background: rgba(255,255,255,.98); border-bottom: 1px solid #dfe6f0; box-shadow: 0 1px 5px rgba(35,52,83,.04); }
+    .patient-back { height: 34px; padding: 0 10px; border-radius: 4px; display: inline-flex; align-items: center; gap: 6px; color: #526078; font-weight: 600; }
+    .patient-back:hover { background: #f2f5fa; }
+    .patient-back svg { width: 17px; height: 17px; }
+    .patient-top-title { min-width: 0; display: flex; align-items: center; gap: 14px; }
+    .patient-top-title strong { color: #243751; font-size: 17px; }
+    .patient-top-meta { color: #788598; font-size: 12px; white-space: nowrap; }
+    .patient-top-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .patient-top-save, .patient-top-publish { height: 36px; min-width: 76px; padding: 0 15px; border-radius: 4px; font-weight: 700; }
+    .patient-top-save { border: 1px solid #3154ff; color: #3154ff; background: #fff; }
+    .patient-top-publish { color: #fff; background: #1d43ff; }
+    .patient-top-save.loading, .patient-top-publish.loading { opacity: .68; pointer-events: none; }
+    .patient-layout { min-height: calc(100vh - 62px); padding: 16px 20px 24px; display: grid; grid-template-columns: 270px minmax(900px, 1fr); gap: 16px; }
+    .publish-confirm { width: 420px; background: #fff; border-radius: 8px; box-shadow: 0 18px 55px rgba(26,41,73,.22); overflow: hidden; }
+    .publish-confirm-body { padding: 24px 22px 20px; }
+    .publish-confirm-body h2 { margin: 0 0 12px; color: #273850; font-size: 17px; }
+    .publish-confirm-body p { margin: 0; color: #647188; line-height: 1.7; }
+    .publish-confirm-foot { height: 62px; padding: 0 22px; border-top: 1px solid #edf0f5; display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
     .patient-nav { background: rgba(248,250,255,.94); border: 1px solid #dfe8f5; border-radius: 8px; overflow: hidden; }
     .patient-profile { min-height: 174px; padding: 34px 18px 18px; background: linear-gradient(145deg, #dfeaff, #f8fbff); border-bottom: 1px dashed #d9e2f0; }
     .patient-profile-row { display: flex; align-items: center; gap: 12px; }
@@ -460,7 +475,11 @@
 
   <section id="patientPage" class="page">
     <div class="patient-page">
-      <header class="patient-page-head"><button class="patient-back" data-patient-back aria-label="返回">‹</button><span>患者档案</span></header>
+      <header class="patient-page-head">
+        <button class="patient-back" data-patient-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m15 18-6-6 6-6"/></svg><span>退出</span></button>
+        <div class="patient-top-title"><strong>患者档案</strong><span class="patient-top-meta"><span data-patient-text="name">林嘉慧</span>｜<span data-patient-text="gender">女</span>｜<span data-patient-text="age">19岁</span>｜就诊号：<span data-patient-text="visitNo">22071523287</span></span></div>
+        <div class="patient-top-actions"><button class="patient-top-save" data-save-patient-detail>保存</button><button class="patient-top-publish" data-publish-patient>发布</button></div>
+      </header>
       <div class="patient-layout">
         <aside class="patient-nav">
           <div class="patient-profile"><div class="patient-profile-row"><div class="patient-avatar"></div><div><div class="patient-profile-name" data-patient-text="name">林嘉慧</div><div class="patient-profile-meta"><span data-patient-text="gender">女</span><span data-patient-text="age">19岁</span></div></div></div><div class="patient-phone" data-patient-text="phone">联系电话：138****5628</div></div>
@@ -536,6 +555,9 @@
       <div class="modal-foot"><button class="secondary-btn" data-close-indicator-modal>取消</button><button class="confirm-btn" data-save-indicator>保存</button></div>
     </div>
   </div>
+  <div class="modal-mask" id="patientPublishModal" aria-hidden="true">
+    <div class="publish-confirm" role="dialog" aria-modal="true" aria-labelledby="patientPublishTitle"><div class="publish-confirm-body"><h2 id="patientPublishTitle">确认发布</h2><p>发布后患者档案信息将同步生效，确定发布吗？</p></div><div class="publish-confirm-foot"><button class="secondary-btn" data-cancel-patient-publish>取消</button><button class="confirm-btn" data-confirm-patient-publish>确认发布</button></div></div>
+  </div>
   <section class="page patient-editor" id="patientEditor" aria-hidden="true">
     <header class="editor-header"><button class="editor-back" data-cancel-patient-edit aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m15 18-6-6 6-6"/></svg></button><div class="editor-heading"><h1>编辑患者档案</h1><div class="editor-patient-meta"><span id="editorPatientMeta">林嘉慧 · 女 · 19岁 · 就诊号 22071523287</span></div></div><div class="editor-actions"><button class="editor-cancel" data-cancel-patient-edit>取消</button><button class="editor-save" data-save-patient>保存</button></div></header>
     <main class="editor-body"><div class="editor-error-banner" id="patientEditorError">保存失败，请检查必填字段后重试。</div>
@@ -595,6 +617,7 @@
       portraits: []
     };
     const patientEditState = { dirty: false, draft: null };
+    const patientPageState = { dirty: false, saving: false, publishing: false };
 
     const typeMeta = {
       single: { label: '单选', icon: radioIcon(), section: '选择' },
@@ -832,7 +855,64 @@
     function showPatientPage() {
       document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
       document.getElementById('patientPage').classList.add('active');
+      patientPageState.dirty = false;
       renderPatientDetail();
+    }
+
+    function exitPatientPage() {
+      if (patientPageState.dirty && !window.confirm('当前内容尚未保存，确定退出吗？')) return;
+      document.getElementById('patientPage').classList.remove('active');
+      document.getElementById('listPage').classList.add('active');
+      showListView('indicator');
+    }
+
+    function savePatientDetail() {
+      if (patientPageState.saving) return;
+      patientPageState.saving = true;
+      const button = document.querySelector('[data-save-patient-detail]');
+      button.classList.add('loading');
+      button.textContent = '保存中...';
+      setTimeout(() => {
+        patientPageState.saving = false;
+        patientPageState.dirty = false;
+        button.classList.remove('loading');
+        button.textContent = '保存';
+        showToast('保存成功');
+      }, 500);
+    }
+
+    function openPatientPublishModal() {
+      if (patientPageState.publishing) return;
+      const modal = document.getElementById('patientPublishModal');
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closePatientPublishModal() {
+      const modal = document.getElementById('patientPublishModal');
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    function publishPatientDetail() {
+      if (patientPageState.publishing) return;
+      patientPageState.publishing = true;
+      const headerButton = document.querySelector('[data-publish-patient]');
+      const confirmButton = document.querySelector('[data-confirm-patient-publish]');
+      headerButton.classList.add('loading');
+      headerButton.textContent = '发布中...';
+      confirmButton.disabled = true;
+      confirmButton.textContent = '发布中...';
+      setTimeout(() => {
+        patientPageState.publishing = false;
+        patientPageState.dirty = false;
+        headerButton.classList.remove('loading');
+        headerButton.textContent = '发布';
+        confirmButton.disabled = false;
+        confirmButton.textContent = '确认发布';
+        closePatientPublishModal();
+        showToast('发布成功');
+      }, 600);
     }
 
     function portraitTypeLabel(type) {
@@ -1216,7 +1296,23 @@
         return;
       }
       if (e.target.closest('[data-patient-back]')) {
-        showList();
+        exitPatientPage();
+        return;
+      }
+      if (e.target.closest('[data-save-patient-detail]')) {
+        savePatientDetail();
+        return;
+      }
+      if (e.target.closest('[data-publish-patient]')) {
+        openPatientPublishModal();
+        return;
+      }
+      if (e.target.closest('[data-cancel-patient-publish]') || e.target.id === 'patientPublishModal') {
+        closePatientPublishModal();
+        return;
+      }
+      if (e.target.closest('[data-confirm-patient-publish]')) {
+        publishPatientDetail();
         return;
       }
       if (e.target.closest('[data-edit-patient]')) {
