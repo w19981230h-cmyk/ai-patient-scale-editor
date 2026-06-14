@@ -145,6 +145,130 @@
     .dashboard-menu button.danger:hover { background: #fff2f0; color: #ff4d4f; }
     .dashboard-empty { grid-column: 1 / -1; height: 260px; display: grid; place-items: center; color: #9ba6b7; }
     @media (max-width: 1650px) { .dashboard-grid { grid-template-columns: repeat(3, minmax(220px, 1fr)); } }
+    .patient-list-panel { padding: 14px 14px 0; }
+    .patient-list-toolbar { height: 54px; display: flex; align-items: flex-start; gap: 10px; }
+    .patient-list-search { width: 278px; }
+    .patient-team-filter { width: 280px; height: 36px; padding: 0 12px; border: 1px solid #e6eaf1; border-radius: 4px; color: #9ba5b4; background: #fff; }
+    .patient-filter-btn { height: 36px; padding: 0 13px; border: 1px solid #e6eaf1; border-radius: 4px; background: #fff; color: #40506a; display: inline-flex; align-items: center; gap: 7px; }
+    .patient-filter-btn svg { width: 16px; height: 16px; }
+    .patient-list-table-wrap { flex: 1; min-height: 0; overflow: auto; }
+    .patient-list-table { min-width: 1600px; table-layout: fixed; }
+    .patient-list-table thead { position: sticky; top: 0; z-index: 2; }
+    .patient-list-table thead tr { height: 50px; }
+    .patient-list-table tbody tr { height: 58px; cursor: pointer; }
+    .patient-list-table tbody tr:last-child { background: #fafafa; }
+    .patient-list-table td, .patient-list-table th { padding: 0 10px; font-size: 13px; }
+    .patient-list-table .patient-name-col { width: 120px; color: #4b5a70; }
+    .patient-list-table .visit-col { width: 145px; }
+    .patient-list-table .age-col { width: 82px; }
+    .patient-list-table .gender-col { width: 72px; }
+    .patient-list-table .phone-col { width: 170px; }
+    .patient-list-table .dept-col { width: 170px; }
+    .patient-list-table .diagnosis-col { width: 255px; }
+    .patient-list-table .date-col { width: 145px; }
+    .patient-list-table .team-col { width: 185px; }
+    .patient-list-table .patient-action-col { width: 145px; }
+    .patient-phone-mask { display: inline-flex; align-items: center; gap: 7px; }
+    .patient-phone-eye { color: #a0aaba; font-size: 15px; }
+    .patient-row-actions { display: inline-flex; gap: 12px; }
+    .patient-row-actions button { color: #3154ff; font-size: 13px; white-space: nowrap; }
+    .patient-diagnosis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .patient-list-pager { height: 64px; flex: 0 0 auto; align-items: center; }
+    .patient-list-pager .total { margin-right: 4px; color: #637187; }
+    .patient-advanced-panel { position: absolute; z-index: 8; left: 576px; top: 58px; width: 330px; padding: 16px; border: 1px solid #e1e7f0; border-radius: 7px; background: #fff; box-shadow: 0 12px 28px rgba(31,51,82,.14); display: none; }
+    .patient-advanced-panel.open { display: block; }
+    .patient-advanced-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .patient-advanced-grid label { color: #647188; font-size: 12px; }
+    .patient-advanced-grid select { width: 100%; height: 34px; margin-top: 6px; border: 1px solid #dfe5ee; border-radius: 4px; padding: 0 8px; background: #fff; }
+    .patient-advanced-actions { margin-top: 14px; display: flex; justify-content: flex-end; gap: 8px; }
+    .patient-advanced-actions button { height: 32px; padding: 0 12px; border-radius: 4px; }
+    .patient-advanced-actions .reset { border: 1px solid #dfe5ee; color: #66748a; }
+    .patient-advanced-actions .apply { color: #fff; background: #3154ff; }
+
+    /* 患者档案 */
+    .archive-page { min-width: 1440px; height: 100vh; overflow: auto; color: #34425a; background: #eaf1fa; }
+    .archive-topbar { position: sticky; top: 0; z-index: 10; height: 54px; padding: 0 18px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #dce5f1; background: #eaf1fa; }
+    .archive-back { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; color: #6e7c91; background: rgba(255,255,255,.55); }
+    .archive-back:hover { color: #3154ff; background: #fff; }
+    .archive-back svg { width: 17px; height: 17px; }
+    .archive-title { margin: 0; color: #2c3b55; font-size: 17px; font-weight: 800; }
+    .archive-shell { min-height: calc(100vh - 54px); padding: 0 14px 18px; display: grid; grid-template-columns: 316px minmax(0, 1fr); gap: 16px; }
+    .archive-sidebar { position: sticky; top: 54px; align-self: start; height: calc(100vh - 68px); min-height: 620px; overflow: hidden; border: 1px solid #dce6f3; border-radius: 9px; background: #f5f8fd; }
+    .archive-side-cover { height: 126px; background: linear-gradient(145deg, rgba(226,235,255,.65), rgba(247,250,255,.9)), url('patient-archive-reference.png'); background-size: 2048px 1263px; background-position: 0 -58px; }
+    .archive-side-patient { min-height: 72px; margin-top: -22px; padding: 0 20px 14px; border-bottom: 1px dashed #dfe6f0; display: grid; grid-template-columns: 58px minmax(0, 1fr); column-gap: 12px; align-items: center; }
+    .archive-side-avatar { width: 58px; height: 58px; border: 3px solid #fff; border-radius: 50%; background-image: url('patient-archive-reference.png'); background-size: 2048px 1263px; background-position: -34px -171px; box-shadow: 0 3px 12px rgba(48,72,122,.16); }
+    .archive-side-line { display: flex; align-items: center; gap: 13px; color: #4d5b70; font-size: 13px; }
+    .archive-side-line strong { color: #334158; font-size: 14px; }
+    .archive-side-phone { grid-column: 2; margin-top: -12px; color: #8c98a9; font-size: 12px; }
+    .archive-side-nav { padding: 24px 16px; }
+    .archive-nav-item { width: 100%; height: 52px; margin-bottom: 8px; padding: 0 13px; display: flex; align-items: center; gap: 10px; border-radius: 6px; color: #7c899b; font-size: 14px; font-weight: 700; text-align: left; }
+    .archive-nav-item:hover { color: #3154ff; background: rgba(255,255,255,.72); }
+    .archive-nav-item.active { color: #214cff; background: #fff; box-shadow: 0 4px 16px rgba(40,70,130,.05); }
+    .archive-nav-item.active::before { content: ''; width: 3px; height: 28px; margin-left: -13px; border-radius: 0 3px 3px 0; background: #3154ff; }
+    .archive-nav-item svg { width: 19px; height: 19px; flex: 0 0 auto; }
+    .archive-main { min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+    .archive-overview { position: relative; min-height: 562px; overflow: hidden; border: 1px solid #d8e4f3; border-radius: 10px; background: linear-gradient(135deg, #dce9fb, #f3f7fd 60%, #e8f0fb); }
+    .archive-person-art { position: absolute; left: 0; top: 0; width: 286px; height: 430px; background-image: url('patient-archive-reference.png'); background-size: 2048px 1263px; background-position: -348px -58px; background-repeat: no-repeat; }
+    .archive-person-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 75%, #e5eefb), linear-gradient(180deg, transparent 75%, #e5eefb); pointer-events: none; }
+    .archive-info-card { position: relative; z-index: 1; min-height: 344px; margin: 20px 18px 0 286px; padding: 22px 30px; border-radius: 16px; background: #fff; }
+    .archive-info-head { display: flex; align-items: center; gap: 15px; margin-bottom: 27px; }
+    .archive-info-head::before { content: ''; width: 4px; height: 20px; align-self: flex-end; border-radius: 4px; background: #3154ff; transform: rotate(-8deg); }
+    .archive-info-head strong { color: #2b3951; font-size: 22px; }
+    .archive-info-head span { color: #44526a; font-size: 14px; }
+    .archive-info-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 86px; }
+    .archive-info-section-title { margin: 0 0 18px; padding-left: 11px; border-left: 2px solid #3154ff; color: #2f3e56; font-size: 15px; }
+    .archive-more-link { margin-left: 22px; color: #3154ff; font-size: 13px; font-weight: 500; }
+    .archive-more-link::after { content: '›'; margin-left: 6px; font-size: 18px; vertical-align: -1px; }
+    .archive-details { display: grid; grid-template-columns: 78px 1fr; row-gap: 17px; margin: 0; font-size: 13px; }
+    .archive-details dt, .archive-details dd { margin: 0; }
+    .archive-details dt { color: #768397; letter-spacing: 3px; }
+    .archive-details dd { color: #45546c; }
+    .archive-health-band { position: relative; z-index: 2; margin: 16px 18px 18px; padding: 26px 20px 18px; border-radius: 15px; background: rgba(255,255,255,.82); }
+    .archive-band-label { position: absolute; left: 10px; top: 10px; transform: translateY(-50%); height: 34px; min-width: 128px; padding: 0 22px 0 42px; display: flex; align-items: center; border-radius: 5px 0 18px 5px; color: #fff; font-size: 13px; font-weight: 700; background: linear-gradient(110deg, #5577ff 0%, #8b9cff 82%, transparent 83%); }
+    .archive-band-label svg { position: absolute; left: 15px; width: 18px; height: 18px; }
+    .archive-portrait-grid { padding: 23px 24px 14px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px; border-radius: 7px; background: #f1f4ff; }
+    .archive-portrait-item { min-height: 55px; padding-left: 11px; border-left: 2px solid #3154ff; color: #34435c; font-size: 13px; font-weight: 700; }
+    .archive-portrait-item span { color: #667489; font-weight: 400; }
+    .archive-portrait-count { margin-top: 10px; color: #6f8fff; font-size: 12px; font-weight: 400; }
+    .archive-dashboard { overflow: hidden; border: 1px solid #dce6f2; border-radius: 9px; background: #fff; box-shadow: 0 4px 16px rgba(31,51,82,.04); }
+    .archive-dashboard-head { min-height: 68px; padding: 0 18px; display: flex; align-items: center; gap: 22px; border-bottom: 1px solid #e3e9f2; background: #fff; }
+    .archive-dashboard-head h2 { margin: 0; padding-left: 11px; border-left: 3px solid #3154ff; color: #2b3a53; font-size: 17px; white-space: nowrap; }
+    .archive-board-select { width: 230px; height: 36px; padding: 0 34px 0 12px; border: 1px solid #d8e1ed; border-radius: 5px; color: #42516a; background: #fff; font-size: 13px; }
+    .archive-board-select:focus { border-color: #3154ff; box-shadow: 0 0 0 2px rgba(49,84,255,.08); }
+    .archive-board-count { margin-left: auto; color: #8c98aa; font-size: 12px; white-space: nowrap; }
+    .archive-metric-strip { min-height: 220px; padding: 18px 18px 8px; display: flex; align-items: flex-start; gap: 16px; flex-wrap: wrap; background: #fff; }
+    .archive-mini-card { width: 182px; min-height: 198px; padding: 17px 14px; border: 1px solid #e3e9f2; border-radius: 7px; background: #fff; }
+    .archive-mini-title { display: flex; align-items: center; gap: 8px; color: #37455c; font-size: 14px; font-weight: 700; }
+    .archive-mini-title svg { width: 18px; height: 18px; }
+    .archive-mini-value { margin: 21px 0 13px; color: #516078; font-size: 16px; font-weight: 700; }
+    .archive-mini-value small { margin-left: 4px; color: #7b889b; font-size: 11px; font-weight: 400; }
+    .archive-mini-update { display: flex; align-items: center; gap: 5px; color: #9aa4b2; font-size: 11px; }
+    .archive-mini-update::before { content: ''; width: 11px; height: 11px; border: 1px solid #aeb8c6; border-radius: 50%; }
+    .archive-spark { position: relative; height: 56px; margin-top: 8px; overflow: hidden; border-bottom: 1px dashed #edf0f5; }
+    .archive-spark svg { width: 100%; height: 100%; }
+    .archive-detail-area { padding: 12px 18px 24px; background: #fff; }
+    .archive-detail-toolbar { min-height: 52px; display: flex; align-items: center; }
+    .archive-detail-toolbar h2 { margin: 0; padding-left: 11px; border-left: 2px solid #3154ff; color: #2d3b53; font-size: 15px; }
+    .archive-detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .archive-detail-card { min-width: 0; min-height: 330px; padding: 18px; border: 1px solid #e1e7f0; border-radius: 7px; background: #fbfcfe; }
+    .archive-detail-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+    .archive-detail-card-head h3 { margin: 0 0 5px; color: #2d3b53; font-size: 15px; }
+    .archive-detail-card-head span { color: #99a4b3; font-size: 11px; }
+    .archive-detail-value { margin-top: 18px; display: flex; align-items: baseline; gap: 6px; color: #293a55; }
+    .archive-detail-value strong { font-size: 26px; }
+    .archive-detail-value span { color: #7b889b; font-size: 12px; }
+    .archive-range-tools { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .archive-range-btn { height: 34px; min-width: 54px; padding: 0 12px; border: 1px solid #e2e7ee; border-radius: 4px; color: #8b96a6; background: #fff; }
+    .archive-range-btn.active { color: #3154ff; border-color: #3154ff; background: #f7f9ff; }
+    .archive-date-box { height: 34px; padding: 0 10px; display: flex; align-items: center; gap: 8px; border: 1px solid #e2e7ee; border-radius: 4px; color: #748196; background: #fff; font-size: 12px; }
+    .archive-date-input { width: 126px; border: 0; outline: 0; color: #748196; background: transparent; font: inherit; }
+    .archive-chart-scroll { margin-top: 12px; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; scrollbar-color: #c8d3e2 transparent; }
+    .archive-monitor-chart { display: block; width: auto; min-width: 100%; height: 230px; }
+    .archive-monitor-chart text { fill: #a4aeba; font-size: 11px; }
+    .archive-monitor-chart .grid { stroke: #dfe4eb; stroke-dasharray: 4 3; }
+    .archive-monitor-chart .line-a { fill: none; stroke: #3154ff; stroke-width: 2.4; }
+    .archive-monitor-chart .line-b { fill: none; stroke: #7fa0ff; stroke-width: 2.4; }
+
     .modal-mask { position: fixed; inset: 0; z-index: 40; background: rgba(17, 28, 51, .28); display: none; align-items: center; justify-content: center; }
     .modal-mask.open { display: flex; }
     .indicator-modal { width: 560px; background: #fff; border-radius: 8px; box-shadow: 0 18px 55px rgba(26, 41, 73, .22); overflow: hidden; }
@@ -238,7 +362,10 @@
     .patient-hero.collapsed .patient-portrait { max-height: 0; margin-top: 0; padding-top: 0; padding-bottom: 0; opacity: 0; transform: translateY(-12px); pointer-events: none; }
     .patient-hero.collapsed .patient-hero-toggle svg { transform: rotate(180deg); }
     @media (prefers-reduced-motion: reduce) { .patient-hero, .patient-hero-visual, .patient-summary, .patient-summary-head, .patient-info-columns, .patient-portrait, .patient-hero-toggle svg { transition: none; } }
-    .patient-indicator-section { min-height: 270px; padding: 16px; background: rgba(255,255,255,.96); border: 1px solid #dfe8f5; border-radius: 8px; }
+    .patient-indicator-section { min-height: 270px; display: flex; flex-direction: column; gap: 16px; }
+    .patient-indicator-section .indicator-work-card { box-shadow: 0 4px 14px rgba(31,51,82,.04); }
+    .patient-indicator-section .indicator-metric-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .patient-indicator-section .indicator-preview-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .patient-indicator-head { height: 38px; display: flex; align-items: center; }
     .patient-indicator-head h3 { margin: 0; padding-left: 10px; border-left: 3px solid #3154ff; color: #314159; font-size: 15px; }
     .patient-indicator-add { margin-left: auto; height: 32px; padding: 0 12px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #3154ff; border-radius: 4px; color: #3154ff; background: #fff; font-weight: 700; }
@@ -313,34 +440,117 @@
     .portrait-remove:hover { background: #fff2f0; }
     .portrait-add { margin-top: 12px; height: 36px; padding: 0 14px; border: 1px dashed #9cb0ff; border-radius: 4px; color: #3154ff; font-weight: 700; }
 
-    /* 指标看板独立编辑页 */
-    .indicator-editor-page { height: 100vh; background: #eef3fa; display: grid; grid-template-rows: 64px minmax(0, 1fr); }
-    .indicator-editor-header { background: #fff; border-bottom: 1px solid #e2e7ef; padding: 0 24px; display: flex; align-items: center; gap: 14px; }
-    .indicator-editor-back { width: 34px; height: 34px; border-radius: 4px; display: grid; place-items: center; color: #53627a; }
+    /* 指标模板全屏编辑页 */
+    .indicator-editor-page { height: 100vh; min-width: 1440px; background: #f2f6fb; display: grid; grid-template-rows: 64px minmax(0, 1fr); color: #24344d; }
+    .indicator-editor-header { z-index: 10; background: #fff; border-bottom: 1px solid #dfe7f1; box-shadow: 0 2px 10px rgba(35,55,88,.04); padding: 0 28px; display: flex; align-items: center; gap: 8px; }
+    .indicator-editor-back { height: 36px; padding: 0 10px; border-radius: 5px; display: inline-flex; align-items: center; gap: 8px; color: #34445c; font-size: 14px; font-weight: 700; }
     .indicator-editor-back:hover { background: #f3f6fa; }
-    .indicator-editor-back svg { width: 19px; height: 19px; }
-    .indicator-editor-title { min-width: 0; }
-    .indicator-editor-title h1 { margin: 0 0 4px; font-size: 17px; color: #283952; }
-    .indicator-editor-title p { margin: 0; color: #8b96a7; font-size: 12px; }
-    .indicator-editor-actions { margin-left: auto; display: flex; gap: 10px; }
-    .indicator-editor-body { overflow: auto; padding: 22px max(28px, calc((100vw - 1240px) / 2)) 60px; }
-    .indicator-edit-card { background: #fff; border: 1px solid #e1e7f0; border-radius: 7px; margin-bottom: 16px; }
-    .indicator-edit-card-head { height: 52px; padding: 0 20px; border-bottom: 1px solid #edf0f5; display: flex; align-items: center; }
-    .indicator-edit-card-head h2 { margin: 0; color: #2f3f57; font-size: 15px; }
-    .indicator-edit-card-body { padding: 20px; }
-    .indicator-edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 20px; }
-    .indicator-edit-field.full { grid-column: 1 / -1; }
-    .indicator-edit-field label { display: block; margin-bottom: 8px; color: #405069; font-weight: 700; }
-    .indicator-edit-field.required label::before { content: "*"; color: #ff4d4f; margin-right: 4px; }
-    .indicator-edit-input, .indicator-edit-select { width: 100%; height: 38px; padding: 0 11px; border: 1px solid #dfe5ee; border-radius: 4px; background: #fff; color: #35445b; }
-    .indicator-edit-input:focus, .indicator-edit-select:focus { border-color: #3154ff; box-shadow: 0 0 0 2px rgba(49,84,255,.08); }
-    .indicator-edit-help { margin-top: 7px; color: #929dad; font-size: 12px; line-height: 1.5; }
-    .indicator-metric-list { display: flex; flex-direction: column; gap: 10px; }
-    .indicator-metric-row { min-height: 54px; padding: 8px 10px; border: 1px solid #e7ebf2; border-radius: 5px; display: grid; grid-template-columns: minmax(180px, 1fr) 180px minmax(240px, 1.5fr) 34px; gap: 10px; align-items: center; }
-    .indicator-metric-row .indicator-edit-input, .indicator-metric-row .indicator-edit-select { height: 36px; }
-    .indicator-metric-remove { width: 34px; height: 34px; color: #ff4d4f; border-radius: 4px; display: grid; place-items: center; font-size: 18px; }
-    .indicator-metric-remove:hover { background: #fff2f0; }
-    .indicator-metric-add { margin-top: 12px; height: 36px; padding: 0 14px; border: 1px dashed #9db1ff; border-radius: 4px; color: #3154ff; font-weight: 700; }
+    .indicator-editor-back svg { width: 18px; height: 18px; }
+    .indicator-editor-actions { margin-left: auto; display: flex; gap: 12px; }
+    .indicator-top-btn { height: 38px; min-width: 88px; padding: 0 20px; border: 1px solid #2864d7; border-radius: 6px; color: #2864d7; background: #fff; font-weight: 700; }
+    .indicator-top-btn.primary { color: #fff; background: #2864d7; box-shadow: 0 5px 12px rgba(40,100,215,.18); }
+    .indicator-editor-body { min-height: 0; overflow: auto; padding: 20px 24px 40px; display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 20px; align-items: start; }
+    .indicator-config-panel { position: sticky; top: 0; background: #fff; border: 1px solid #dfe7f1; border-radius: 8px; box-shadow: 0 4px 14px rgba(31,51,82,.05); }
+    .indicator-panel-title { height: 56px; padding: 0 20px; border-bottom: 1px solid #e8edf4; display: flex; align-items: center; font-size: 17px; font-weight: 800; }
+    .indicator-config-form { padding: 20px; }
+    .indicator-edit-field { margin-bottom: 22px; }
+    .indicator-edit-field:last-child { margin-bottom: 0; }
+    .indicator-edit-field label { display: block; margin-bottom: 8px; color: #34445c; font-weight: 700; }
+    .indicator-edit-field.required label::before { content: "*"; color: #e94b4b; margin-right: 4px; }
+    .indicator-edit-input, .indicator-edit-select { width: 100%; height: 38px; padding: 0 11px; border: 1px solid #d8e1ed; border-radius: 5px; background: #fff; color: #35445b; outline: none; }
+    .indicator-edit-input:focus, .indicator-edit-select:focus { border-color: #2864d7; box-shadow: 0 0 0 2px rgba(40,100,215,.1); }
+    .indicator-edit-help { margin-top: 7px; color: #8b98aa; font-size: 12px; line-height: 1.5; }
+    .indicator-main-column { min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+    .indicator-work-card { background: #fff; border: 1px solid #dfe7f1; border-radius: 8px; box-shadow: 0 4px 14px rgba(31,51,82,.05); overflow: hidden; }
+    .indicator-work-head { min-height: 56px; padding: 0 20px; border-bottom: 1px solid #e8edf4; display: flex; align-items: center; gap: 12px; }
+    .indicator-work-head h2 { margin: 0; font-size: 17px; color: #263850; }
+    .indicator-work-head span { color: #8a97a9; font-size: 12px; }
+    .indicator-metric-grid { padding: 18px 20px 22px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    .indicator-metric-card { min-height: 142px; padding: 12px; border: 1px solid #dfe6ef; border-radius: 7px; background: #fff; position: relative; box-shadow: 0 3px 10px rgba(35,55,88,.04); }
+    .indicator-metric-card:hover { border-color: #aac5ee; box-shadow: 0 6px 18px rgba(35,75,135,.08); }
+    .indicator-metric-card.dragging { opacity: .42; border-style: dashed; }
+    .indicator-metric-card.drag-before { box-shadow: -4px 0 0 #2864d7, 0 6px 18px rgba(35,75,135,.08); }
+    .indicator-metric-card.drag-after { box-shadow: 4px 0 0 #2864d7, 0 6px 18px rgba(35,75,135,.08); }
+    .metric-card-head { position: absolute; top: 7px; right: 8px; z-index: 2; margin: 0; }
+    .metric-card-actions { display: flex; align-items: center; gap: 0; }
+    .metric-drag, .metric-delete { width: 22px; height: 22px; border-radius: 3px; display: grid; place-items: center; color: #7a8799; }
+    .metric-drag { cursor: grab; font-size: 13px; letter-spacing: -2px; }
+    .metric-drag:active { cursor: grabbing; }
+    .metric-drag:hover { color: #2864d7; background: #eef4fd; }
+    .metric-delete:hover { color: #e44b4b; background: #fff1f0; }
+    .metric-delete svg { width: 13px; height: 13px; }
+    .metric-type-tag { height: 24px; padding: 0 8px; border-radius: 4px; display: inline-flex; align-items: center; background: #eef5ff; color: #2864d7; font-size: 12px; font-weight: 700; }
+    .metric-type-tag.metric { background: #ecf8f3; color: #218567; }
+    .metric-type-tag.result { background: #fff5e7; color: #b57216; }
+    .metric-type-tag.timeline { background: #f4efff; color: #7251b5; }
+    .metric-more { width: 28px; height: 28px; border-radius: 4px; color: #65748a; font-size: 20px; line-height: 1; }
+    .metric-more:hover { background: #f0f4f8; }
+    .metric-menu { position: absolute; right: 12px; top: 46px; z-index: 3; width: 92px; padding: 5px; border: 1px solid #dfe6ef; border-radius: 6px; background: #fff; box-shadow: 0 10px 24px rgba(31,51,82,.14); display: none; }
+    .indicator-metric-card.menu-open .metric-menu { display: block; }
+    .metric-menu button { width: 100%; height: 30px; padding: 0 8px; text-align: left; border-radius: 4px; color: #44546a; }
+    .metric-menu button:hover { background: #f3f6fa; }
+    .metric-menu button.danger { color: #e44b4b; }
+    .metric-field { margin-bottom: 11px; }
+    .metric-field:last-child { margin-bottom: 0; }
+    .metric-field label { display: block; margin-bottom: 5px; color: #78869a; font-size: 12px; }
+    .metric-field .indicator-edit-input, .metric-field .indicator-edit-select { height: 34px; font-size: 13px; }
+    .indicator-add-card { min-height: 164px; border: 1px dashed #78a8e8; border-radius: 7px; background: #f3f8ff; color: #2864d7; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; cursor: pointer; }
+    .indicator-add-card:hover { border-color: #2864d7; background: #edf5ff; }
+    .indicator-add-icon { width: 48px; height: 48px; margin-bottom: 12px; border-radius: 50%; background: #fff; box-shadow: 0 4px 12px rgba(40,100,215,.12); display: grid; place-items: center; font-size: 30px; font-weight: 300; }
+    .indicator-add-card strong { margin-bottom: 7px; font-size: 15px; }
+    .indicator-add-card p { margin: 0; color: #7890af; font-size: 12px; line-height: 1.6; }
+    .indicator-preview-grid { padding: 14px 20px 22px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    .preview-empty { grid-column: 1 / -1; min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #8996a8; }
+    .preview-empty-icon { width: 58px; height: 58px; margin-bottom: 13px; border-radius: 50%; display: grid; place-items: center; background: #eef4fc; color: #6f96ce; }
+    .preview-empty-icon svg { width: 28px; height: 28px; }
+    .preview-empty strong { color: #53627a; font-size: 15px; }
+    .preview-empty p { margin: 7px 0 0; font-size: 12px; }
+    .preview-card { min-height: 248px; padding: 16px; border: 1px solid #dfe6ef; border-radius: 7px; background: #fff; box-shadow: 0 3px 10px rgba(35,55,88,.04); }
+    .preview-card.trend { grid-column: span 2; }
+    .preview-card-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 13px; }
+    .preview-card-head > div { min-width: 0; flex: 1; padding-right: 12px; }
+    .preview-card-head h3 { margin: 0 0 5px; font-size: 15px; color: #2d3e56; }
+    .preview-update { color: #9aa5b4; font-size: 11px; }
+    .status-tag { height: 28px; min-width: 56px; padding: 0 12px; flex: 0 0 auto; border-radius: 4px; background: #ecf8f3; color: #218567; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; line-height: 1; font-size: 12px; font-weight: 700; }
+    .status-tag.high, .status-tag.abnormal { background: #fff0ef; color: #d44a45; }
+    .status-tag.low { background: #edf4ff; color: #3b6fc4; }
+    .status-tag.none { background: #f1f3f6; color: #8792a2; }
+    .preview-latest { display: flex; align-items: baseline; gap: 5px; margin-bottom: 12px; }
+    .preview-latest strong { font-size: 25px; color: #263850; }
+    .preview-latest span { color: #7b889b; font-size: 12px; }
+    .mini-chart { height: 148px; border-top: 1px dashed #e5eaf1; padding-top: 8px; }
+    .mini-chart svg { width: 100%; height: 100%; overflow: visible; }
+    .chart-grid { stroke: #e8edf3; stroke-width: 1; }
+    .chart-axis { stroke: #cfd8e5; stroke-width: 1; }
+    .chart-axis-label { fill: #8794a7; font-size: 9px; }
+    .chart-axis-unit { fill: #69788e; font-size: 9px; font-weight: 700; }
+    .chart-line-a { fill: none; stroke: #2864d7; stroke-width: 2.2; }
+    .chart-line-b { fill: none; stroke: #57a98b; stroke-width: 2.2; }
+    .chart-dot-a { fill: #fff; stroke: #2864d7; stroke-width: 2; }
+    .chart-dot-b { fill: #fff; stroke: #57a98b; stroke-width: 2; }
+    .chart-legend { display: flex; gap: 14px; margin-top: 6px; color: #748297; font-size: 11px; }
+    .chart-legend i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; background: #2864d7; }
+    .chart-legend span:last-child i { background: #57a98b; }
+    .metric-value-card { display: flex; flex-direction: column; justify-content: space-between; }
+    .metric-gauge { height: 7px; border-radius: 99px; background: #edf1f6; overflow: hidden; }
+    .metric-gauge i { display: block; width: 66%; height: 100%; background: #57a98b; border-radius: inherit; }
+    .metric-status-panel { margin-top: 22px; padding: 13px; border-radius: 6px; border-left: 3px solid #42a780; background: #f0f9f5; display: flex; align-items: center; gap: 10px; }
+    .metric-status-panel.high, .metric-status-panel.abnormal { border-left-color: #df5b55; background: #fff3f2; }
+    .metric-status-panel.low { border-left-color: #4d7ecb; background: #f1f6ff; }
+    .metric-status-panel.none { border-left-color: #a8b1bd; background: #f5f6f8; }
+    .metric-status-icon { width: 32px; height: 32px; flex: 0 0 auto; border-radius: 50%; display: grid; place-items: center; color: #fff; background: #42a780; font-size: 16px; font-weight: 800; }
+    .metric-status-panel.high .metric-status-icon, .metric-status-panel.abnormal .metric-status-icon { background: #df5b55; }
+    .metric-status-panel.low .metric-status-icon { background: #4d7ecb; }
+    .metric-status-panel.none .metric-status-icon { background: #a8b1bd; }
+    .metric-status-copy strong { display: block; margin-bottom: 3px; color: #34445c; font-size: 13px; }
+    .metric-status-copy span { color: #7b889b; font-size: 11px; }
+    .result-scale { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; margin-top: 16px; }
+    .result-scale span { height: 34px; border-radius: 4px; background: #f2f4f7; color: #8a96a7; display: grid; place-items: center; font-size: 12px; }
+    .result-scale span.active { background: #eaf6f1; color: #218567; font-weight: 700; }
+    .timeline-list { margin-top: 16px; padding-left: 8px; }
+    .timeline-item { min-height: 42px; padding-left: 18px; border-left: 1px solid #dfe6ef; position: relative; color: #68768b; font-size: 12px; }
+    .timeline-item::before { content: ""; position: absolute; left: -4px; top: 2px; width: 7px; height: 7px; border-radius: 50%; background: #2864d7; }
+    .timeline-item strong { display: block; margin-bottom: 3px; color: #3d4d63; font-size: 13px; }
 
     /* 量表编辑器 */
     .builder { height: 100vh; min-width: 1440px; display: grid; grid-template-rows: 58px 1fr; background: #eef2f7; }
@@ -474,7 +684,7 @@
         <nav class="menu">
           <div class="menu-section"><div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg><span>工作台</span></div></div>
           <div class="menu-section"><div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 4h8l3 3v13H5V4h3Z"/><path d="M9 12h6M9 16h4"/></svg><span>任务管理</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m8 10 4 4 4-4"/></svg></div></div>
-          <div class="menu-section"><div class="menu-item" data-open-patient><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>患者管理</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m8 10 4 4 4-4"/></svg></div></div>
+          <div class="menu-section"><div class="menu-item" data-list-view="patients"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>患者管理</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m18 15-6-6-6 6"/></svg></div><div class="submenu"><div class="submenu-item" data-list-view="patients">全部患者</div><div class="submenu-item" data-patient-team-list>团队患者</div></div></div>
           <div class="menu-section">
             <div class="menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 4h10v16H7z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><span>方案与内容</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m18 15-6-6-6 6"/></svg></div>
             <div class="submenu"><div class="submenu-item">方案管理</div><div class="submenu-item active" data-list-view="scale">量表管理</div><div class="submenu-item">评估报告</div><div class="submenu-item">文章管理</div><div class="submenu-item">知识库</div></div>
@@ -508,6 +718,17 @@
           </div>
           <div class="dashboard-grid" id="indicatorCards"></div>
         </section>
+        <section class="list-panel list-view patient-list-panel" id="patientListView">
+          <div class="patient-list-toolbar">
+            <label class="search patient-list-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg><input id="patientListSearch" placeholder="患者姓名/就诊卡号/手机号码"></label>
+            <select class="patient-team-filter" id="patientTeamFilter"><option value="">请选择患者已加入团队</option><option>呼吸内科随访团队</option><option>小儿科随访团队</option><option>妇科随访团队</option><option>泌尿外科随访团队</option><option>肿瘤科随访团队</option></select>
+            <button class="patient-filter-btn" data-toggle-patient-filter><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 5h16l-6 7v6l-4 2v-8Z"/></svg>更多筛选</button>
+            <button class="icon-button" data-patient-column-setting title="字段设置"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/><path d="M4 8h8M12 16h8"/></svg></button>
+          </div>
+          <div class="patient-advanced-panel" id="patientAdvancedPanel"><div class="patient-advanced-grid"><label>性别<select><option>全部</option><option>男</option><option>女</option></select></label><label>年龄<select><option>全部</option><option>0-18岁</option><option>19-60岁</option><option>60岁以上</option></select></label><label>最近科室<select><option>全部科室</option><option>肿瘤科</option><option>妇科</option><option>泌尿外科</option></select></label><label>最近日期<select><option>全部时间</option><option>近7天</option><option>近30天</option></select></label></div><div class="patient-advanced-actions"><button class="reset" data-reset-patient-filter>重置</button><button class="apply" data-apply-patient-filter>确定</button></div></div>
+          <div class="patient-list-table-wrap"><table class="patient-list-table"><thead><tr><th class="patient-name-col">姓名</th><th class="visit-col">就诊卡号</th><th class="age-col">年龄</th><th class="gender-col">性别</th><th class="phone-col">手机号码</th><th class="dept-col">最近就诊科室</th><th class="diagnosis-col">最近诊断</th><th class="date-col">最近就诊日期</th><th class="team-col">已加入团队</th><th class="patient-action-col">操作</th></tr></thead><tbody id="patientListRows"></tbody></table></div>
+          <div class="pager patient-list-pager"><span class="total">共 78593 条</span><button class="page-btn disabled">‹</button><button class="page-btn active" data-patient-page="1">1</button><button class="page-btn" data-patient-page="2">2</button><button class="page-btn" data-patient-page="3">3</button><button class="page-btn" data-patient-page="4">4</button><button class="page-btn" data-patient-page="5">5</button><span class="ellipsis">...</span><button class="page-btn" data-patient-page="7860">7860</button><button class="page-btn" data-patient-page="next">›</button><button class="page-select">10 条/页⌄</button><span>跳至</span><span class="jump-input" contenteditable="true"></span><span>页</span></div>
+        </section>
       </main>
     </div>
   </section>
@@ -537,26 +758,69 @@
             </section>
             <section class="patient-portrait"><h3 class="patient-band-title">健康画像</h3><div class="portrait-columns"><div class="portrait-item">疾病诊断：<span id="diagnosisSummary">--</span><div class="portrait-count" id="diagnosisCount">共 0 条</div></div><div class="portrait-item">异常指标：<span id="abnormalSummary">--</span><div class="portrait-count" id="abnormalCount">共 0 条</div></div><div class="portrait-item">风险提示：<span id="riskSummary">--</span><div class="portrait-count" id="riskCount">共 0 条</div></div></div></section>
           </section>
-          <section class="patient-indicator-section"><div class="patient-indicator-head"><h3>指标展示</h3><button class="patient-indicator-add" data-open-patient-indicator><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg>添加指标</button></div><div id="patientIndicatorContent"></div></section>
+          <section class="patient-indicator-section">
+            <section class="indicator-work-card">
+              <div class="indicator-work-head"><h2>指标配置区</h2><span>配置指标名称和展示方式</span></div>
+              <div class="indicator-metric-grid" id="indicatorMetricRows"></div>
+            </section>
+            <section class="indicator-work-card">
+              <div class="indicator-work-head"><h2>指标展示预览</h2><span>预览会随上方配置实时更新</span></div>
+              <div class="indicator-preview-grid" id="indicatorPreviewGrid"></div>
+            </section>
+          </section>
         </main>
       </div>
     </div>
   </section>
 
-  <section id="indicatorEditorPage" class="page">
-    <div class="indicator-editor-page">
-      <header class="indicator-editor-header">
-        <button class="indicator-editor-back" data-close-indicator-editor aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m15 18-6-6 6-6"/></svg></button>
-        <div class="indicator-editor-title"><h1>编辑指标模板</h1><p id="indicatorEditorSubtitle">配置模板适用范围和展示指标</p></div>
-        <div class="indicator-editor-actions"><button class="secondary-btn" data-close-indicator-editor>取消</button><button class="confirm-btn" data-save-indicator-editor>保存</button></div>
-      </header>
-      <main class="indicator-editor-body">
-        <section class="indicator-edit-card"><div class="indicator-edit-card-head"><h2>基本配置</h2></div><div class="indicator-edit-card-body"><div class="indicator-edit-grid">
-          <div class="indicator-edit-field required full"><label>模板名称</label><input class="indicator-edit-input" id="indicatorEditorName" placeholder="请输入模板名称"></div>
-          <div class="indicator-edit-field required"><label>适用对象</label><select class="indicator-edit-select" id="indicatorEditorApplicableType"><option value="方案">方案</option><option value="科室">科室</option><option value="主诊断">主诊断</option><option value="团队">团队</option></select><div class="indicator-edit-help">先选择适用对象类型，再选择该类型下的具体值域。</div></div>
-          <div class="indicator-edit-field required"><label>对象值域</label><select class="indicator-edit-select" id="indicatorEditorApplicableValue"></select><div class="indicator-edit-help" id="indicatorApplicableHelp">请选择具体方案</div></div>
-        </div></div></section>
-        <section class="indicator-edit-card"><div class="indicator-edit-card-head"><h2>看板指标配置</h2></div><div class="indicator-edit-card-body"><div class="indicator-metric-list" id="indicatorMetricRows"></div><button class="indicator-metric-add" data-add-indicator-metric>+ 添加指标</button></div></section>
+  <section id="patientArchivePage" class="page archive-page">
+    <header class="archive-topbar">
+      <button class="archive-back" data-archive-back aria-label="返回全部患者"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m15 18-6-6 6-6"/></svg></button>
+      <h1 class="archive-title">患者档案</h1>
+    </header>
+    <div class="archive-shell">
+      <aside class="archive-sidebar">
+        <div class="archive-side-cover"></div>
+        <div class="archive-side-patient">
+          <div class="archive-side-avatar"></div>
+          <div class="archive-side-line"><strong data-archive-text="name">黄尚忠</strong><span data-archive-text="gender">男</span><span><i data-archive-text="age">73</i>岁</span></div>
+          <div class="archive-side-phone">联系电话:<span data-archive-text="phone">166****5580</span>　⌁</div>
+        </div>
+        <nav class="archive-side-nav">
+          <button class="archive-nav-item active" data-archive-tab="basic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M6 16c.8-2 5.2-2 6 0M14 9h4M14 13h4"/></svg>基本信息</button>
+          <button class="archive-nav-item" data-archive-tab="health"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 4v4a4 4 0 0 0 8 0V4M6 4h4M14 4h4M12 12v2a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="10" r="2"/></svg>健康管理</button>
+          <button class="archive-nav-item" data-archive-tab="history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 4h12l2 2v14H5z"/><path d="M8 9h8M8 13h8M8 17h5M8 2v4M16 2v4"/></svg>病历档案</button>
+        </nav>
+      </aside>
+      <main class="archive-main">
+        <section class="archive-overview">
+          <div class="archive-person-art" aria-hidden="true"></div>
+          <section class="archive-info-card">
+            <div class="archive-info-head"><strong data-archive-text="name">黄尚忠</strong><span data-archive-text="gender">男</span><span><i data-archive-text="age">73</i>岁</span><span>就诊号：<i data-archive-text="visitNo">22071025959</i></span></div>
+            <div class="archive-info-columns">
+              <div>
+                <h2 class="archive-info-section-title">基本信息 <button class="archive-more-link" data-archive-more="basic">更多信息</button></h2>
+                <dl class="archive-details"><dt>出生年月:</dt><dd data-archive-text="birthDate">1952年07月</dd><dt>民　族:</dt><dd data-archive-text="ethnicity">汉族</dd><dt>职　业:</dt><dd data-archive-text="occupation">退休</dd><dt>地　区:</dt><dd data-archive-text="region">--</dd><dt>手机号码:</dt><dd><span data-archive-text="phone">166****5580</span>　⌁</dd></dl>
+              </div>
+              <div>
+                <h2 class="archive-info-section-title">健康史/生活习惯 <button class="archive-more-link" data-archive-more="health">更多信息</button></h2>
+                <dl class="archive-details"><dt>既 往 史:</dt><dd>--</dd><dt>个 人 史:</dt><dd>--</dd><dt>过 敏 史:</dt><dd>--</dd><dt>家 族 史:</dt><dd>--</dd><dt>饮　酒:</dt><dd>--</dd><dt>吸　烟:</dt><dd>--</dd></dl>
+              </div>
+            </div>
+          </section>
+          <section class="archive-health-band">
+            <div class="archive-band-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7h7l2 2h9v10H3z"/><path d="M3 7V5h7l2 2"/></svg>健康画像</div>
+            <div class="archive-portrait-grid"><div class="archive-portrait-item">疾病诊断：<span>--</span><div class="archive-portrait-count">共 0 条</div></div><div class="archive-portrait-item">异常指标：<span>--</span><div class="archive-portrait-count">共 0 条</div></div><div class="archive-portrait-item">风险提示：<span>--</span><div class="archive-portrait-count">共 0 条</div></div></div>
+          </section>
+        </section>
+        <section class="archive-dashboard">
+          <div class="archive-dashboard-head"><h2>指标看板</h2><select class="archive-board-select" id="archiveBoardSelect" aria-label="选择指标看板"><option>90天减肥计划</option><option>慢性肾病看板</option><option>心血管风险看板</option><option>糖尿病模板看板</option></select><span class="archive-board-count" id="archiveBoardCount">当前命中 4 个看板</span></div>
+          <section class="archive-metric-strip" id="archiveMetricCards"></section>
+          <section class="archive-detail-area">
+            <div class="archive-detail-toolbar"><h2>指标明细</h2><div class="archive-range-tools"><button class="archive-range-btn" data-archive-range="今天">今天</button><button class="archive-range-btn" data-archive-range="昨天">昨天</button><button class="archive-range-btn active" data-archive-range="最近7天">最近7天</button><button class="archive-range-btn" data-archive-range="最近30天">最近30天</button><div class="archive-date-box"><input class="archive-date-input" id="archiveDateStart" type="date" value="2026-06-06" aria-label="开始日期"><span>至</span><input class="archive-date-input" id="archiveDateEnd" type="date" value="2026-06-12" aria-label="结束日期"></div></div></div>
+            <div class="archive-detail-grid" id="archiveDetailBoards"></div>
+          </section>
+        </section>
       </main>
     </div>
   </section>
@@ -598,7 +862,10 @@
     </div>
   </div>
   <div class="modal-mask" id="patientPublishModal" aria-hidden="true">
-    <div class="publish-confirm" role="dialog" aria-modal="true" aria-labelledby="patientPublishTitle"><div class="publish-confirm-body"><h2 id="patientPublishTitle">确认发布</h2><p>发布后患者档案信息将同步生效，确定发布吗？</p></div><div class="publish-confirm-foot"><button class="secondary-btn" data-cancel-patient-publish>取消</button><button class="confirm-btn" data-confirm-patient-publish>确认发布</button></div></div>
+    <div class="publish-confirm" role="dialog" aria-modal="true" aria-labelledby="patientPublishTitle"><div class="publish-confirm-body"><h2 id="patientPublishTitle">确认发布</h2><p>发布后指标看板模板将立即生效，确定发布吗？</p></div><div class="publish-confirm-foot"><button class="secondary-btn" data-cancel-patient-publish>取消</button><button class="confirm-btn" data-confirm-patient-publish>确认发布</button></div></div>
+  </div>
+  <div class="modal-mask" id="patientSaveModal" aria-hidden="true">
+    <div class="publish-confirm" role="dialog" aria-modal="true" aria-labelledby="patientSaveTitle"><div class="publish-confirm-body"><h2 id="patientSaveTitle">确认保存</h2><p>是否保存当前指标看板模板的配置内容？</p></div><div class="publish-confirm-foot"><button class="secondary-btn" data-cancel-patient-save>取消</button><button class="confirm-btn" data-confirm-patient-save>确定</button></div></div>
   </div>
   <div class="modal-mask" id="patientIndicatorModal" aria-hidden="true">
     <div class="indicator-modal" role="dialog" aria-modal="true" aria-labelledby="patientIndicatorModalTitle">
@@ -651,7 +918,12 @@
     ];
 
     let indicatorTemplates = [
-      { id: 'board-1', name: '患者基础信息看板', applicableProfile: '全部患者', published: true, metrics: [{ name: '年龄', type: '数值', source: 'patient.age' }, { name: '性别', type: '分类', source: 'patient.gender' }] },
+      { id: 'board-1', name: '患者基础信息看板', applicableType: '方案', applicableProfile: '全部患者', published: true, metrics: [
+        { name: '血压', display: '趋势图', source: '居家打卡', period: '按日' },
+        { name: '血糖', display: '趋势图', source: '检验数据', period: '按日' },
+        { name: 'BMI', display: '指标卡', source: '设备上传', period: '按周' },
+        { name: '尿蛋白', display: '结果卡', source: '检验数据', period: '按月' }
+      ] },
       { id: 'board-2', name: '糖尿病健康指标看板', applicableProfile: '糖尿病患者', published: true, metrics: [{ name: '空腹血糖', type: '数值', source: 'lab.fbg' }, { name: '糖化血红蛋白', type: '数值', source: 'lab.hba1c' }] },
       { id: 'board-3', name: '肿瘤患者随访看板', applicableProfile: '肿瘤患者', published: false, metrics: [{ name: '随访日期', type: '日期', source: 'followup.date' }] },
       { id: 'board-4', name: '营养风险指标看板', applicableProfile: '住院患者', published: true, metrics: [{ name: 'NRS-2002总分', type: '数值', source: 'nrs2002.totalScore' }] },
@@ -660,9 +932,9 @@
     ];
 
     const indicatorState = { keyword: '', editingId: null };
-    const indicatorEditorState = { editingId: null, dirty: false, draft: null };
+    const indicatorEditorState = { editingId: null, dirty: false, draft: null, granularity: '日', startDate: '2026-06-01', endDate: '2026-06-13', range: '2026-06-01 至 2026-06-13' };
     const indicatorApplicableOptions = {
-      '方案': ['全部患者管理方案', '糖尿病管理方案', '高血压管理方案', '肿瘤患者随访方案', '营养风险管理方案'],
+      '方案': ['全部患者', '全部患者管理方案', '糖尿病管理方案', '高血压管理方案', '肿瘤患者随访方案', '营养风险管理方案'],
       '科室': ['消化内科', '呼吸内科', '心血管内科', '内分泌科', '肿瘤科', '营养科'],
       '主诊断': ['2型糖尿病', '原发性高血压', '慢性阻塞性肺疾病', '肺癌', '营养不良'],
       '团队': ['全院患者管理团队', '糖尿病管理团队', '心血管管理团队', '肿瘤随访团队', '营养管理团队', '患者运营团队']
@@ -674,9 +946,30 @@
       allergyHistory: '', familyHistory: '', drinking: '否', smoking: '否',
       portraits: []
     };
+    const allPatients = [
+      { name: '黄尚忠', visitNo: '22071025959', age: '73', gender: '男', phone: '166****5580', department: '呼吸与危重症医学科', diagnosis: '1.重症肺炎 2.脓毒症 脓毒性休克 3.急性肾功...', visitDate: '2026/06/12', team: '呼吸内科随访团队' },
+      { name: '黄可睿', visitNo: '25052234005', age: '2', gender: '男', phone: '191****2319', department: '小儿科', diagnosis: '出院诊断：', visitDate: '2026/06/12', team: '小儿科随访团队' },
+      { name: '冯金柳', visitNo: '11338105', age: '38', gender: '女', phone: '137****8802', department: '妇科', diagnosis: '未获取', visitDate: '2026/06/12', team: '妇科随访团队' },
+      { name: '农业宝', visitNo: '452126195009101818', age: '75', gender: '男', phone: '188****6540', department: '泌尿外科', diagnosis: '未获取', visitDate: '2026/06/12', team: '泌尿外科随访团队' },
+      { name: '余玉梅', visitNo: '26060418002', age: '62', gender: '女', phone: '156****1238', department: '肿瘤科', diagnosis: '出院诊断：', visitDate: '2026/06/12', team: '肿瘤科随访团队' },
+      { name: '梁禹兴', visitNo: '11338047', age: '32', gender: '男', phone: '173****8884', department: '泌尿外科', diagnosis: '未获取', visitDate: '2026/06/12', team: '泌尿外科随访团队' },
+      { name: '韦望林', visitNo: '22070815354', age: '62', gender: '女', phone: '138****1977', department: '心血管内科一病区', diagnosis: '1.冠状动脉粥样硬化性心脏病 不稳定型心绞...', visitDate: '2026/06/12', team: '心内科随访团队' },
+      { name: '刘五妹', visitNo: '22071515705', age: '65', gender: '女', phone: '187****6519', department: '肿瘤科', diagnosis: '1.胰腺低分化腺癌T4N2M1、IV期 2.肝脏多发...', visitDate: '2026/06/12', team: '肿瘤科随访团队' },
+      { name: '滕晓霞', visitNo: '50245326', age: '39', gender: '女', phone: '134****5416', department: '乳腺甲状腺外科', diagnosis: '未获取', visitDate: '2026/06/12', team: '乳腺甲状腺外科' },
+      { name: '黄灿芳', visitNo: '441282198102054523', age: '45', gender: '女', phone: '152****1012', department: '妇科', diagnosis: '未获取', visitDate: '2026/06/12', team: '妇科随访团队、行风办满意... (2)' }
+    ];
+    const patientListState = { keyword: '', team: '', page: 1 };
     const patientEditState = { dirty: false, draft: null };
-    const patientPageState = { dirty: false, saving: false, publishing: false, editingId: null };
+    const patientPageState = { dirty: false, saving: false, publishing: false, editingId: null, creating: false, returnView: 'indicator' };
     const patientIndicatorState = { items: [] };
+    let archiveCurrentPatient = allPatients[0];
+    const archiveDashboardState = { board: '90天减肥计划', range: '最近7天', customStart: '2026-06-06', customEnd: '2026-06-12' };
+    const archiveBoardMetrics = {
+      '90天减肥计划': ['体重', '身高', 'BMI', '心率', '体脂'],
+      '慢性肾病看板': ['血压', '血糖', '肾小球过滤率', '肾脏大小', '肌酐', '血肌酐', '尿酸'],
+      '心血管风险看板': ['血压', '血糖', '心率'],
+      '糖尿病模板看板': ['血压', '血糖']
+    };
 
     const typeMeta = {
       single: { label: '单选', icon: radioIcon(), section: '选择' },
@@ -782,13 +1075,31 @@
       </article>`).join('') : '<div class="dashboard-empty">暂无符合条件的指标看板</div>';
     }
 
+    function renderPatientList() {
+      const keyword = patientListState.keyword.trim().toLowerCase();
+      const rows = allPatients.filter(patient => {
+        const matchesKeyword = !keyword || [patient.name, patient.visitNo, patient.phone].some(value => value.toLowerCase().includes(keyword));
+        const matchesTeam = !patientListState.team || patient.team === patientListState.team;
+        return matchesKeyword && matchesTeam;
+      });
+      document.getElementById('patientListRows').innerHTML = rows.length ? rows.map(patient => `<tr data-patient-row="${esc(patient.visitNo)}">
+        <td class="patient-name-col">${esc(patient.name)}</td><td>${esc(patient.visitNo)}</td><td>${esc(patient.age)}岁</td><td>${esc(patient.gender)}</td>
+        <td><span class="patient-phone-mask">${esc(patient.phone)} <span class="patient-phone-eye">⌁</span></span></td><td>${esc(patient.department)}</td>
+        <td class="patient-diagnosis" title="${esc(patient.diagnosis)}">${esc(patient.diagnosis)}</td><td>${esc(patient.visitDate)}</td><td title="${esc(patient.team)}">${esc(patient.team)}</td>
+        <td><span class="patient-row-actions"><button data-open-patient-record="${esc(patient.visitNo)}">档案</button><button data-select-patient-group="${esc(patient.visitNo)}">选择分组</button></span></td>
+      </tr>`).join('') : `<tr><td colspan="10" style="height:220px;text-align:center;color:#9aa5b4">暂无符合条件的患者</td></tr>`;
+    }
+
     function showListView(view) {
       const isIndicator = view === 'indicator';
-      document.getElementById('scaleManagementView').classList.toggle('active', !isIndicator);
+      const isPatients = view === 'patients';
+      document.getElementById('scaleManagementView').classList.toggle('active', !isIndicator && !isPatients);
       document.getElementById('indicatorTemplateView').classList.toggle('active', isIndicator);
-      document.getElementById('listPageTitle').textContent = isIndicator ? '指标模板' : '量表管理';
+      document.getElementById('patientListView').classList.toggle('active', isPatients);
+      document.getElementById('listPageTitle').textContent = isPatients ? '全部患者' : isIndicator ? '指标模板' : '量表管理';
       document.querySelectorAll('[data-list-view]').forEach(item => item.classList.toggle('active', item.dataset.listView === view));
       if (isIndicator) renderIndicatorList();
+      if (isPatients) renderPatientList();
     }
 
     function openIndicatorModal(id = null) {
@@ -834,14 +1145,99 @@
       showToast(wasEditing ? '指标看板已更新' : '指标看板已创建');
     }
 
+    function normalizeIndicatorMetric(metric = {}) {
+      const legacyDisplay = metric.type === '分类' ? '结果卡' : metric.type === '日期' ? '时间线' : '指标卡';
+      const knownSource = ['居家打卡','检验数据','检查数据','设备上传'].includes(metric.source) ? metric.source : '居家打卡';
+      return {
+        name: metric.name || '',
+        display: metric.display || legacyDisplay,
+        source: knownSource,
+        period: metric.period || '按日'
+      };
+    }
+
+    function indicatorTypeClass(display) {
+      return { '趋势图': 'trend', '指标卡': 'metric', '结果卡': 'result', '时间线': 'timeline' }[display] || 'metric';
+    }
+
+    function recommendedIndicatorDisplay(name) {
+      if (['血压','血糖'].includes(name)) return '趋势图';
+      if (['尿蛋白','尿酮体'].includes(name)) return '结果卡';
+      if (['复诊事件','用药调整','报告上传'].includes(name)) return '时间线';
+      return '指标卡';
+    }
+
+    function indicatorSample(metric, index) {
+      const name = metric.name || `未命名指标 ${index + 1}`;
+      const lower = name.toLowerCase();
+      if (name.includes('血压')) return { value: '128/82', unit: 'mmHg', status: '正常', statusClass: '', legend: ['收缩压','舒张压'] };
+      if (name.includes('血糖')) return { value: '6.2', unit: 'mmol/L', status: '偏高', statusClass: 'high', legend: ['空腹','餐后 2 小时'] };
+      if (lower.includes('bmi') || name.includes('体重')) return { value: lower.includes('bmi') ? '21.6' : '52.8', unit: lower.includes('bmi') ? 'kg/m²' : 'kg', status: '正常', statusClass: '', legend: [] };
+      if (name.includes('尿蛋白') || name.includes('尿酮')) return { value: '阴性', unit: '', status: '正常', statusClass: '', legend: [] };
+      if (name.includes('尿酸')) return { value: '368', unit: 'μmol/L', status: '正常', statusClass: '', legend: [] };
+      if (lower.includes('hba1c')) return { value: '6.8', unit: '%', status: '偏高', statusClass: 'high', legend: [] };
+      if (lower.includes('egfr')) return { value: '92', unit: 'mL/min', status: '正常', statusClass: '', legend: [] };
+      return { value: '--', unit: '', status: '暂无数据', statusClass: 'none', legend: ['测量值','参考值'] };
+    }
+
+    function trendChartSvg(index, metric) {
+      const granularity = indicatorEditorState.granularity;
+      const start = new Date(`${indicatorEditorState.startDate}T00:00:00`);
+      const end = new Date(`${indicatorEditorState.endDate}T00:00:00`);
+      const xLabels = granularity === '日'
+        ? ['08:00','10:00','12:00','14:00','16:00','18:00','20:00']
+        : Array.from({ length: 7 }, (_, pointIndex) => {
+            const ratio = pointIndex / 6;
+            const date = new Date(start.getTime() + (end.getTime() - start.getTime()) * ratio);
+            return granularity === '年' ? `${date.getMonth() + 1}月` : `${date.getMonth() + 1}月${date.getDate()}日`;
+          });
+      const isBloodPressure = metric.name.includes('血压');
+      const isBloodSugar = metric.name.includes('血糖');
+      const yLabels = isBloodPressure ? ['160','120','80'] : isBloodSugar ? ['12','6','0'] : ['100','50','0'];
+      const unit = isBloodPressure ? 'mmHg' : isBloodSugar ? 'mmol/L' : '数值';
+      const shift = (granularity.charCodeAt(0) + index * 7) % 10;
+      const xs = [38,82,126,170,214,258,302];
+      const aYs = [64-shift,52+shift/2,58-shift/3,38+shift/2,47-shift/2,31+shift/3,42-shift/4];
+      const bYs = [84-shift/2,77+shift/3,81-shift/4,68+shift/3,73-shift/5,59+shift/4,66-shift/3];
+      const a = xs.map((x, i) => `${x},${aYs[i]}`).join(' ');
+      const b = xs.map((x, i) => `${x},${bYs[i]}`).join(' ');
+      const xText = xs.map((x, i) => `<text class="chart-axis-label" x="${x}" y="119" text-anchor="middle">${xLabels[i]}</text>`).join('');
+      const yText = [18,55,92].map((y, i) => `<text class="chart-axis-label" x="28" y="${y + 3}" text-anchor="end">${yLabels[i]}</text>`).join('');
+      return `<svg viewBox="0 0 320 128" aria-label="${esc(metric.name)}${granularity}趋势图"><text class="chart-axis-unit" x="36" y="9">${unit}</text><path class="chart-axis" d="M34 14V96H308"/><path class="chart-grid" d="M34 18H308M34 55H308M34 92H308"/>${yText}${xText}<polyline class="chart-line-a" points="${a}"/><polyline class="chart-line-b" points="${b}"/>${a.split(' ').map(point => { const [x,y] = point.split(','); return `<circle class="chart-dot-a" cx="${x}" cy="${y}" r="2.7"/>`; }).join('')}${b.split(' ').map(point => { const [x,y] = point.split(','); return `<circle class="chart-dot-b" cx="${x}" cy="${y}" r="2.7"/>`; }).join('')}</svg>`;
+    }
+
+    function renderIndicatorPreview() {
+      const root = document.getElementById('indicatorPreviewGrid');
+      if (!root) return;
+      const metrics = indicatorEditorState.draft?.metrics || [];
+      if (!metrics.length) {
+        root.innerHTML = `<div class="preview-empty"><div class="preview-empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19V9M10 19V5M16 19v-7M3 19h18"/><path d="M18 5v6M15 8h6"/></svg></div><strong>暂无展示指标</strong><p>请先在上方添加指标，系统将根据配置生成看板预览</p></div>`;
+        return;
+      }
+      root.innerHTML = metrics.map((metric, index) => {
+        const sample = indicatorSample(metric, index);
+        const header = `<div class="preview-card-head"><div><h3>${esc(metric.name || '未命名指标')}</h3><span class="preview-update">更新时间：2026-06-12 08:30</span></div><span class="status-tag ${sample.statusClass}">${sample.status}</span></div>`;
+        const latest = `<div class="preview-latest"><strong>${sample.value}</strong><span>${sample.unit}</span></div>`;
+        const statusIcon = sample.statusClass === 'high' || sample.statusClass === 'abnormal' ? '!' : sample.statusClass === 'low' ? '↓' : sample.statusClass === 'none' ? '–' : '✓';
+        const statusNote = sample.statusClass === 'high' ? '当前结果高于参考范围，请持续关注' : sample.statusClass === 'low' ? '当前结果低于参考范围，请持续关注' : sample.statusClass === 'abnormal' ? '当前结果存在异常，建议及时处理' : sample.statusClass === 'none' ? '当前时间范围内暂无有效数据' : '当前结果处于参考范围内';
+        const statusPanel = `<div class="metric-status-panel ${sample.statusClass}"><span class="metric-status-icon">${statusIcon}</span><div class="metric-status-copy"><strong>当前状态：${sample.status}</strong><span>${statusNote}</span></div></div>`;
+        if (metric.display === '趋势图') return `<article class="preview-card trend">${header}${latest}<div class="mini-chart">${trendChartSvg(index, metric)}</div><div class="chart-legend">${sample.legend.map(item => `<span><i></i>${item}</span>`).join('')}</div></article>`;
+        if (metric.display === '结果卡') return `<article class="preview-card">${header}${latest}${statusPanel}<div class="result-scale"><span class="active">阴性</span><span>±</span><span>1+</span><span>2+</span></div></article>`;
+        if (metric.display === '时间线') return `<article class="preview-card">${header}<div class="timeline-list"><div class="timeline-item"><strong>复诊评估</strong>2026-06-12 08:30</div><div class="timeline-item"><strong>报告上传</strong>2026-06-06 14:20</div><div class="timeline-item"><strong>用药调整</strong>2026-05-28 10:10</div></div></article>`;
+        return `<article class="preview-card metric-value-card">${header}<div>${latest}<div class="metric-gauge"><i></i></div>${statusPanel}</div></article>`;
+      }).join('');
+    }
+
     function renderIndicatorMetricEditor() {
       const metrics = indicatorEditorState.draft?.metrics || [];
-      document.getElementById('indicatorMetricRows').innerHTML = metrics.length ? metrics.map((metric, index) => `<div class="indicator-metric-row">
-        <input class="indicator-edit-input" data-indicator-metric-field="name" data-indicator-metric-index="${index}" value="${esc(metric.name)}" placeholder="指标名称">
-        <select class="indicator-edit-select" data-indicator-metric-field="type" data-indicator-metric-index="${index}">${['数值','分类','文本','日期','评分'].map(type => `<option ${metric.type === type ? 'selected' : ''}>${type}</option>`).join('')}</select>
-        <input class="indicator-edit-input" data-indicator-metric-field="source" data-indicator-metric-index="${index}" value="${esc(metric.source)}" placeholder="数据来源字段，例如 vital.sbp">
-        <button class="indicator-metric-remove" data-remove-indicator-metric="${index}" title="删除">×</button>
-      </div>`).join('') : '<div class="muted-note">暂未配置指标，可点击下方按钮添加。</div>';
+      const displayOptions = ['趋势图','指标卡','结果卡','时间线'];
+      const indicatorOptions = ['血压','血糖','体重','BMI','尿酸','HbA1c','eGFR','尿蛋白','尿酮体','复诊事件','用药调整','报告上传'];
+      document.getElementById('indicatorMetricRows').innerHTML = metrics.map((metric, index) => `<article class="indicator-metric-card" data-metric-card-index="${index}">
+        <div class="metric-card-head"><div class="metric-card-actions"><button class="metric-drag" draggable="true" data-drag-indicator-metric="${index}" title="拖动排序" aria-label="拖动${esc(metric.name || '指标')}排序">⋮⋮</button><button class="metric-delete" data-remove-indicator-metric="${index}" title="删除指标" aria-label="删除${esc(metric.name || '指标')}">${trashIcon()}</button></div></div>
+        <div class="metric-field"><label>指标</label><select class="indicator-edit-select" data-indicator-metric-field="name" data-indicator-metric-index="${index}"><option value="">请选择指标</option>${metric.name && !indicatorOptions.includes(metric.name) ? `<option selected>${esc(metric.name)}</option>` : ''}${indicatorOptions.map(value => `<option ${metric.name === value ? 'selected' : ''}>${value}</option>`).join('')}</select></div>
+        <div class="metric-field"><label>展示方式</label><select class="indicator-edit-select" data-indicator-metric-field="display" data-indicator-metric-index="${index}">${displayOptions.map(value => `<option ${metric.display === value ? 'selected' : ''}>${value}</option>`).join('')}</select></div>
+      </article>`).join('') + `<button class="indicator-add-card" data-add-indicator-metric><span class="indicator-add-icon">+</span><strong>添加指标</strong><p>从指标库选择指标，系统将推荐展示方式</p></button>`;
+      renderIndicatorPreview();
     }
 
     function inferApplicableType(value) {
@@ -864,15 +1260,17 @@
       if (!item) return;
       indicatorEditorState.editingId = id;
       indicatorEditorState.dirty = false;
-      indicatorEditorState.draft = JSON.parse(JSON.stringify({ ...item, metrics: item.metrics || [] }));
+      indicatorEditorState.draft = JSON.parse(JSON.stringify({ ...item, metrics: (item.metrics || []).map(normalizeIndicatorMetric) }));
+      indicatorEditorState.granularity = '日';
+      indicatorEditorState.range = `${indicatorEditorState.startDate} 至 ${indicatorEditorState.endDate}`;
       document.getElementById('indicatorEditorName').value = item.name;
       const applicableType = item.applicableType || inferApplicableType(item.applicableProfile);
       document.getElementById('indicatorEditorApplicableType').value = applicableType;
       updateIndicatorApplicableOptions(applicableType, item.applicableProfile);
-      document.getElementById('indicatorEditorSubtitle').textContent = `正在编辑：${item.name}`;
+      document.querySelectorAll('[data-granularity]').forEach(button => button.classList.toggle('active', button.dataset.granularity === '日'));
       renderIndicatorMetricEditor();
       document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-      document.getElementById('indicatorEditorPage').classList.add('active');
+      document.getElementById('indicatorEditorPage')?.classList.add('active');
     }
 
     function closeIndicatorEditor(force = false) {
@@ -880,7 +1278,7 @@
       indicatorEditorState.editingId = null;
       indicatorEditorState.dirty = false;
       indicatorEditorState.draft = null;
-      document.getElementById('indicatorEditorPage').classList.remove('active');
+      document.getElementById('indicatorEditorPage')?.classList.remove('active');
       document.getElementById('listPage').classList.add('active');
       showListView('indicator');
     }
@@ -891,13 +1289,29 @@
       draft.applicableType = document.getElementById('indicatorEditorApplicableType').value;
       draft.applicableProfile = document.getElementById('indicatorEditorApplicableValue').value;
       if (!draft.name || !draft.applicableType || !draft.applicableProfile) return showToast('请填写模板名称和适用对象');
-      if (draft.metrics.some(metric => !metric.name.trim() || !metric.source.trim())) return showToast('请完善指标名称和数据来源字段');
+      if (draft.metrics.some(metric => !metric.name.trim() || !metric.display)) return showToast('请完善指标名称和展示方式');
       const item = indicatorTemplates.find(row => row.id === indicatorEditorState.editingId);
       Object.assign(item, JSON.parse(JSON.stringify(draft)));
       indicatorEditorState.dirty = false;
       closeIndicatorEditor(true);
       renderIndicatorList();
-      showToast('指标看板已保存');
+      showToast('指标模板已保存');
+    }
+
+    function publishIndicatorEditor() {
+      const draft = indicatorEditorState.draft;
+      if (!draft) return;
+      draft.name = document.getElementById('indicatorEditorName').value.trim();
+      draft.applicableType = document.getElementById('indicatorEditorApplicableType').value;
+      draft.applicableProfile = document.getElementById('indicatorEditorApplicableValue').value;
+      if (!draft.name || !draft.applicableType || !draft.applicableProfile) return showToast('请先完善模板名称、适用维度和适用对象');
+      if (!draft.metrics.length) return showToast('发布前请至少添加一个指标');
+      if (draft.metrics.some(metric => !metric.name.trim() || !metric.display)) return showToast('请先完善所有指标配置');
+      const item = indicatorTemplates.find(row => row.id === indicatorEditorState.editingId);
+      Object.assign(item, JSON.parse(JSON.stringify({ ...draft, published: true })));
+      indicatorEditorState.dirty = false;
+      renderIndicatorList();
+      showToast('指标模板已发布');
     }
 
     function formatBirthDate(value) {
@@ -925,6 +1339,139 @@
         document.getElementById(summaryId).textContent = items.length ? items.map(item => item.name).join('、') : '--';
         document.getElementById(countId).textContent = `共 ${items.length} 条`;
       });
+    }
+
+    function renderPatientArchive() {
+      if (!archiveCurrentPatient) return;
+      const patient = archiveCurrentPatient;
+      const archiveValues = {
+        ...patient,
+        birthDate: `${2026 - Number(patient.age) - 1}年07月`,
+        ethnicity: '汉族',
+        occupation: Number(patient.age) >= 60 ? '退休' : '--',
+        region: '--'
+      };
+      document.querySelectorAll('[data-archive-text]').forEach(node => {
+        const value = archiveValues[node.dataset.archiveText];
+        node.textContent = value || '--';
+      });
+    }
+
+    function archiveMetricData(metric) {
+      const metricMap = {
+        '体重': { value: '68.4', unit: 'kg', labels: ['85', '75', '65', '55'], a: '35,62 125,70 215,82 305,95 395,107 485,119 575,128', b: '' },
+        '身高': { value: '172', unit: 'cm', labels: ['180', '175', '170', '165'], a: '35,105 125,104 215,104 305,103 395,104 485,103 575,103', b: '' },
+        '血压': { value: '128/82', unit: 'mmHg', labels: ['200', '155', '110', '65'], a: '35,90 125,82 215,101 305,68 395,86 485,63 575,76', b: '35,145 125,137 215,153 305,126 395,141 485,119 575,132' },
+        '血糖': { value: '6.2', unit: 'mmol/L', labels: ['12', '8', '4', '0'], a: '35,150 125,132 215,146 305,103 395,126 485,84 575,116', b: '35,178 125,169 215,162 305,155 395,146 485,137 575,142' },
+        'BMI': { value: '23.1', unit: 'kg/m²', labels: ['30', '25', '20', '15'], a: '35,76 125,84 215,93 305,103 395,112 485,120 575,126', b: '' },
+        '心率': { value: '76', unit: '次/分', labels: ['120', '90', '60', '30'], a: '35,127 125,103 215,139 305,89 395,122 485,96 575,113', b: '' },
+        '体脂': { value: '24.6', unit: '%', labels: ['35', '28', '21', '14'], a: '35,72 125,79 215,91 305,100 395,111 485,119 575,129', b: '' },
+        '肾小球过滤率': { value: '68', unit: 'mL/min/1.73m²', labels: ['120', '90', '60', '30'], a: '35,84 125,91 215,98 305,105 395,112 485,118 575,125', b: '' },
+        '肾脏大小': { value: '10.8/10.5', unit: 'cm', labels: ['12', '11', '10', '9'], a: '35,82 125,79 215,84 305,81 395,86 485,83 575,85', b: '35,108 125,105 215,110 305,106 395,111 485,108 575,110' },
+        '肌酐': { value: '112', unit: 'μmol/L', labels: ['160', '120', '80', '40'], a: '35,103 125,96 215,112 305,91 395,106 485,88 575,99', b: '' },
+        '血肌酐': { value: '108', unit: 'μmol/L', labels: ['160', '120', '80', '40'], a: '35,112 125,104 215,116 305,98 395,109 485,94 575,103', b: '' },
+        '尿酸': { value: '428', unit: 'μmol/L', labels: ['600', '450', '300', '150'], a: '35,118 125,102 215,111 305,89 395,98 485,76 575,92', b: '' }
+      };
+      return metricMap[metric] || { value: '--', unit: '', labels: ['100', '75', '50', '25'], a: '35,120 125,110 215,115 305,96 395,104 485,88 575,98', b: '' };
+    }
+
+    function archiveMetricIcon() {
+      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V9M10 19V5M16 19v-7M3 19h18"/><path d="M18 5v6M15 8h6"/></svg>`;
+    }
+
+    function archiveSparkline(metric, index) {
+      const data = archiveMetricData(metric);
+      const points = data.a.split(' ').map((point, pointIndex) => {
+        const parts = point.split(',');
+        return `${8 + pointIndex * 19},${Math.max(8, Math.min(50, Number(parts[1]) * .27 - 3))}`;
+      }).join(' ');
+      return `<svg viewBox="0 0 130 56" preserveAspectRatio="none" aria-hidden="true"><polyline points="${points}" fill="none" stroke="${index % 2 ? '#6e8cff' : '#3154ff'}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    }
+
+    function renderArchiveMetricCards(metrics) {
+      document.getElementById('archiveMetricCards').innerHTML = metrics.map((metric, index) => {
+        const data = archiveMetricData(metric);
+        return `<article class="archive-mini-card"><div class="archive-mini-title">${archiveMetricIcon()}<span>${metric}</span></div><div class="archive-mini-value">${data.value}<small>${data.unit}</small></div><div class="archive-mini-update">2026-06-12 08:30</div><div class="archive-spark">${archiveSparkline(metric, index)}</div></article>`;
+      }).join('');
+    }
+
+    function archiveDateList(start, end) {
+      const dates = [];
+      const cursor = new Date(`${start}T00:00:00`);
+      const last = new Date(`${end}T00:00:00`);
+      if (Number.isNaN(cursor.getTime()) || Number.isNaN(last.getTime()) || cursor > last) return [];
+      while (cursor <= last && dates.length < 120) {
+        dates.push(`${String(cursor.getMonth() + 1).padStart(2, '0')}月${String(cursor.getDate()).padStart(2, '0')}日`);
+        cursor.setDate(cursor.getDate() + 1);
+      }
+      return dates;
+    }
+
+    function archiveAxisLabels() {
+      if (archiveDashboardState.range === '今天' || archiveDashboardState.range === '昨天') {
+        return Array.from({ length: 24 }, (_, hour) => `${String(hour).padStart(2, '0')}:00`);
+      }
+      if (archiveDashboardState.range === '最近30天') return archiveDateList('2026-05-14', '2026-06-12');
+      if (archiveDashboardState.range === '自定义') return archiveDateList(archiveDashboardState.customStart, archiveDashboardState.customEnd);
+      return archiveDateList('2026-06-06', '2026-06-12');
+    }
+
+    function archiveSeriesPoints(source, count, width) {
+      const base = source.split(' ').map(point => Number(point.split(',')[1]));
+      const left = 42;
+      const right = 20;
+      const step = count > 1 ? (width - left - right) / (count - 1) : 0;
+      return Array.from({ length: count }, (_, index) => {
+        const baseline = base[index % base.length];
+        const variation = ((Math.floor(index / base.length) % 3) - 1) * 4;
+        return `${Math.round(left + index * step)},${Math.max(28, Math.min(178, baseline + variation))}`;
+      }).join(' ');
+    }
+
+    function archiveDetailChart(metric) {
+      const data = archiveMetricData(metric);
+      const labels = archiveAxisLabels();
+      const width = Math.max(620, labels.length * 54);
+      const labelStep = labels.length > 14 ? 1 : 1;
+      const xLabels = labels.map((label, index) => {
+        if (index % labelStep) return '';
+        const x = labels.length > 1 ? 42 + index * ((width - 62) / (labels.length - 1)) : 42;
+        return `<text x="${Math.round(x)}" y="218" text-anchor="middle">${label}</text>`;
+      }).join('');
+      const lineA = archiveSeriesPoints(data.a, labels.length, width);
+      const lineB = data.b ? archiveSeriesPoints(data.b, labels.length, width) : '';
+      return `<div class="archive-chart-scroll"><svg class="archive-monitor-chart" style="width:${width}px" viewBox="0 0 ${width} 230" aria-label="${metric}监测趋势图"><g class="grid"><path d="M32 26H${width - 10}M32 78H${width - 10}M32 130H${width - 10}M32 182H${width - 10}"/></g><g><text x="0" y="30">${data.labels[0]}</text><text x="0" y="82">${data.labels[1]}</text><text x="0" y="134">${data.labels[2]}</text><text x="4" y="186">${data.labels[3]}</text>${xLabels}</g><polyline class="line-a" points="${lineA}"/>${lineB ? `<polyline class="line-b" points="${lineB}"/>` : ''}</svg></div>`;
+    }
+
+    function renderArchiveDetails(metrics) {
+      document.getElementById('archiveDetailBoards').innerHTML = metrics.map(metric => {
+        const data = archiveMetricData(metric);
+        return `<article class="archive-detail-card"><div class="archive-detail-card-head"><div><h3>${metric}监测数据</h3><span>更新时间：2026-06-12 08:30</span></div></div><div class="archive-detail-value"><strong>${data.value}</strong><span>${data.unit}</span></div>${archiveDetailChart(metric)}</article>`;
+      }).join('');
+    }
+
+    function renderArchiveBoard(board) {
+      archiveDashboardState.board = board;
+      const visibleMetrics = archiveBoardMetrics[board] || archiveBoardMetrics['90天减肥计划'];
+      document.getElementById('archiveBoardSelect').value = board;
+      document.getElementById('archiveBoardCount').textContent = `当前命中 ${Object.keys(archiveBoardMetrics).length} 个看板`;
+      renderArchiveMetricCards(visibleMetrics);
+      renderArchiveDetails(visibleMetrics);
+    }
+
+    function openPatientArchive(patient) {
+      archiveCurrentPatient = patient || allPatients[0];
+      renderPatientArchive();
+      renderArchiveBoard('90天减肥计划');
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      document.getElementById('patientArchivePage').classList.add('active');
+      document.querySelector('.archive-page').scrollTop = 0;
+    }
+
+    function closePatientArchive() {
+      document.getElementById('patientArchivePage').classList.remove('active');
+      document.getElementById('listPage').classList.add('active');
+      showListView('patients');
     }
 
     function patientIndicatorDisplayLabel(type) {
@@ -1000,21 +1547,50 @@
       updatePatientTemplateOptions(applicableType, item.applicableProfile);
     }
 
-    function showPatientPage(id = null) {
+    function showPatientPage(id = null, createNew = false) {
       document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
       document.getElementById('patientPage').classList.add('active');
-      patientPageState.editingId = id || patientPageState.editingId || indicatorTemplates[0]?.id || null;
+      patientPageState.creating = createNew;
+      patientPageState.editingId = createNew ? null : (id || patientPageState.editingId || indicatorTemplates[0]?.id || null);
       patientPageState.dirty = false;
-      renderPatientTemplateConfig();
+      const item = createNew ? null : (indicatorTemplates.find(row => row.id === patientPageState.editingId) || indicatorTemplates[0]);
+      indicatorEditorState.editingId = item?.id || null;
+      indicatorEditorState.dirty = false;
+      indicatorEditorState.draft = item
+        ? JSON.parse(JSON.stringify({ ...item, metrics: (item.metrics || []).map(normalizeIndicatorMetric) }))
+        : { id: null, name: '', applicableType: '方案', applicableProfile: '全部患者', published: false, metrics: [] };
+      indicatorEditorState.granularity = '日';
+      indicatorEditorState.range = `${indicatorEditorState.startDate} 至 ${indicatorEditorState.endDate}`;
+      if (createNew) {
+        document.getElementById('patientTemplateName').value = '';
+        document.getElementById('patientTemplateType').value = '方案';
+        updatePatientTemplateOptions('方案', '全部患者');
+      } else {
+        renderPatientTemplateConfig();
+      }
       renderPatientDetail();
-      renderPatientIndicators();
+      document.querySelectorAll('[data-granularity]').forEach(button => button.classList.toggle('active', button.dataset.granularity === '日'));
+      renderIndicatorMetricEditor();
     }
 
     function exitPatientPage() {
       if (patientPageState.dirty && !window.confirm('当前内容尚未保存，确定退出吗？')) return;
       document.getElementById('patientPage').classList.remove('active');
       document.getElementById('listPage').classList.add('active');
-      showListView('indicator');
+      showListView(patientPageState.returnView || 'indicator');
+    }
+
+    function openPatientSaveModal() {
+      if (patientPageState.saving) return;
+      const modal = document.getElementById('patientSaveModal');
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closePatientSaveModal() {
+      const modal = document.getElementById('patientSaveModal');
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
     }
 
     function savePatientDetail() {
@@ -1023,17 +1599,35 @@
       const name = document.getElementById('patientTemplateName').value.trim();
       const applicableType = document.getElementById('patientTemplateType').value;
       const applicableProfile = document.getElementById('patientTemplateValue').value;
-      if (!name || !applicableType || !applicableProfile) return showToast('请填写模板名称、匹配维度和匹配值');
+      if (!name || !applicableType || !applicableProfile) { closePatientSaveModal(); return showToast('请填写模板名称、匹配维度和匹配值'); }
+      const metrics = indicatorEditorState.draft?.metrics || [];
+      if (metrics.some(metric => !metric.name.trim() || !metric.display)) { closePatientSaveModal(); return showToast('请完善指标名称和展示方式'); }
       patientPageState.saving = true;
       const button = document.querySelector('[data-save-patient-detail]');
+      const confirmButton = document.querySelector('[data-confirm-patient-save]');
       button.classList.add('loading');
       button.textContent = '保存中...';
+      confirmButton.disabled = true;
+      confirmButton.textContent = '保存中...';
       setTimeout(() => {
-        if (item) Object.assign(item, { name, applicableType, applicableProfile });
+        const savedValues = { name, applicableType, applicableProfile, metrics: JSON.parse(JSON.stringify(metrics)), published: item?.published || false };
+        if (item) {
+          Object.assign(item, savedValues);
+        } else {
+          const createdItem = { id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), ...savedValues };
+          indicatorTemplates.unshift(createdItem);
+          patientPageState.editingId = createdItem.id;
+          patientPageState.creating = false;
+          indicatorEditorState.editingId = createdItem.id;
+          indicatorEditorState.draft.id = createdItem.id;
+        }
         patientPageState.saving = false;
         patientPageState.dirty = false;
         button.classList.remove('loading');
         button.textContent = '保存';
+        confirmButton.disabled = false;
+        confirmButton.textContent = '确定';
+        closePatientSaveModal();
         renderIndicatorList();
         showToast('保存成功');
       }, 500);
@@ -1041,6 +1635,12 @@
 
     function openPatientPublishModal() {
       if (patientPageState.publishing) return;
+      const name = document.getElementById('patientTemplateName').value.trim();
+      const applicableType = document.getElementById('patientTemplateType').value;
+      const applicableProfile = document.getElementById('patientTemplateValue').value;
+      if (!name || !applicableType || !applicableProfile) return showToast('请先填写模板名称、匹配维度和匹配值');
+      if (!(indicatorEditorState.draft?.metrics || []).length) return showToast('发布前请至少添加一个指标');
+      if (indicatorEditorState.draft.metrics.some(metric => !metric.name.trim() || !metric.display)) return showToast('请先完善所有指标配置');
       const modal = document.getElementById('patientPublishModal');
       modal.classList.add('open');
       modal.setAttribute('aria-hidden', 'false');
@@ -1062,6 +1662,16 @@
       confirmButton.disabled = true;
       confirmButton.textContent = '发布中...';
       setTimeout(() => {
+        const item = indicatorTemplates.find(row => row.id === patientPageState.editingId);
+        const publishedValues = {
+          name: document.getElementById('patientTemplateName').value.trim(),
+          applicableType: document.getElementById('patientTemplateType').value,
+          applicableProfile: document.getElementById('patientTemplateValue').value,
+          metrics: JSON.parse(JSON.stringify(indicatorEditorState.draft.metrics)),
+          published: true
+        };
+        if (item) Object.assign(item, publishedValues);
+        else indicatorTemplates.unshift({ id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), ...publishedValues });
         patientPageState.publishing = false;
         patientPageState.dirty = false;
         headerButton.classList.remove('loading');
@@ -1069,6 +1679,8 @@
         confirmButton.disabled = false;
         confirmButton.textContent = '确认发布';
         closePatientPublishModal();
+        renderIndicatorList();
+        exitPatientPage();
         showToast('发布成功');
       }, 600);
     }
@@ -1436,20 +2048,128 @@
         saveIndicatorEditor();
         return;
       }
+      if (e.target.closest('[data-publish-indicator-editor]')) {
+        publishIndicatorEditor();
+        return;
+      }
       if (e.target.closest('[data-add-indicator-metric]')) {
-        indicatorEditorState.draft.metrics.push({ name: '', type: '数值', source: '' });
+        indicatorEditorState.draft.metrics.push({ name: '', display: '指标卡', source: '居家打卡', period: '按日' });
         indicatorEditorState.dirty = true;
+        patientPageState.dirty = true;
         renderIndicatorMetricEditor();
+        requestAnimationFrame(() => document.querySelector(`[data-indicator-metric-index="${indicatorEditorState.draft.metrics.length - 1}"][data-indicator-metric-field="name"]`)?.focus());
+        return;
+      }
+      const toggleMetricMenu = e.target.closest('[data-toggle-metric-menu]');
+      if (toggleMetricMenu) {
+        const card = toggleMetricMenu.closest('.indicator-metric-card');
+        document.querySelectorAll('.indicator-metric-card.menu-open').forEach(node => { if (node !== card) node.classList.remove('menu-open'); });
+        card.classList.toggle('menu-open');
+        return;
+      }
+      const focusIndicatorMetric = e.target.closest('[data-focus-indicator-metric]');
+      if (focusIndicatorMetric) {
+        const index = Number(focusIndicatorMetric.dataset.focusIndicatorMetric);
+        focusIndicatorMetric.closest('.indicator-metric-card').classList.remove('menu-open');
+        document.querySelector(`[data-indicator-metric-index="${index}"][data-indicator-metric-field="name"]`)?.focus();
         return;
       }
       const removeIndicatorMetric = e.target.closest('[data-remove-indicator-metric]');
       if (removeIndicatorMetric) {
-        indicatorEditorState.draft.metrics.splice(Number(removeIndicatorMetric.dataset.removeIndicatorMetric), 1);
+        const index = Number(removeIndicatorMetric.dataset.removeIndicatorMetric);
+        const metric = indicatorEditorState.draft.metrics[index];
+        if (!window.confirm(`确定删除指标“${metric?.name || '未命名指标'}”吗？`)) return;
+        indicatorEditorState.draft.metrics.splice(index, 1);
         indicatorEditorState.dirty = true;
+        patientPageState.dirty = true;
         renderIndicatorMetricEditor();
         return;
       }
+      const granularityButton = e.target.closest('[data-granularity]');
+      if (granularityButton) {
+        indicatorEditorState.granularity = granularityButton.dataset.granularity;
+        document.querySelectorAll('[data-granularity]').forEach(button => button.classList.toggle('active', button === granularityButton));
+        renderIndicatorPreview();
+        return;
+      }
+      const openPatientRecord = e.target.closest('[data-open-patient-record]');
+      if (openPatientRecord) {
+        const patient = allPatients.find(item => item.visitNo === openPatientRecord.dataset.openPatientRecord);
+        if (patient) openPatientArchive(patient);
+        return;
+      }
+      const selectPatientGroup = e.target.closest('[data-select-patient-group]');
+      if (selectPatientGroup) {
+        const patient = allPatients.find(item => item.visitNo === selectPatientGroup.dataset.selectPatientGroup);
+        showToast(`${patient?.name || '患者'}：分组选择已打开`);
+        return;
+      }
+      const patientRow = e.target.closest('[data-patient-row]');
+      if (patientRow && !e.target.closest('button')) {
+        patientRow.querySelector('[data-open-patient-record]')?.click();
+        return;
+      }
+      if (e.target.closest('[data-toggle-patient-filter]')) {
+        document.getElementById('patientAdvancedPanel').classList.toggle('open');
+        return;
+      }
+      if (e.target.closest('[data-reset-patient-filter]')) {
+        document.querySelectorAll('#patientAdvancedPanel select').forEach(select => select.selectedIndex = 0);
+        showToast('筛选条件已重置');
+        return;
+      }
+      if (e.target.closest('[data-apply-patient-filter]')) {
+        document.getElementById('patientAdvancedPanel').classList.remove('open');
+        showToast('筛选条件已应用');
+        return;
+      }
+      if (e.target.closest('[data-patient-column-setting]')) {
+        showToast('字段设置已打开');
+        return;
+      }
+      if (e.target.closest('[data-patient-team-list]')) {
+        showListView('patients');
+        document.getElementById('patientTeamFilter').selectedIndex = 1;
+        patientListState.team = document.getElementById('patientTeamFilter').value;
+        renderPatientList();
+        return;
+      }
+      if (e.target.closest('[data-archive-back]')) {
+        closePatientArchive();
+        return;
+      }
+      const archiveTab = e.target.closest('[data-archive-tab]');
+      if (archiveTab) {
+        document.querySelectorAll('[data-archive-tab]').forEach(button => button.classList.toggle('active', button === archiveTab));
+        if (archiveTab.dataset.archiveTab !== 'basic') showToast(`${archiveTab.textContent.trim()}模块已切换`);
+        return;
+      }
+      const archiveMore = e.target.closest('[data-archive-more]');
+      if (archiveMore) {
+        showToast(archiveMore.dataset.archiveMore === 'basic' ? '更多基本信息已打开' : '更多健康史信息已打开');
+        return;
+      }
+      const archiveRange = e.target.closest('[data-archive-range]');
+      if (archiveRange) {
+        document.querySelectorAll('[data-archive-range]').forEach(button => button.classList.toggle('active', button === archiveRange));
+        archiveDashboardState.range = archiveRange.dataset.archiveRange;
+        const ranges = { '今天': ['2026-06-12', '2026-06-12'], '昨天': ['2026-06-11', '2026-06-11'], '最近7天': ['2026-06-06', '2026-06-12'], '最近30天': ['2026-05-14', '2026-06-12'] };
+        const selectedRange = ranges[archiveDashboardState.range];
+        document.getElementById('archiveDateStart').value = selectedRange[0];
+        document.getElementById('archiveDateEnd').value = selectedRange[1];
+        renderArchiveDetails(archiveBoardMetrics[archiveDashboardState.board]);
+        return;
+      }
+      const patientPageButton = e.target.closest('[data-patient-page]');
+      if (patientPageButton) {
+        document.querySelectorAll('[data-patient-page]').forEach(button => button.classList.remove('active'));
+        patientPageButton.classList.add('active');
+        patientListState.page = patientPageButton.dataset.patientPage;
+        showToast(`已切换至第 ${patientListState.page === 'next' ? 2 : patientListState.page} 页`);
+        return;
+      }
       if (e.target.closest('[data-open-patient]')) {
+        patientPageState.returnView = 'indicator';
         showPatientPage();
         return;
       }
@@ -1458,6 +2178,14 @@
         return;
       }
       if (e.target.closest('[data-save-patient-detail]')) {
+        openPatientSaveModal();
+        return;
+      }
+      if (e.target.closest('[data-cancel-patient-save]') || e.target.id === 'patientSaveModal') {
+        closePatientSaveModal();
+        return;
+      }
+      if (e.target.closest('[data-confirm-patient-save]')) {
         savePatientDetail();
         return;
       }
@@ -1564,7 +2292,8 @@
         return;
       }
       if (e.target.closest('[data-new-indicator]')) {
-        openIndicatorModal();
+        patientPageState.returnView = 'indicator';
+        showPatientPage(null, true);
         return;
       }
       const editIndicator = e.target.closest('[data-edit-indicator]');
@@ -1681,7 +2410,57 @@
       if (toastBtn) showToast(toastBtn.dataset.toast);
     });
 
+    let draggedIndicatorMetricIndex = null;
+
+    document.addEventListener('dragstart', e => {
+      const handle = e.target.closest('[data-drag-indicator-metric]');
+      if (!handle || !indicatorEditorState.draft) return;
+      draggedIndicatorMetricIndex = Number(handle.dataset.dragIndicatorMetric);
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', String(draggedIndicatorMetricIndex));
+      requestAnimationFrame(() => handle.closest('.indicator-metric-card')?.classList.add('dragging'));
+    });
+
+    document.addEventListener('dragover', e => {
+      const card = e.target.closest('[data-metric-card-index]');
+      if (!card || draggedIndicatorMetricIndex === null) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      document.querySelectorAll('.indicator-metric-card').forEach(node => node.classList.remove('drag-before', 'drag-after'));
+      const rect = card.getBoundingClientRect();
+      const after = e.clientX > rect.left + rect.width / 2;
+      card.classList.add(after ? 'drag-after' : 'drag-before');
+    });
+
+    document.addEventListener('drop', e => {
+      const card = e.target.closest('[data-metric-card-index]');
+      if (!card || draggedIndicatorMetricIndex === null || !indicatorEditorState.draft) return;
+      e.preventDefault();
+      const sourceIndex = draggedIndicatorMetricIndex;
+      const targetIndex = Number(card.dataset.metricCardIndex);
+      const rect = card.getBoundingClientRect();
+      let insertIndex = targetIndex + (e.clientX > rect.left + rect.width / 2 ? 1 : 0);
+      const [movedMetric] = indicatorEditorState.draft.metrics.splice(sourceIndex, 1);
+      if (sourceIndex < insertIndex) insertIndex -= 1;
+      indicatorEditorState.draft.metrics.splice(Math.max(0, Math.min(insertIndex, indicatorEditorState.draft.metrics.length)), 0, movedMetric);
+      draggedIndicatorMetricIndex = null;
+      indicatorEditorState.dirty = true;
+      patientPageState.dirty = true;
+      renderIndicatorMetricEditor();
+      showToast('指标顺序已调整');
+    });
+
+    document.addEventListener('dragend', () => {
+      draggedIndicatorMetricIndex = null;
+      document.querySelectorAll('.indicator-metric-card').forEach(node => node.classList.remove('dragging', 'drag-before', 'drag-after'));
+    });
+
     document.addEventListener('input', e => {
+      if (e.target.id === 'patientListSearch') {
+        patientListState.keyword = e.target.value;
+        renderPatientList();
+        return;
+      }
       if (e.target.id === 'patientTemplateName') {
         patientPageState.dirty = true;
         return;
@@ -1693,7 +2472,10 @@
       if (e.target.matches('[data-indicator-metric-field]') && indicatorEditorState.draft) {
         const metric = indicatorEditorState.draft.metrics[Number(e.target.dataset.indicatorMetricIndex)];
         metric[e.target.dataset.indicatorMetricField] = e.target.value;
+        if (e.target.dataset.indicatorMetricField === 'name' && e.target.value) metric.display = recommendedIndicatorDisplay(e.target.value);
         indicatorEditorState.dirty = true;
+        patientPageState.dirty = true;
+        renderIndicatorPreview();
         return;
       }
       if (e.target.matches('[data-patient-field]') && patientEditState.draft) {
@@ -1756,6 +2538,27 @@
     });
 
     document.addEventListener('change', e => {
+      if (e.target.id === 'archiveDateStart' || e.target.id === 'archiveDateEnd') {
+        archiveDashboardState.customStart = document.getElementById('archiveDateStart').value;
+        archiveDashboardState.customEnd = document.getElementById('archiveDateEnd').value;
+        if (archiveDashboardState.customStart > archiveDashboardState.customEnd) {
+          showToast('开始日期不能晚于结束日期');
+          return;
+        }
+        archiveDashboardState.range = '自定义';
+        document.querySelectorAll('[data-archive-range]').forEach(button => button.classList.remove('active'));
+        renderArchiveDetails(archiveBoardMetrics[archiveDashboardState.board]);
+        return;
+      }
+      if (e.target.id === 'archiveBoardSelect') {
+        renderArchiveBoard(e.target.value);
+        return;
+      }
+      if (e.target.id === 'patientTeamFilter') {
+        patientListState.team = e.target.value;
+        renderPatientList();
+        return;
+      }
       if (e.target.id === 'patientTemplateType') {
         updatePatientTemplateOptions(e.target.value);
         patientPageState.dirty = true;
@@ -1777,7 +2580,10 @@
       if (e.target.matches('[data-indicator-metric-field]') && indicatorEditorState.draft) {
         const metric = indicatorEditorState.draft.metrics[Number(e.target.dataset.indicatorMetricIndex)];
         metric[e.target.dataset.indicatorMetricField] = e.target.value;
+        if (e.target.dataset.indicatorMetricField === 'name' && e.target.value) metric.display = recommendedIndicatorDisplay(e.target.value);
         indicatorEditorState.dirty = true;
+        patientPageState.dirty = true;
+        renderIndicatorMetricEditor();
         return;
       }
       if (e.target.matches('[data-patient-field]') && patientEditState.draft) {
@@ -1816,7 +2622,7 @@
       document.getElementById('builderPage').classList.remove('active');
       document.getElementById('patientPage').classList.remove('active');
       document.getElementById('patientEditor').classList.remove('active');
-      document.getElementById('indicatorEditorPage').classList.remove('active');
+      document.getElementById('indicatorEditorPage')?.classList.remove('active');
       document.getElementById('listPage').classList.add('active');
       showListView('scale');
     }
@@ -1886,6 +2692,7 @@
 
     renderList();
     renderIndicatorList();
+    renderPatientList();
     renderPatientDetail();
   </script>
 </body>
